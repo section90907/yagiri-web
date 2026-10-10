@@ -1,0 +1,37 @@
+/* スマホ幅の調整。ページの見た目はインラインstyleで書かれているので、
+   ここでは !important で上書きしている(デスクトップ幅には一切効かない)。 */
+@media (max-width: 640px) {
+  /* 左右の固定余白(56px/48px)が画面を食って横スクロールになる */
+  [style*="px 56px"], [style*="0 56px"], [style*="px 48px"],
+  [style*="padding: 56px"], [style*="padding: 48px"] {
+    padding-left: 20px !important; padding-right: 20px !important;
+  }
+  [style*="margin: 0 56px"] { margin-left: 20px !important; margin-right: 20px !important; }
+
+  /* ナビの間隔を詰めて、ヘッダーが縦に伸びすぎないようにする */
+  nav[style*="gap: 30px"], nav[style*="gap: 26px"] { gap: 4px 18px !important; }
+  nav a { min-height: 44px; display: inline-flex; align-items: center; }
+
+  /* 画面いっぱいに広げる帯(margin: 0 -56px)も、余白を20pxにしたぶん合わせる */
+  [style*="margin: 0 -56px"] { margin-left: -20px !important; margin-right: -20px !important; }
+
+  /* 年表の3列(種別・内容・出典)は縦に積む */
+  [style*="grid-template-columns: 120px 1fr 160px"] { grid-template-columns: 1fr !important; gap: 8px !important; }
+
+  /* 404の飾りの斜線が画面の外へ出ないよう短くする */
+  [style*="left: 200px"][style*="width: 180px"] { width: 80px !important; }
+
+  /* 最小幅つきの段組み(minmax(340px,1fr) など)は1列にする */
+  [style*="minmax("] { grid-template-columns: 1fr !important; gap: 40px !important; }
+
+  /* 大見出しは画面幅に合わせて縮める */
+  [style*="font-size: 104px"], [style*="font-size: 96px"], [style*="font-size: 88px"] { font-size: min(96px, 13vw) !important; }
+  [style*="font-size: 72px"], [style*="font-size: 64px"] { font-size: min(64px, 11vw) !important; }
+
+  /* 縦書きのコピー。ヒーローの見出しと重ならないよう、小さくして上へ寄せる */
+  [style*="position: absolute"][style*="writing-mode"] { top: 56px !important; right: 28px !important; }
+  [style*="writing-mode"][style*="font-size: 92px"],
+  [style*="writing-mode"][style*="font-size: 72px"] { font-size: 14vw !important; }
+  [style*="writing-mode"][style*="font-size: 60px"],
+  [style*="writing-mode"][style*="font-size: 56px"] { font-size: 12vw !important; }
+}

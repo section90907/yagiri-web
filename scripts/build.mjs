@@ -60,13 +60,13 @@ posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0
 
 const eyecatch = (p, ratio) => p.image
   ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
-  : `<div style="aspect-ratio: ${ratio}; background: #161616; border: 1px solid #2E2E2E; display: flex; align-items: center; justify-content: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.3em; color: #6E6A60">YAGIRI JOURNAL</div>`;
+  : `<div style="aspect-ratio: ${ratio}; background: #161616; border: 1px solid #2E2E2E; display: flex; align-items: center; justify-content: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 16px; letter-spacing: 0.3em; color: #6E6A60">YAGIRI JOURNAL</div>`;
 
 // ---------- 静的ページ ----------
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
 <span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F">${p.image ? `<img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover">` : ''}</span>
-<span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; color: #DCD4C0; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 1.6; font-weight: 600">${esc(p.title)}</span></span>
+<span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #DCD4C0; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 1.6; font-weight: 600">${esc(p.title)}</span></span>
 </a>`).join('\n') || `<p style="font-family: 'Shippori Mincho', serif; font-size: 18px; padding: 22px 0; border-top: 1px solid #3F5C52">ただいま発酵中…</p>`;
 
 for (const f of walk(PAGES)) {
@@ -80,7 +80,7 @@ for (const f of walk(PAGES)) {
 // ---------- 記事詳細 ----------
 const artTpl = include(fs.readFileSync(path.join(ROOT, 'src/templates/article.html'), 'utf8'), 'article.html');
 const navLink = (p, dir) => p
-  ? `<a href="/journal/${p.slug}/" style="padding: 48px 56px; display: flex; flex-direction: column; gap: 8px;${dir === 'next' ? ' text-align: right' : ' border-right: 1px solid #262626'}"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 12px; letter-spacing: 0.3em; color: #C9AA6E">${dir === 'next' ? 'NEXT →' : '← PREV'}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 18px">${esc(p.title)}</span></a>`
+  ? `<a href="/journal/${p.slug}/" style="padding: 48px 56px; display: flex; flex-direction: column; gap: 8px;${dir === 'next' ? ' text-align: right' : ' border-right: 1px solid #262626'}"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.3em; color: #C9AA6E">${dir === 'next' ? 'NEXT →' : '← PREV'}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 18px">${esc(p.title)}</span></a>`
   : `<span style="padding: 48px 56px"></span>`;
 posts.forEach((p, i) => {
   const html = fill(artTpl, {
@@ -88,7 +88,7 @@ posts.forEach((p, i) => {
     DATE: fmtDate(p.date) + (p.updated ? ` 更新 ${fmtDate(p.updated)}` : ''),
     MINUTES: String(p.minutes), AUTHOR: esc(p.author ?? '矢切ブルワリー'),
     HERO: eyecatch(p, '21 / 9'),
-    TOC: p.toc.map((t) => `<a href="#${t.id}" style="font-size: 14px; line-height: 1.7">${esc(t.text)}</a>`).join('\n'),
+    TOC: p.toc.map((t) => `<a href="#${t.id}" style="font-size: 16px; line-height: 1.7">${esc(t.text)}</a>`).join('\n'),
     POINT: (p.point ?? []).map(esc).join('<br>'),
     BODY: p.html,
     PREV: navLink(posts[i + 1], 'prev'), NEXT: navLink(posts[i - 1], 'next'),
@@ -100,21 +100,21 @@ posts.forEach((p, i) => {
 // ---------- 記事一覧 ----------
 const listTpl = include(fs.readFileSync(path.join(ROOT, 'src/templates/journal-list.html'), 'utf8'), 'journal-list.html');
 const cats = ['すべて', ...new Set(posts.map((p) => p.category))];
-const tabs = cats.map((c, i) => `<button type="button" data-cat="${esc(c)}" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid ${i ? '#3A3A3A' : '#7A1E2B'}; background: ${i ? 'transparent' : '#7A1E2B'}; color: #EFE9DC; font: inherit; font-size: 14px; letter-spacing: 0.1em; cursor: pointer">${esc(c)}</button>`).join('\n');
+const tabs = cats.map((c, i) => `<button type="button" data-cat="${esc(c)}" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid ${i ? '#3A3A3A' : '#7A1E2B'}; background: ${i ? 'transparent' : '#7A1E2B'}; color: #EFE9DC; font: inherit; font-size: 16px; letter-spacing: 0.1em; cursor: pointer">${esc(c)}</button>`).join('\n');
 const [first, ...rest] = posts;
 const featured = first ? `<a href="/journal/${first.slug}/" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; align-items: center">
 ${eyecatch(first, '16 / 10')}
 <div style="display: flex; flex-direction: column; gap: 16px">
-<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 12px; letter-spacing: 0.3em; color: #C9AA6E">LATEST — No.${esc(first.no)}</span>
-<span style="font-size: 13px; color: #CFC8B8">${esc(first.category)} ／ ${fmtDate(first.date)} ／ 約${first.minutes}分で読めます</span>
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.3em; color: #C9AA6E">LATEST — No.${esc(first.no)}</span>
+<span style="font-size: 15px; color: #CFC8B8">${esc(first.category)} ／ ${fmtDate(first.date)} ／ 約${first.minutes}分で読めます</span>
 <span style="font-family: 'Shippori Mincho', serif; font-size: 34px; font-weight: 800; line-height: 1.5">${esc(first.title)}</span>
-<span style="font-size: 15px; line-height: 1.9; color: #CFC8B8">${esc(first.lead)}</span>
-<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 13px; letter-spacing: 0.25em; border-bottom: 1px solid #7A1E2B; align-self: flex-start; padding-bottom: 4px">READ →</span>
+<span style="font-size: 17px; line-height: 1.9; color: #CFC8B8">${esc(first.lead)}</span>
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em; border-bottom: 1px solid #7A1E2B; align-self: flex-start; padding-bottom: 4px">READ →</span>
 </div>
 </a>` : `<div style="padding: 56px 0; border-top: 1px solid #3F5C52; border-bottom: 1px solid #3F5C52"><p style="margin: 0; font-family: 'Shippori Mincho', serif; font-size: 34px; font-weight: 800">ただいま発酵中…</p><p style="margin: 10px 0 0; color: #DCD4C0">次の記事を仕込んでいます。飲み頃まで、少々お待ちください。</p></div>`;
 const cards = rest.map((p) => `<a href="/journal/${p.slug}/" data-cat="${esc(p.category)}" style="display: flex; flex-direction: column; gap: 12px">
 ${eyecatch(p, '16 / 10')}
-<span style="font-size: 12px; color: #CFC8B8; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span>
+<span style="font-size: 14px; color: #CFC8B8; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span>
 <span style="font-family: 'Shippori Mincho', serif; font-size: 20px; font-weight: 600; line-height: 1.6">${esc(p.title)}</span>
 </a>`).join('\n');
 const filterJs = `<script>
