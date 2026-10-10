@@ -16,6 +16,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 
 ## 構成とコマンド
 - `src/pages/` 静的ページ(`index.html` トップ / `story/` / `guide/` / `future/` / `yagiriya/` / `404.html`)
+- `src/partials/` 共通ヘッダー・フッター(`brewery-*` と `yagiriya-*` の2系統)。ページには `<!--include:brewery-header current=story-->` のように書く。ナビの `data-nav="キー"` が current と一致したリンクだけ強調される。トップの大きなフッターと404のヘッダーは意図的に独自
 - `src/templates/` 読み物の一覧(`journal-list.html`)・詳細(`article.html`)テンプレート
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)

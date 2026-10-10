@@ -12,6 +12,20 @@ const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.config.json'), 'utf
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const fill = (tpl, map) => tpl.replace(/%%([A-Z_]+)%%/g, (m, k) => (k in map ? map[k] : m));
+// ---------- 共通部品(src/partials/) ----------
+// <!--include:名前 current=キー--> をその部品で置き換える。ヘッダーの nav は data-nav="キー" の
+// リンクだけ現在地として強調し、data-only-current 付きは現在地のときだけ出す(いまは該当なし)。
+const PARTIALS = path.join(ROOT, 'src/partials');
+const include = (html, from) => html.replace(/<!--include:([\w-]+)(?: current=([\w-]+))?-->/g, (m, name, cur) => {
+  const file = path.join(PARTIALS, `${name}.html`);
+  if (!fs.existsSync(file)) throw new Error(`${from}: 部品 "${name}" が src/partials/ にありません`);
+  return fs.readFileSync(file, 'utf8').replace(/<a ([^>]*?)data-nav="([\w-]+)"([^>]*)>(.*?)<\/a>/g, (a, pre, key, post, text) => {
+    const on = key === cur;
+    if (/data-only-current/.test(post) && !on) return '';
+    const attrs = (pre + post).replace(/\s*data-only-current/, '').trim();
+    return `<a ${attrs}${on ? ' style="color: #C9AA6E"' : ''}>${text}</a>`;
+  });
+});
 const write = (rel, html) => {
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
@@ -58,12 +72,13 @@ const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style
 for (const f of walk(PAGES)) {
   const rel = path.relative(PAGES, f);
   let html = fs.readFileSync(f, 'utf8');
+  if (rel.endsWith('.html')) html = include(html, rel);
   if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), LATEST: latest });
   write(rel, html);
 }
 
 // ---------- 記事詳細 ----------
-const artTpl = fs.readFileSync(path.join(ROOT, 'src/templates/article.html'), 'utf8');
+const artTpl = include(fs.readFileSync(path.join(ROOT, 'src/templates/article.html'), 'utf8'), 'article.html');
 const navLink = (p, dir) => p
   ? `<a href="/journal/${p.slug}/" style="padding: 48px 56px; display: flex; flex-direction: column; gap: 8px;${dir === 'next' ? ' text-align: right' : ' border-right: 1px solid #262626'}"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 12px; letter-spacing: 0.3em; color: #C9AA6E">${dir === 'next' ? 'NEXT →' : '← PREV'}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 18px">${esc(p.title)}</span></a>`
   : `<span style="padding: 48px 56px"></span>`;
@@ -83,7 +98,7 @@ posts.forEach((p, i) => {
 });
 
 // ---------- 記事一覧 ----------
-const listTpl = fs.readFileSync(path.join(ROOT, 'src/templates/journal-list.html'), 'utf8');
+const listTpl = include(fs.readFileSync(path.join(ROOT, 'src/templates/journal-list.html'), 'utf8'), 'journal-list.html');
 const cats = ['すべて', ...new Set(posts.map((p) => p.category))];
 const tabs = cats.map((c, i) => `<button type="button" data-cat="${esc(c)}" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid ${i ? '#3A3A3A' : '#7A1E2B'}; background: ${i ? 'transparent' : '#7A1E2B'}; color: #EFE9DC; font: inherit; font-size: 14px; letter-spacing: 0.1em; cursor: pointer">${esc(c)}</button>`).join('\n');
 const [first, ...rest] = posts;
