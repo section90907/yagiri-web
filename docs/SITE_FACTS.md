@@ -6,7 +6,7 @@
 - 問い合わせ: craftbeeraddict@yagiribrewery.com
 - 醸造所の所在地はサイトに載せない(「松戸市内の自社醸造所」とする)。醸造所の見学・直接販売は通常不可(復活クラウドファンディング期間中のみ特別に見学あり ※期間終了後に注記を外す)
 - 特定商取引法に基づく表記・プライバシーポリシーは BASE 側に置き、フッターからリンク(URL未定)
-- BASE ショップURL: 未定 → `site.config.json` の `shopUrl`
+- BASE ショップURL: https://www.yagiribrewery.com/items/all(`site.config.json` の `shopUrl`)
 
 ## 製品(定番・掲載中)
 日常IPA(American IPA)/ CANVAS(Hazy IPA)/ Merckx(Dark Belgian)/ Sunparede(Gose)/ Hinmmel(Lager)
