@@ -14,7 +14,7 @@ const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').
 const fill = (tpl, map) => tpl.replace(/%%([A-Z_]+)%%/g, (m, k) => (k in map ? map[k] : m));
 // ---------- 共通部品(src/partials/) ----------
 // <!--include:名前 current=キー--> をその部品で置き換える。ヘッダーの nav は data-nav="キー" の
-// リンクだけ現在地として強調し、data-only-current 付き(BEER 101)は現在地のときだけ出す。
+// リンクだけ現在地として強調し、data-only-current 付きは現在地のときだけ出す(いまは該当なし)。
 const PARTIALS = path.join(ROOT, 'src/partials');
 const include = (html, from) => html.replace(/<!--include:([\w-]+)(?: current=([\w-]+))?-->/g, (m, name, cur) => {
   const file = path.join(PARTIALS, `${name}.html`);
