@@ -1,0 +1,118 @@
+// 矢切ブルワリー サイトビルド
+// src/pages/ の静的ページと content/journal/*.md の記事から dist/ を生成する。
+import fs from 'node:fs';
+import path from 'node:path';
+import matter from 'gray-matter';
+import { marked } from 'marked';
+
+const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const DIST = path.join(ROOT, 'dist');
+fs.rmSync(DIST, { recursive: true, force: true });
+const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.config.json'), 'utf8'));
+
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const fill = (tpl, map) => tpl.replace(/%%([A-Z_]+)%%/g, (m, k) => (k in map ? map[k] : m));
+const write = (rel, html) => {
+  const p = path.join(DIST, rel);
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, html);
+};
+const copyDir = (from, to) => {
+  if (!fs.existsSync(from)) return;
+  for (const e of fs.readdirSync(from, { withFileTypes: true })) {
+    const s = path.join(from, e.name), d = path.join(to, e.name);
+    if (e.isDirectory()) { fs.mkdirSync(d, { recursive: true }); copyDir(s, d); }
+    else fs.copyFileSync(s, d);
+  }
+};
+const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+  e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]);
+
+// ---------- 記事の読み込み ----------
+const JDIR = path.join(ROOT, 'content/journal');
+const fmtDate = (d) => { const x = new Date(d); return `${x.getFullYear()}.${String(x.getMonth() + 1).padStart(2, '0')}.${String(x.getDate()).padStart(2, '0')}`; };
+const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsWith('_')).map((f) => {
+  const { data, content } = matter(fs.readFileSync(path.join(JDIR, f), 'utf8'));
+  const required = ['title', 'category', 'date', 'lead'];
+  for (const k of required) if (!data[k]) throw new Error(`${f}: front matter "${k}" がありません`);
+  let html = marked.parse(content);
+  const toc = [];
+  let n = 0;
+  html = html.replace(/<h2>(.*?)<\/h2>/g, (m, inner) => { n += 1; toc.push({ id: `s${n}`, text: inner.replace(/<[^>]+>/g, '') }); return `<h2 id="s${n}">${inner}</h2>`; });
+  const chars = content.replace(/\s/g, '').length;
+  return { slug: f.replace(/\.md$/, ''), ...data, html, toc, minutes: Math.max(1, Math.round(chars / 500)) };
+}).filter((p) => !p.draft).sort((a, b) => new Date(b.date) - new Date(a.date));
+posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0'); });
+
+const eyecatch = (p, ratio) => p.image
+  ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
+  : `<div style="aspect-ratio: ${ratio}; background: #161616; border: 1px solid #2E2E2E; display: flex; align-items: center; justify-content: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.3em; color: #6E6A60">YAGIRI JOURNAL</div>`;
+
+// ---------- 静的ページ ----------
+const PAGES = path.join(ROOT, 'src/pages');
+const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
+<span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F">${p.image ? `<img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover">` : ''}</span>
+<span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 12px; color: #DCD4C0; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 1.6; font-weight: 600">${esc(p.title)}</span></span>
+</a>`).join('\n') || `<p style="font-family: 'Shippori Mincho', serif; font-size: 18px; padding: 22px 0; border-top: 1px solid #3F5C52">ただいま発酵中…</p>`;
+
+for (const f of walk(PAGES)) {
+  const rel = path.relative(PAGES, f);
+  let html = fs.readFileSync(f, 'utf8');
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), LATEST: latest });
+  write(rel, html);
+}
+
+// ---------- 記事詳細 ----------
+const artTpl = fs.readFileSync(path.join(ROOT, 'src/templates/article.html'), 'utf8');
+const navLink = (p, dir) => p
+  ? `<a href="/journal/${p.slug}/" style="padding: 48px 56px; display: flex; flex-direction: column; gap: 8px;${dir === 'next' ? ' text-align: right' : ' border-right: 1px solid #262626'}"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 12px; letter-spacing: 0.3em; color: #C9AA6E">${dir === 'next' ? 'NEXT →' : '← PREV'}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 18px">${esc(p.title)}</span></a>`
+  : `<span style="padding: 48px 56px"></span>`;
+posts.forEach((p, i) => {
+  const html = fill(artTpl, {
+    TITLE: esc(p.title), LEAD: esc(p.lead), CATEGORY: esc(p.category), NO: esc(p.no),
+    DATE: fmtDate(p.date) + (p.updated ? ` 更新 ${fmtDate(p.updated)}` : ''),
+    MINUTES: String(p.minutes), AUTHOR: esc(p.author ?? '矢切ブルワリー'),
+    HERO: eyecatch(p, '21 / 9'),
+    TOC: p.toc.map((t) => `<a href="#${t.id}" style="font-size: 14px; line-height: 1.7">${esc(t.text)}</a>`).join('\n'),
+    POINT: (p.point ?? []).map(esc).join('<br>'),
+    BODY: p.html,
+    PREV: navLink(posts[i + 1], 'prev'), NEXT: navLink(posts[i - 1], 'next'),
+    SHOP_URL: esc(cfg.shopUrl),
+  });
+  write(`journal/${p.slug}/index.html`, html);
+});
+
+// ---------- 記事一覧 ----------
+const listTpl = fs.readFileSync(path.join(ROOT, 'src/templates/journal-list.html'), 'utf8');
+const cats = ['すべて', ...new Set(posts.map((p) => p.category))];
+const tabs = cats.map((c, i) => `<button type="button" data-cat="${esc(c)}" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid ${i ? '#3A3A3A' : '#7A1E2B'}; background: ${i ? 'transparent' : '#7A1E2B'}; color: #EFE9DC; font: inherit; font-size: 14px; letter-spacing: 0.1em; cursor: pointer">${esc(c)}</button>`).join('\n');
+const [first, ...rest] = posts;
+const featured = first ? `<a href="/journal/${first.slug}/" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; align-items: center">
+${eyecatch(first, '16 / 10')}
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 12px; letter-spacing: 0.3em; color: #C9AA6E">LATEST — No.${esc(first.no)}</span>
+<span style="font-size: 13px; color: #CFC8B8">${esc(first.category)} ／ ${fmtDate(first.date)} ／ 約${first.minutes}分で読めます</span>
+<span style="font-family: 'Shippori Mincho', serif; font-size: 34px; font-weight: 800; line-height: 1.5">${esc(first.title)}</span>
+<span style="font-size: 15px; line-height: 1.9; color: #CFC8B8">${esc(first.lead)}</span>
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 13px; letter-spacing: 0.25em; border-bottom: 1px solid #7A1E2B; align-self: flex-start; padding-bottom: 4px">READ →</span>
+</div>
+</a>` : `<div style="padding: 56px 0; border-top: 1px solid #3F5C52; border-bottom: 1px solid #3F5C52"><p style="margin: 0; font-family: 'Shippori Mincho', serif; font-size: 34px; font-weight: 800">ただいま発酵中…</p><p style="margin: 10px 0 0; color: #DCD4C0">次の記事を仕込んでいます。飲み頃まで、少々お待ちください。</p></div>`;
+const cards = rest.map((p) => `<a href="/journal/${p.slug}/" data-cat="${esc(p.category)}" style="display: flex; flex-direction: column; gap: 12px">
+${eyecatch(p, '16 / 10')}
+<span style="font-size: 12px; color: #CFC8B8; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span>
+<span style="font-family: 'Shippori Mincho', serif; font-size: 20px; font-weight: 600; line-height: 1.6">${esc(p.title)}</span>
+</a>`).join('\n');
+const filterJs = `<script>
+document.querySelectorAll('button[data-cat]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var c = b.getAttribute('data-cat');
+    document.querySelectorAll('button[data-cat]').forEach(function (x) { var on = x === b; x.style.background = on ? '#7A1E2B' : 'transparent'; x.style.borderColor = on ? '#7A1E2B' : '#3A3A3A'; });
+    document.querySelectorAll('a[data-cat]').forEach(function (a) { a.style.display = (c === 'すべて' || a.getAttribute('data-cat') === c) ? '' : 'none'; });
+  });
+});
+</script>`;
+write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POSTS: cards, SHOP_URL: esc(cfg.shopUrl) }).replace('</body>', filterJs + '\n</body>'));
+
+// ---------- 静的アセット ----------
+copyDir(path.join(ROOT, 'public'), DIST);
+console.log(`built: ${posts.length} articles -> dist/`);

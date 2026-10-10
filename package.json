@@ -1,0 +1,17 @@
+{
+  "name": "yagiri-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "npm run build && npx wrangler dev",
+    "deploy": "npm run build && npx wrangler deploy"
+  },
+  "dependencies": {
+    "gray-matter": "4.0.3",
+    "marked": "18.0.14"
+  },
+  "devDependencies": {
+    "wrangler": "4.141.0"
+  }
+}
