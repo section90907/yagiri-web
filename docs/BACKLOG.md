@@ -8,5 +8,7 @@
    - 済(既存素材): Y1・トップのYAGIRIYAタイル(外観)/ Y3(タップ)/ S2(渡辺・石田)/ S4(カウンター)/ トップのヒーロー背景(旧トップのイラスト。動画 MOVIE 01 ができるまでの仮)
    - 未: MOVIE 01、PHOTO 02、製品 03〜07、S1、S3、Y2(ハンバーグランチ)。外観・店内はハロウィン装飾の時期の写真なので、季節が変わったら撮り直し
 8. **OGP画像・favicon・sitemap.xml・robots.txt**
+   - 済: OGP画像(`public/images/og.png`。正式ロゴの暗い版)と `og:image` / `twitter:card`(醸造所の各ページ。URLは `site.config.json` の `siteUrl`)
+   - 未: favicon(正式ロゴには小さく使えるマークが無いので、決めてから)、sitemap.xml、robots.txt(workers.dev のうちは検索に載せない方が安全。ドメイン切り替えの直前に)、YAGIRIYA ページ用のOGP
 9. **読み物の運用開始** — 月次で `draft: true` の記事PRを作る
 10. **ドメイン切り替え**(完成後。BASE の独自ドメイン設定を外し、Cloudflare に付け替え)
