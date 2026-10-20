@@ -57,7 +57,8 @@ const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsW
   const { data, content } = matter(fs.readFileSync(path.join(JDIR, f), 'utf8'));
   const required = ['title', 'category', 'date', 'lead'];
   for (const k of required) if (!data[k]) throw new Error(`${f}: front matter "${k}" がありません`);
-  let html = marked.parse(content);
+  // 記事の中のメモ(<!-- ... -->)は、公開するHTMLに出さない
+  let html = marked.parse(content).replace(/<!--[\s\S]*?-->/g, '');
   const toc = [];
   let n = 0;
   html = html.replace(/<h2>(.*?)<\/h2>/g, (m, inner) => { n += 1; toc.push({ id: `s${n}`, text: inner.replace(/<[^>]+>/g, '') }); return `<h2 id="s${n}">${inner}</h2>`; });
