@@ -113,6 +113,13 @@ const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px s
 ${tap.sets.items.map((x) => `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span></span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`).join('\n')}
 <span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
 </div>`;
+// ビール診断用のデータ(味の目安 profile がある銘柄だけ。無い銘柄は診断の対象外にして、推測で入れない)
+const finderMissing = tap.items.filter((t) => !t.profile || !t.likes).map((t) => t.name);
+if (finderMissing.length) console.warn(`診断の対象外(profile か likes がない): ${finderMissing.join(', ')}`);
+const FINDER_DATA = JSON.stringify({
+  updated: tapDate, setPrice: tap.sets.price,
+  items: tap.items.filter((t) => t.profile && t.likes).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes })),
+}).replace(/</g, '\\u003c');
 const TAPLIST = `<p style="margin: 0 0 20px; font-size: 15px">${esc(tap.sizes)}</p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
 // ---------- 静的ページ ----------
@@ -128,7 +135,7 @@ for (const f of walk(PAGES)) {
   if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA });
   write(rel, html);
 }
 

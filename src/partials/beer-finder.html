@@ -1,0 +1,104 @@
+<section id="finder" aria-labelledby="finder-title" style="margin: 0 0 48px; padding: 32px 36px; background: #F4ECD9; color: #145E50; border: 3px double #145E50; font-family: 'Zen Maru Gothic', sans-serif">
+<span style="font-family: 'Alfa Slab One', serif; font-size: 15px; letter-spacing: 0.1em">BEER FINDER</span>
+<h3 id="finder-title" tabindex="-1" style="margin: 6px 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 30px; line-height: 1.3">はじめてさんの ビール選び</h3>
+<div id="finder-body" aria-live="polite">
+<p style="margin: 0 0 20px; font-size: 17px; line-height: 1.9">5つの質問に答えるだけ。いまのタップ(<span id="finder-date"></span> 現在)から、おすすめを選びます。</p>
+<button type="button" id="finder-start" style="min-height: 56px; padding: 0 32px; background: #145E50; color: #F4ECD9; border: 0; font: inherit; font-size: 18px; font-weight: 700; cursor: pointer">診断をはじめる →</button>
+</div>
+<p style="margin: 20px 0 0; font-size: 13px; line-height: 1.8">おすすめは、タップリストの味の目安をもとにした自動の目安です。お酒は20歳になってから。20歳未満の飲酒は法律で禁止されています。飲酒運転は法律で禁止されています。お酒は適量で。</p>
+<script type="application/json" id="finder-data">%%FINDER_DATA%%</script>
+<script>
+(function () {
+  var root = document.getElementById('finder');
+  if (!root) return;
+  var data = JSON.parse(document.getElementById('finder-data').textContent);
+  var body = document.getElementById('finder-body');
+  var title = document.getElementById('finder-title');
+  document.getElementById('finder-date').textContent = data.updated;
+
+  var Q = [
+    { key: 'mood', q: 'いまの気分は?', opts: [['refresh', 'スッキリしたい'], ['savor', 'ゆっくり味わいたい'], ['adventure', 'ちょっと冒険したい'], ['fun', '楽しく盛り上がりたい']] },
+    { key: 'purpose', q: 'どんな一杯がいい?', opts: [['thirst', 'のどを潤したい'], ['pair', '料理と合わせたい'], ['rich', 'しっかり飲みごたえがほしい'], ['light', '軽く一杯だけ']] },
+    { key: 'bitter', q: '苦いのは?', opts: [['low', '苦手'], ['mid', 'ふつう'], ['high', '好き']] },
+    { key: 'likes', q: '好きな味の方向は?', opts: [['classic', 'すっきり王道(ラガー・ピルスナー系)'], ['fruity', 'フルーティー・トロピカル'], ['roasty', '香ばしい・黒ビール系'], ['spicy', 'スパイス・ハーブ系'], ['hoppy', 'ホップの香りと苦味(IPA系)'], ['any', 'おまかせ・わからない']] },
+    { key: 'exp', q: 'ふだん、ビールは?', opts: [['rare', 'ほとんど飲まない'], ['some', 'ときどき飲む'], ['often', 'よく飲む']] }
+  ];
+
+  // 点数のつけ方は、味の目安(1〜5)と度数から。理由も一緒に集める。
+  function score(b, a) {
+    var p = b.profile, s = 0, why = [];
+    var crisp = ['のどごし', 'ドライ', 'クリア', 'ハーバル', '酸味'].indexOf(b.tag) >= 0;
+    var aroma = ['ダンク', '酸味', 'スパイシー', '香ばしさ'].indexOf(b.tag) >= 0;
+    var foody = ['スパイシー', 'ロースト', '香ばしさ', 'ドライ', 'ハーバル'].indexOf(b.tag) >= 0;
+    if (a.bitter === 'low') { s += 4 - Math.abs(p.bitter - 1) * 1.5; if (p.bitter >= 4) s -= 6; if (p.bitter <= 1) why.push('苦味がとてもやわらかい'); else if (p.bitter <= 2) why.push('苦味はひかえめ'); }
+    else if (a.bitter === 'mid') { s += 3 - Math.abs(p.bitter - 2.5); if (p.bitter >= 2 && p.bitter <= 3) why.push('苦味はほどほど'); }
+    else { s += 4 - Math.abs(p.bitter - 4.5) * 1.2; if (p.bitter >= 4) why.push('苦味がしっかり'); }
+    if (a.likes !== 'any' && b.likes.indexOf(a.likes) >= 0) { s += 4; why.push('選んだ味の方向(' + ({ classic: 'すっきり王道', fruity: 'フルーティー', roasty: '香ばしい・黒', spicy: 'スパイス・ハーブ', hoppy: 'ホップの香りと苦味' }[a.likes]) + ')に合う'); }
+    if (a.purpose === 'thirst') { s += (b.abv <= 5.5 ? 2 : 0) + (p.body <= 2 ? 2 : 0) - (b.abv >= 7 ? 12 : 0); if (b.abv <= 5.5 && p.body <= 2) why.push('度数' + b.abv.toFixed(1) + '%で軽く、のどを潤しやすい'); }
+    else if (a.purpose === 'pair') { s += (p.body >= 2 && p.body <= 3 ? 2 : 0) + (foody ? 1.5 : 0) + (/合い/.test(b.desc) ? 2 : 0); if (/合い/.test(b.desc)) why.push('料理に合わせやすい'); }
+    else if (a.purpose === 'rich') { s += (b.abv >= 6.5 ? 3 : 0) + (p.body >= 3 ? 2 : 0); if (b.abv >= 6.5 || p.body >= 3) why.push('飲みごたえがある(度数' + b.abv.toFixed(1) + '%)'); }
+    else { s += (b.abv <= 5.5 ? 3 : 0) - (b.abv >= 7 ? 12 : 0); if (b.abv <= 5.5) why.push('度数' + b.abv.toFixed(1) + '%で、軽く一杯に向く'); }
+    if (a.mood === 'refresh') { s += (p.body <= 2 ? 1.5 : 0) + (crisp ? 2 : 0); if (crisp) why.push('すっきりした飲み口'); }
+    else if (a.mood === 'savor') { s += (p.body >= 3 ? 2 : 0) + (b.abv >= 5.5 ? 1 : 0); if (p.body >= 3) why.push('コクがあり、ゆっくり味わえる'); }
+    else if (a.mood === 'adventure') { s += (aroma ? 2.5 : 0) + (p.special >= 5 ? 1.5 : 0); if (aroma || p.special >= 5) why.push('個性がはっきりしていて、冒険向き'); }
+    else { s += (p.fruity >= 4 ? 2.5 : 0) + (p.sweet >= 3 ? 1 : 0); if (p.fruity >= 4) why.push('フルーティーで気分が上がる'); }
+    if (a.exp === 'rare') { s -= (b.abv >= 7 ? 12 : 0) + (p.bitter >= 4 ? 4 : 0); s += (b.abv <= 5.5 ? 1.5 : 0); }
+    else if (a.exp === 'often') { s += (b.abv >= 6.5 ? 1 : 0); }
+    return { beer: b, score: s, why: why.slice(0, 3) };
+  }
+  function pick(a) {
+    return data.items.map(function (b) { return score(b, a); }).sort(function (x, y) { return y.score - x.score || x.beer.abv - y.beer.abv; });
+  }
+  window.yagiriFinder = { pick: pick, data: data };
+
+  function el(tag, style, text) { var e = document.createElement(tag); if (style) e.setAttribute('style', style); if (text != null) e.textContent = text; return e; }
+  function focusTitle() { title.focus(); }
+  var BTN = 'min-height: 56px; padding: 12px 20px; background: #FBF6EA; color: #145E50; border: 2px solid #145E50; font: inherit; font-size: 18px; font-weight: 700; text-align: left; cursor: pointer';
+  var answers = {}, step = 0;
+
+  function ask() {
+    body.textContent = '';
+    var q = Q[step];
+    body.appendChild(el('p', 'margin: 0 0 6px; font-size: 14px; font-weight: 700', '質問 ' + (step + 1) + ' / ' + Q.length));
+    body.appendChild(el('p', 'margin: 0 0 18px; font-size: 22px; font-weight: 700; line-height: 1.6', q.q));
+    var grid = el('div', 'display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 12px');
+    q.opts.forEach(function (o) {
+      var b = el('button', BTN, o[1]); b.type = 'button';
+      b.addEventListener('click', function () { answers[q.key] = o[0]; step++; if (step < Q.length) ask(); else show(); focusTitle(); });
+      grid.appendChild(b);
+    });
+    body.appendChild(grid);
+    var nav = el('div', 'margin-top: 18px; display: flex; gap: 16px');
+    if (step > 0) { var back = el('button', 'min-height: 44px; padding: 0 8px; background: none; border: 0; border-bottom: 2px solid #145E50; color: #145E50; font: inherit; font-size: 16px; cursor: pointer', '← ひとつ前へ'); back.type = 'button'; back.addEventListener('click', function () { step--; ask(); focusTitle(); }); nav.appendChild(back); }
+    body.appendChild(nav);
+  }
+  function yen(n) { return '¥' + Number(n).toLocaleString('en-US'); }
+  function card(r, big) {
+    var b = r.beer, c = el('div', 'padding: ' + (big ? '22px 24px' : '16px 18px') + '; background: ' + (big ? '#FFFFFF' : '#FBF6EA') + '; border: 2px solid #145E50; display: flex; flex-direction: column; gap: 8px');
+    var head = el('div', 'font-size: ' + (big ? '26px' : '19px') + '; font-weight: 700; line-height: 1.4', (b.no ? '【' + String(b.no).padStart(2, '0') + '】' : '') + b.name + (b.ruby ? '(' + b.ruby + ')' : ''));
+    c.appendChild(head);
+    c.appendChild(el('div', 'font-size: 15px', b.style + ' ／ ALC.' + b.abv.toFixed(1) + '%' + (b.brewery ? ' ／ ' + b.brewery : (b.original ? ' ／ オリジナル' : ''))));
+    c.appendChild(el('div', "font-family: 'Alfa Slab One', serif; font-size: 16px", 'レギュラー ' + yen(b.regular) + ' ／ ビッグ ' + yen(b.big)));
+    if (r.why.length) { var ul = el('ul', 'margin: 0; padding-left: 1.3em; font-size: 16px; line-height: 1.8'); r.why.forEach(function (w) { ul.appendChild(el('li', '', w)); }); c.appendChild(ul); }
+    if (big) c.appendChild(el('p', 'margin: 0; font-size: 15px; line-height: 1.9', b.desc));
+    return c;
+  }
+  function show() {
+    var list = pick(answers);
+    body.textContent = '';
+    title.textContent = 'あなたへのおすすめ';
+    body.appendChild(el('p', 'margin: 0 0 12px; font-size: 14px; font-weight: 700', 'いちばん合いそうな一杯'));
+    body.appendChild(card(list[0], true));
+    body.appendChild(el('p', 'margin: 22px 0 10px; font-size: 14px; font-weight: 700', 'こちらもどうぞ'));
+    var two = el('div', 'display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px');
+    two.appendChild(card(list[1], false)); two.appendChild(card(list[2], false));
+    body.appendChild(two);
+    body.appendChild(el('p', 'margin: 22px 0 0; font-size: 16px; line-height: 1.9', '決めきれないときは「飲み比べセット」(3種 × 各100mL ' + yen(data.setPrice) + ')もどうぞ。'));
+    var again = el('button', 'margin-top: 16px; ' + BTN, 'もう一度やる'); again.type = 'button';
+    again.addEventListener('click', function () { answers = {}; step = 0; title.textContent = 'はじめてさんの ビール選び'; ask(); focusTitle(); });
+    body.appendChild(again);
+  }
+  document.getElementById('finder-start').addEventListener('click', function () { answers = {}; step = 0; ask(); focusTitle(); });
+})();
+</script>
+</section>
