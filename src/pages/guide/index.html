@@ -331,101 +331,150 @@ a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
 <h2 style="margin: 8px 0 16px; font-family: 'Shippori Mincho', serif; font-size: 36px; font-weight: 800">用語集</h2>
 <p style="margin: 0 0 32px; font-size: 18px; line-height: 2; color: #DCD4C0">メニューやタップリストでよく見る言葉を、ひとことで。</p>
 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px">
-
-<a href="#" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #7A1E2B; background: #7A1E2B; font-size: 16px">すべて</a>
-
-<a href="#" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; font-size: 16px">味・香り</a>
-
-<a href="#" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; font-size: 16px">数値</a>
-
-<a href="#" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; font-size: 16px">つくり方</a>
-
-<a href="#" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; font-size: 16px">お店で</a>
-
+<button type="button" data-gtab="すべて" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #7A1E2B; background: #7A1E2B; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">すべて</button>
+<button type="button" data-gtab="スタイル" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">スタイル</button>
+<button type="button" data-gtab="味・香り" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">味・香り</button>
+<button type="button" data-gtab="数値" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">数値</button>
+<button type="button" data-gtab="つくり方" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">つくり方</button>
+<button type="button" data-gtab="お店で" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1px solid #3A3A3A; background: transparent; color: #EFE9DC; font: inherit; font-size: 16px; cursor: pointer">お店で</button>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px">
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="数値" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ABV</span><span style="font-size: 13px; color: #C9AA6E">数値</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">アルコール度数。5%前後が一般的。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="数値" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">IBU</span><span style="font-size: 13px; color: #C9AA6E">数値</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">苦味の単位。数字が大きいほど苦い(感じ方は甘みとのバランスでも変わる)。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">IPA</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">インディア・ペールエール。ホップの香りと苦味が主役。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ダブル(DIPA)</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">IPAを強化版にしたもの。アルコールもホップも多め。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="味・香り" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ヘイジー</span><span style="font-size: 13px; color: #C9AA6E">味・香り</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">濁った見た目のこと。ジューシーで口当たりがやわらかい。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="味・香り" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">セッション</span><span style="font-size: 13px; color: #C9AA6E">味・香り</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">アルコール低めで、何杯も飲みやすいビール。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ドライホップ</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">発酵中や発酵後にホップを加えて、苦味より香りを引き出す手法。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">エール/ラガー</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">酵母と発酵温度による2大系統。上の「スタイルとは」を参照。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">モルト</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">麦芽のこと。甘み・コク・色のもと。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="味・香り" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">サワー</span><span style="font-size: 13px; color: #C9AA6E">味・香り</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">乳酸菌などで酸味を出したビール。チューハイのサワーとは別物。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">バレルエイジド</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">ウイスキーやワインの樽で熟成させたビール。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">タップ</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">ビールを注ぐ注ぎ口。「◯タップ」は同時に出せる種類の数。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ケグ</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">ビールを詰めて運ぶ樽。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ゲストビール</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">自社以外の醸造所のビール。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">フライト</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">少量ずつ数種類を飲み比べるセット。</span>
 </div>
 
-<div style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">パイント</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">英米の液量単位。US 473ml、UK 568ml。</span>
 </div>
 
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ホップ</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">ビールの苦味と香りのもとになる植物。入れるタイミングで、苦味が強くなったり、香りが立ったりする。</span>
 </div>
+
+<div data-gcat="つくり方" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">酵母</span><span style="font-size: 13px; color: #C9AA6E">つくり方</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">麦汁の糖をアルコールと炭酸に変える微生物。種類によって、ビールの香りや味わいが大きく変わる。</span>
+</div>
+
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ペールエール</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">淡い色の麦芽とホップで造るエール。IPAのもとになったスタイルで、IPAよりおだやか。</span>
+</div>
+
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ピルスナー</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">チェコのピルゼン発祥の淡色ラガー。すっきりした飲み口と、ほどよい苦味。</span>
+</div>
+
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ヴァイツェン</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">小麦麦芽を使ったドイツ発祥のビール。バナナやクローブのような香りは酵母由来。</span>
+</div>
+
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">スタウト</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">焙煎した麦芽で黒く仕上げたエール。コーヒーやチョコレートのような香ばしさ。</span>
+</div>
+
+<div data-gcat="スタイル" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ゴーゼ</span><span style="font-size: 13px; color: #C9AA6E">スタイル</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">ドイツ発祥のサワービール。ほのかな塩味と酸味が特徴で、軽やかに飲める。</span>
+</div>
+
+<div data-gcat="味・香り" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">ボディ</span><span style="font-size: 13px; color: #C9AA6E">味・香り</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">口に含んだときの重さ・厚み。「ボディが軽い」はさらっと、「しっかり」はどっしり。</span>
+</div>
+
+<div data-gcat="お店で" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">樽生(ドラフト)</span><span style="font-size: 13px; color: #C9AA6E">お店で</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">樽から注いで出すビール。缶や瓶と違い、注ぎたてをその場で飲める。</span>
+</div>
+
+</div>
+<script>
+document.querySelectorAll('button[data-gtab]').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var c = b.getAttribute('data-gtab');
+    document.querySelectorAll('button[data-gtab]').forEach(function (x) { var on = x === b; x.style.background = on ? '#7A1E2B' : 'transparent'; x.style.borderColor = on ? '#7A1E2B' : '#3A3A3A'; });
+    document.querySelectorAll('[data-gcat]').forEach(function (d) { d.style.display = (c === 'すべて' || d.getAttribute('data-gcat') === c) ? '' : 'none'; });
+  });
+});
+</script>
 </section>
 
 <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr))">
