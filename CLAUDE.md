@@ -19,6 +19,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `src/partials/` 共通ヘッダー・フッター(`brewery-*` と `yagiriya-*` の2系統)。ページには `<!--include:brewery-header current=story-->` のように書く。ナビの `data-nav="キー"` が current と一致したリンクだけ強調される。トップの大きなフッターと404のヘッダーは意図的に独自
 - `src/templates/` 読み物の一覧(`journal-list.html`)・詳細(`article.html`)テンプレート
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
+- `content/taplist.json` YAGIRIYA の ON TAP(毎週入れ替わる。直すとビルドが欄を作る)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
 - `site.config.json` BASE ショップURLなど(`%%SHOP_URL%%` に差し込まれる)
 - `scripts/build.mjs` `dist/` を生成(依存は marked と gray-matter のみ。フレームワークは使わない方針)
@@ -28,7 +29,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 ## 守ること
 - デザインのルールは `docs/DESIGN.md`。特に **醸造所ページと YAGIRIYA ページのデザインを混ぜない**。
 - 事実(住所・営業時間・価格・ビール名など)は `docs/SITE_FACTS.md` を正とする。載っていない事実は推測で書かず、ユーザーに聞く。
-- `[ ]` の空欄はプレースホルダー。実データが来るまで消さない・でっち上げない。写真の枠は、素材が無い間「COMING SOON / 準備中」の表示にしてある(もとの撮影指示は `docs/PHOTO_SLOTS.md`)。素材が揃ったら `<img>` に差し替える。
+- `[ ]` の空欄はプレースホルダー。実データが来るまで消さない・でっち上げない。写真の枠は、素材が無い間は `hidden`(`data-pending="photo"`)で隠してある。消さない(もとの撮影指示は `docs/PHOTO_SLOTS.md`)。素材が揃ったら `<img>` に差し替えて、枠の `hidden` ごと外す。未記入の数値の行・新作バナー・FUTURE も同様に `data-pending` で隠してある(一覧は `docs/BACKLOG.md`)。FUTURE ページは `site.config.json` の `hiddenPages` で出力していない。
 - 読み物記事は `docs/ARTICLE_GUIDE.md` に従う。参考文献は実在を確認できたものだけ。出典を捏造しない。新規記事は必ず `draft: true`。
 - 外部スクリプトや外部画像を増やさない(Google Fonts は可)。サイトは静的のまま保つ。
 - タップ領域は 44px 以上、スマホ幅で横スクロールが出ないこと。

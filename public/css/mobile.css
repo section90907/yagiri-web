@@ -1,3 +1,7 @@
+/* 素材のない枠・未記入の行は hidden で隠している(data-pending)。揃ったら hidden を外す。
+   インラインの display に負けないよう !important */
+[hidden] { display: none !important; }
+
 /* スマホ幅の調整。ページの見た目はインラインstyleで書かれているので、
    ここでは !important で上書きしている(デスクトップ幅には一切効かない)。 */
 @media (max-width: 640px) {

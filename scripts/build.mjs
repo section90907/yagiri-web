@@ -70,6 +70,26 @@ const eyecatch = (p, ratio) => p.image
   ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
   : `<div style="aspect-ratio: ${ratio}; background: #161616; border: 1px solid #2E2E2E; display: flex; align-items: center; justify-content: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 16px; letter-spacing: 0.3em; color: #6E6A60">YAGIRI JOURNAL</div>`;
 
+// ---------- ON TAP(content/taplist.json から) ----------
+const tap = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/taplist.json'), 'utf8'));
+const yen = (n) => '¥' + Number(n).toLocaleString('en-US');
+const circled = (n) => String.fromCodePoint(0x2460 + n - 1); // ①〜⑩(10まで)
+const tapDate = tap.updated.replace(/-/g, '.');
+const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px solid #7FA89C; background: rgba(0, 0, 0, 0.12)">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">${t.no ? String(t.no).padStart(2, '0') : '─'}</span><span style="font-size: 14px; text-align: right">${t.original ? '<span style="background: #E3D3A8; color: #145E50; padding: 2px 10px; font-weight: 700">オリジナル</span>' : esc(t.brewery ?? '')}</span></div>
+<div><span style="font-size: 22px; font-weight: 700">${esc(t.name)}</span>${t.ruby ? ` <span style="font-size: 14px">${esc(t.ruby)}</span>` : ''}</div>
+<div style="font-size: 15px">${esc(t.style)} ／ ALC.${Number(t.abv).toFixed(1)}%</div>
+<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.9">${esc(t.desc)}</p>
+<div><span style="display: inline-block; border: 1px solid #E3D3A8; padding: 2px 12px; font-size: 14px">${esc(t.tag)}</span></div>
+</div>`).join('\n');
+const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px solid #E3D3A8; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px"><span style="font-family: 'Alfa Slab One', serif; font-size: 24px; color: #E3D3A8">${esc(tap.sets.title)}</span><span style="font-family: 'Alfa Slab One', serif; font-size: 22px">${yen(tap.sets.price)}</span><span style="font-size: 14px">${esc(tap.sets.size)}</span></div>
+${tap.sets.items.map((x) => `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span></span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`).join('\n')}
+<span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
+</div>`;
+const TAPLIST = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
+
 // ---------- 静的ページ ----------
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
@@ -79,9 +99,11 @@ const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style
 
 for (const f of walk(PAGES)) {
   const rel = path.relative(PAGES, f);
+  // まだ公開しないページ(site.config.json の hiddenPages)は出力しない。URLを直接開いても404になる
+  if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate });
   write(rel, html);
 }
 
