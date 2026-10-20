@@ -87,7 +87,7 @@ const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsW
   html = html.replace(/<h2>(.*?)<\/h2>/g, (m, inner) => { n += 1; toc.push({ id: `s${n}`, text: inner.replace(/<[^>]+>/g, '') }); return `<h2 id="s${n}">${inner}</h2>`; });
   const chars = content.replace(/\s/g, '').length;
   return { slug: f.replace(/\.md$/, ''), ...data, html, toc, minutes: Math.max(1, Math.round(chars / 500)) };
-}).filter((p) => !p.draft || STAGING).sort((a, b) => new Date(b.date) - new Date(a.date));
+}).filter((p) => !p.draft || STAGING).sort((a, b) => new Date(b.date) - new Date(a.date) || (b.seq ?? 0) - (a.seq ?? 0)); // 同じ日の記事は連載の順(seq)
 if (STAGING) posts.forEach((p) => { if (p.draft) p.title = `【下書き】${p.title}`; }); // 下書きは確認用でだけ見える
 posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0'); });
 
