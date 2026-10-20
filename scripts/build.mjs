@@ -79,6 +79,8 @@ const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style
 
 for (const f of walk(PAGES)) {
   const rel = path.relative(PAGES, f);
+  // まだ公開しないページ(site.config.json の hiddenPages)は出力しない。URLを直接開いても404になる
+  if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
   if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest });
