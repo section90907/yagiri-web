@@ -6,7 +6,7 @@
 6. **未来年表のデータ化** — `content/future.json` から年表を生成(内容は別スレッドで作成中のものを受け取る)
 7. **写真・動画の差し替え** — 点線枠を実素材に。画像は WebP、幅 1600px 以下。
    - 済(既存素材): Y1・トップのYAGIRIYAタイル(外観)/ Y3(タップ)/ S2(渡辺・石田)/ S4(カウンター)/ トップのヒーロー背景(旧トップのイラスト。動画 MOVIE 01 ができるまでの仮)
-   - 準備中の表示にした(素材待ち): MOVIE 01、PHOTO 02、製品 03〜07、S1、S3、Y2(ハンバーグランチ)。もとの撮影指示は `docs/PHOTO_SLOTS.md`。外観・店内はハロウィン装飾の時期の写真なので、季節が変わったら撮り直し
+   - 隠してある(素材待ち。`data-pending`): PHOTO 02、製品 03〜07、S3。MOVIE 01 はイラスト、S1 は背景なし、Y2 は店内の写真で仮もとの撮影指示は `docs/PHOTO_SLOTS.md`。外観・店内はハロウィン装飾の時期の写真なので、季節が変わったら撮り直し
 8. **OGP画像・favicon・sitemap.xml・robots.txt**
    - 済: OGP画像(`public/images/og.png`。正式ロゴの暗い版)と `og:image` / `twitter:card`(醸造所の各ページ。URLは `site.config.json` の `siteUrl`)
    - 未: favicon(正式ロゴには小さく使えるマークが無いので、決めてから)、sitemap.xml、robots.txt(workers.dev のうちは検索に載せない方が安全。ドメイン切り替えの直前に)、YAGIRIYA ページ用のOGP
