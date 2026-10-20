@@ -7,8 +7,11 @@ import { marked } from 'marked';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const DIST = path.join(ROOT, 'dist');
+// 確認用(staging)のビルド: 検索に載せず、画面の上に「確認用」と出す。公開用には一切入れない。
+const STAGING = process.argv.includes('--staging');
 fs.rmSync(DIST, { recursive: true, force: true });
 const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.config.json'), 'utf8'));
+if (STAGING) cfg.siteUrl = cfg.stagingUrl; // OGP などの絶対URLも確認用に向ける
 
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const fill = (tpl, map) => tpl.replace(/%%([A-Z_]+)%%/g, (m, k) => (k in map ? map[k] : m));
@@ -26,7 +29,12 @@ const include = (html, from) => html.replace(/<!--include:([\w-]+)(?: current=([
     return `<a ${attrs}${on ? ' style="color: #C9AA6E"' : ''}>${text}</a>`;
   });
 });
+const STAGING_BAR = '<div style="background: #7A1E2B; color: #FFFFFF; text-align: center; font-size: 14px; letter-spacing: 0.1em; padding: 8px 12px">確認用(非公開) ─ 公開前の確認ページです</div>';
+const forStaging = (html) => html
+  .replace('</head>', '<meta name="robots" content="noindex, nofollow">\n</head>')
+  .replace(/<body[^>]*>/, (m) => `${m}\n${STAGING_BAR}`);
 const write = (rel, html) => {
+  if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, html);
@@ -130,4 +138,9 @@ write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POST
 
 // ---------- 静的アセット ----------
 copyDir(path.join(ROOT, 'public'), DIST);
-console.log(`built: ${posts.length} articles -> dist/`);
+if (STAGING) {
+  // 二重の保険: ヘッダーと robots.txt でも検索に載せない
+  fs.writeFileSync(path.join(DIST, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
+  fs.writeFileSync(path.join(DIST, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+}
+console.log(`built${STAGING ? ' (staging)' : ''}: ${posts.length} articles -> dist/`);
