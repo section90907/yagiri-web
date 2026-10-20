@@ -63,7 +63,8 @@ const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsW
   html = html.replace(/<h2>(.*?)<\/h2>/g, (m, inner) => { n += 1; toc.push({ id: `s${n}`, text: inner.replace(/<[^>]+>/g, '') }); return `<h2 id="s${n}">${inner}</h2>`; });
   const chars = content.replace(/\s/g, '').length;
   return { slug: f.replace(/\.md$/, ''), ...data, html, toc, minutes: Math.max(1, Math.round(chars / 500)) };
-}).filter((p) => !p.draft).sort((a, b) => new Date(b.date) - new Date(a.date));
+}).filter((p) => !p.draft || STAGING).sort((a, b) => new Date(b.date) - new Date(a.date));
+if (STAGING) posts.forEach((p) => { if (p.draft) p.title = `【下書き】${p.title}`; }); // 下書きは確認用でだけ見える
 posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0'); });
 
 const eyecatch = (p, ratio) => p.image
@@ -88,7 +89,7 @@ const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px s
 ${tap.sets.items.map((x) => `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span></span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`).join('\n')}
 <span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
 </div>`;
-const TAPLIST = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
+const TAPLIST = `<p style="margin: 0 0 20px; font-size: 15px">${esc(tap.sizes)}</p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
 // ---------- 静的ページ ----------
 const PAGES = path.join(ROOT, 'src/pages');
