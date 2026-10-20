@@ -23,6 +23,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
 - `site.config.json` BASE ショップURLなど(`%%SHOP_URL%%` に差し込まれる)
 - `scripts/build.mjs` `dist/` を生成(依存は marked と gray-matter のみ。フレームワークは使わない方針)
+  - 全ページ(404を除く)の右下に「上に戻る」ボタンを、ビルドで差し込む(`toTop`。YAGIRIYA は緑、それ以外はえんじ。240px 以上スクロールすると出る)
 - `npm install` → `npm run build` → `npm run preview`(wrangler dev でローカル確認)
 - コミット前に必ず `npm run build` が通ることを確認する。
 
