@@ -6,5 +6,7 @@
 6. **未来年表のデータ化** — `content/future.json` から年表を生成(内容は別スレッドで作成中のものを受け取る)
 7. **写真・動画の差し替え** — 点線枠を実素材に。画像は WebP、幅 1600px 以下
 8. **OGP画像・favicon・sitemap.xml・robots.txt**
+   - 済: OGP画像(`public/images/og.png`。正式ロゴの暗い版)と `og:image` / `twitter:card`(醸造所の各ページ。URLは `site.config.json` の `siteUrl`)
+   - 未: favicon(正式ロゴには小さく使えるマークが無いので、決めてから)、sitemap.xml、robots.txt(workers.dev のうちは検索に載せない方が安全。ドメイン切り替えの直前に)、YAGIRIYA ページ用のOGP
 9. **読み物の運用開始** — 月次で `draft: true` の記事PRを作る
 10. **ドメイン切り替え**(完成後。BASE の独自ドメイン設定を外し、Cloudflare に付け替え)

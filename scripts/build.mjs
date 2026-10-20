@@ -73,7 +73,7 @@ for (const f of walk(PAGES)) {
   const rel = path.relative(PAGES, f);
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), LATEST: latest });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest });
   write(rel, html);
 }
 
@@ -92,7 +92,7 @@ posts.forEach((p, i) => {
     POINT: (p.point ?? []).map(esc).join('<br>'),
     BODY: p.html,
     PREV: navLink(posts[i + 1], 'prev'), NEXT: navLink(posts[i - 1], 'next'),
-    SHOP_URL: esc(cfg.shopUrl),
+    SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl),
   });
   write(`journal/${p.slug}/index.html`, html);
 });
@@ -126,7 +126,7 @@ document.querySelectorAll('button[data-cat]').forEach(function (b) {
   });
 });
 </script>`;
-write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POSTS: cards, SHOP_URL: esc(cfg.shopUrl) }).replace('</body>', filterJs + '\n</body>'));
+write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POSTS: cards, SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }).replace('</body>', filterJs + '\n</body>'));
 
 // ---------- 静的アセット ----------
 copyDir(path.join(ROOT, 'public'), DIST);
