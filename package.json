@@ -5,7 +5,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "preview": "npm run build && npx wrangler dev",
-    "deploy": "npm run build && npx wrangler deploy"
+    "deploy": "npm run build && npx wrangler deploy",
+    "build:staging": "node scripts/build.mjs --staging",
+    "preview:staging": "npm run build:staging && npx wrangler dev --env staging"
   },
   "dependencies": {
     "gray-matter": "4.0.3",
