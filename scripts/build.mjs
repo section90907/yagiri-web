@@ -33,7 +33,30 @@ const STAGING_BAR = '<div style="background: #7A1E2B; color: #FFFFFF; text-align
 const forStaging = (html) => html
   .replace('</head>', '<meta name="robots" content="noindex, nofollow">\n</head>')
   .replace(/<body[^>]*>/, (m) => `${m}\n${STAGING_BAR}`);
+// ---------- 「上に戻る」ボタン ----------
+// 縦に長いページ用。少し下へスクロールすると右下に出る。YAGIRIYA ページだけ配色を変える(デザインを混ぜない)。
+const toTop = (yagiriya) => `<style>
+#to-top{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:60;width:48px;height:48px;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s;${yagiriya ? 'background:#145E50;border:2px solid #F4ECD9;color:#F4ECD9' : 'background:rgba(122,30,43,.94);border:1px solid #C9AA6E;color:#FFFFFF'}}
+#to-top.on{opacity:1;pointer-events:auto}
+#to-top:focus-visible{outline:2px solid #C9AA6E;outline-offset:2px}
+@media print{#to-top{display:none}}
+</style>
+<button type="button" id="to-top" aria-label="ページの先頭へ"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M4 9l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+<script>
+(function () {
+  var b = document.getElementById('to-top');
+  if (!b) return;
+  function sync() { b.classList.toggle('on', window.scrollY > 240); }
+  window.addEventListener('scroll', sync, { passive: true });
+  sync();
+  b.addEventListener('click', function () {
+    var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+})();
+</script>`;
 const write = (rel, html) => {
+  if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(rel.startsWith('yagiriya'))}\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
