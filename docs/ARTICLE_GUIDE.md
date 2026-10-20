@@ -14,6 +14,7 @@
 | lead | ○ | 80〜120字。一覧・meta descriptionに使用 |
 | point | | 要点3行(配列) |
 | image | | アイキャッチ。`public/images/journal/` に置き `/images/journal/xxx.jpg` で指定 |
+| seq | | 連載の順番(同じ日付の記事を、新しい順に並べるのに使う) |
 | draft | | true の間は公開されない |
 
 ## 本文ルール
