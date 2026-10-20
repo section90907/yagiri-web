@@ -15,4 +15,3 @@
 
 ## 隠してあるもの(`data-pending`。揃ったら `hidden` を外す。`grep -rn data-pending src`)
 - `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `spec`: 製品の ABV・IBU の行 / `release`: NEW RELEASE のバナー / `future`: FUTURE のナビとトップの欄
-- リンク先が `#` のまま: トップの ONLINE SHOP タイル・フッターの Instagram とメール・STORY の2か所・メニューPDF・404

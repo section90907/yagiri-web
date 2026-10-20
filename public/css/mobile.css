@@ -2,6 +2,10 @@
    インラインの display に負けないよう !important */
 [hidden] { display: none !important; }
 
+/* ページ内リンク(目次など)はなめらかに移動する。動きを減らす設定の人には効かせない */
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+[id] { scroll-margin-top: 16px; }
+
 /* スマホ幅の調整。ページの見た目はインラインstyleで書かれているので、
    ここでは !important で上書きしている(デスクトップ幅には一切効かない)。 */
 @media (max-width: 640px) {
