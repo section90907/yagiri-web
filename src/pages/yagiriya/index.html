@@ -45,7 +45,7 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
-<section style="background: #FBF6EA; border-top: 3px double #145E50; border-bottom: 3px double #145E50; padding: 96px 48px">
+<section id="food" style="background: #FBF6EA; border-top: 3px double #145E50; border-bottom: 3px double #145E50; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <h2 style="margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; color: #145E50; text-align: center">FOOD</h2>
 <p style="margin: 0 0 56px; text-align: center; font-size: 16px">価格はすべて税込</p>
@@ -291,7 +291,7 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
-<section style="padding: 96px 48px">
+<section id="drink" style="padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <h2 style="margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; color: #145E50; text-align: center">DRINK</h2>
 <p style="margin: 0 0 56px; text-align: center; font-size: 16px">価格はすべて税込</p>
@@ -303,30 +303,12 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 
 <div>
 <h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">CRAFT BEER</h3>
-
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
-<span style="font-size: 18px; font-weight: 700">100ml</span>
+<span style="font-size: 18px; font-weight: 700">飲み比べセット(3種×各100mL)</span>
 <span style="flex: 1"></span>
-<span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥400</span>
+<span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥1,000</span>
 </div>
-
-<div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
-<span style="font-size: 18px; font-weight: 700">200ml</span>
-<span style="flex: 1"></span>
-<span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥600</span>
-</div>
-
-<div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
-<span style="font-size: 18px; font-weight: 700">300ml</span>
-<span style="flex: 1"></span>
-<span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥800</span>
-</div>
-
-<div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
-<span style="font-size: 18px; font-weight: 700">熟成シリーズは各サイズ</span>
-<span style="flex: 1"></span>
-<span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">+¥200</span>
-</div>
+<p style="margin: 12px 0 0; font-size: 15px; line-height: 1.8">レギュラー/ビッグの価格は銘柄ごとに異なります。<a href="#ontap" style="border-bottom: 1px solid #145E50">ON TAP をご覧ください →</a></p>
 
 </div>
 
@@ -805,49 +787,17 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
-<section style="background: #145E50; color: #F4ECD9; padding: 96px 48px">
+<section id="ontap" style="background: #145E50; color: #F4ECD9; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 40px">
 <h2 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; letter-spacing: 0.04em">ON TAP</h2>
-<span style="font-size: 16px">本日のラインナップは Instagram @yagiribrewery で</span>
+<span style="font-size: 16px">%%TAPLIST_DATE%% 現在 ／ 最新のラインナップは Instagram @yagiribrewery で</span>
 </div>
-<div hidden data-pending="tap" style="display: flex; flex-direction: column; border-top: 2px solid #F4ECD9">
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">01</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">02</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">03</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">04</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">05</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-<div style="display: grid; grid-template-columns: 64px 1fr; gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px dashed #7FA89C">
-<span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">06</span>
-<span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 20px; font-weight: 700">[銘柄名]</span><span style="font-size: 15px">[醸造所] ／ [スタイル] ／ ABV [ ]%</span></span>
-</div>
-
-</div>
+%%TAPLIST%%
 </div>
 </section>
 
-<section style="background: #E9DEC4; padding: 96px 48px">
+<section id="access" style="background: #E9DEC4; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; align-items: start">
 <div style="display: flex; flex-direction: column; gap: 14px; font-size: 18px; line-height: 1.9">
 <h2 style="margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 48px; color: #145E50">ACCESS</h2>
@@ -862,7 +812,7 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
-<section style="max-width: 1184px; margin: 0 auto; padding: 96px 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 40px">
+<section id="recruit" style="max-width: 1184px; margin: 0 auto; padding: 96px 48px; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 40px">
 <div style="background: #145E50; color: #F4ECD9; padding: 44px; display: flex; flex-direction: column; gap: 12px">
 <span style="font-family: 'Alfa Slab One', serif; font-size: 16px; letter-spacing: 0.2em; color: #E3D3A8">COMING SOON</span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 40px; line-height: 1.1">2nd Store</span>
