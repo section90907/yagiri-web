@@ -15,3 +15,6 @@
 
 ## 隠してあるもの(`data-pending`。揃ったら `hidden` を外す。`grep -rn data-pending src`)
 - `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `spec`: 製品の ABV・IBU の行 / `release`: NEW RELEASE のバナー / `future`: FUTURE のナビとトップの欄
+
+## PRODUCT(ビールのスペックとアーカイブ)
+- 仕組みは作成済み(`docs/BEER_ARCHIVE.md`)。**データ待ち**: 銘柄ごとの スタイル / ABV / IBU / OG / FG / ホップ / モルト / 酵母 を `content/beers.json` に入れる。CANVAS=CANVASX2、SUNPARADE D.P.=SUNPARADEANNIN、PEETAIPA は OEM のため除外。
