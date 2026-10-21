@@ -33,3 +33,4 @@
 - 1994年の規制緩和で、ビールの年間最低製造量が 2,000kL → 60kL に
 - パイント: US 473ml / UK 568ml(ハーフ US 237ml / UK 284ml)
 - クラウドファンディング: 「復活クラウドファンディング」。リンク先は `site.config.json` の `fundUrl`(https://fund.yagiribrewery.com/ 。DNS の Worker `yagiri-fund`)。期間・目標金額などの数字は、サイトには書いていない(ユーザーに確認してから)。導線は、両ヘッダーの「応援する」、醸造所トップとYAGIRIYAページの帯、両フッター、STORY の見学の注記。
+- クラウドファンディングの期限: **2026年11月3日まで**(`site.config.json` の `fundEnd`)。期限の翌日から、導線(`data-fund` の付いた要素)は自動で隠れる。**11月4日以降に、HTMLから導線そのものを外す**(ヘッダー・フッターの partial、トップ・YAGIRIYA の帯、/tap/ の05、STORY の注記と SITE_FACTS の見学の注記)。
