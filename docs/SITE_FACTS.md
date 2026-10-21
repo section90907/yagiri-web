@@ -9,7 +9,7 @@
 - BASE ショップURL: https://www.yagiribrewery.com/items/all(`site.config.json` の `shopUrl`)
 
 ## 製品(定番・掲載中)
-日常IPA(American IPA)/ CANVAS(Hazy IPA)/ Merckx(Dark Belgian)/ Sunparede(Gose)/ Hinmmel(Lager)
+日常IPA(American IPA)/ CANVAS(Hazy IPA)/ Merckx(Dark Belgian)/ Sunparede(Gose)/ Himmel(Lager)
 - ABV・IBU などのスペックは未記入(ユーザーに確認)
 
 ## YAGIRIYA
