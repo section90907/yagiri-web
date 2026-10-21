@@ -55,7 +55,15 @@ const toTop = (yagiriya) => `<style>
   });
 })();
 </script>`;
+const SHOP_ORIGIN = new URL(cfg.shopUrl).origin; // 特商法・プライバシーのリンクの元(ショップのドメイン)
+const OUT_PAGES = []; // sitemap 用(出力した公開ページ)
 const write = (rel, html) => {
+  html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN);
+  if (rel.endsWith('.html') && rel !== '404.html') {
+    OUT_PAGES.push(rel);
+    // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
+    if (!STAGING) html = html.replace('</head>', `<link rel="canonical" href="${cfg.siteUrl}/${rel.replace(/index\.html$/, '')}">\n</head>`);
+  }
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(rel.startsWith('yagiriya'))}\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
@@ -197,6 +205,15 @@ write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POST
 
 // ---------- 静的アセット ----------
 copyDir(path.join(ROOT, 'public'), DIST);
+// 旧BASEのURL(www.〜/items/… など)を、ショップの新しいドメインへ転送する(検索結果・SNS・ブックマーク対策)
+fs.writeFileSync(path.join(DIST, '_redirects'), (cfg.baseRedirectPaths ?? []).flatMap((p) => p.endsWith('/*')
+  ? [`${p} ${SHOP_ORIGIN}${p.replace('/*', '/:splat')} 301`]
+  : [`${p} ${SHOP_ORIGIN}${p} 301`, `${p}/ ${SHOP_ORIGIN}${p} 301`]).join('\n') + '\n');
+if (!STAGING) {
+  // 公開用: 検索に載せる。sitemap.xml を出す
+  fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${cfg.siteUrl}/sitemap.xml\n`);
+  fs.writeFileSync(path.join(DIST, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${OUT_PAGES.sort().map((r) => `<url><loc>${cfg.siteUrl}/${r.replace(/index\.html$/, '')}</loc></url>`).join('\n')}\n</urlset>\n`);
+}
 if (STAGING) {
   // 二重の保険: ヘッダーと robots.txt でも検索に載せない
   fs.writeFileSync(path.join(DIST, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
