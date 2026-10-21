@@ -1,5 +1,7 @@
 # 独自ドメインの切り替え手順(www.yagiribrewery.com)
 
+**状態: 切り替え完了(2026-10-21)。** www・裸ドメイン→www の転送・shop(BASE)・メールの送受信を確認済み。以下は記録と、残りの任意作業。
+
 **ゴール**: `www.yagiribrewery.com` を新サイト(Cloudflare)にし、BASE のショップは `shop.yagiribrewery.com` へ引っ越す。
 メール(`craftbeeraddict@yagiribrewery.com`)は止めない。
 
