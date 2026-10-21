@@ -86,6 +86,7 @@ const ALL_PRODUCTS_HREF = beers.length ? '/beer/' : cfg.shopUrl;
 const isYagiriya = (rel) => rel.startsWith('yagiriya') || rel.startsWith('tap/');
 const write = (rel, html) => {
   html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
+    .replace(/%%FUND_URL%%/g, cfg.fundUrl)
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
   if (rel.endsWith('.html') && rel !== '404.html') {
