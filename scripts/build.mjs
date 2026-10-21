@@ -57,8 +57,26 @@ const toTop = (yagiriya) => `<style>
 </script>`;
 const SHOP_ORIGIN = new URL(cfg.shopUrl).origin; // 特商法・プライバシーのリンクの元(ショップのドメイン)
 const OUT_PAGES = []; // sitemap 用(出力した公開ページ)
+// ---------- ビール(銘柄)の一覧と詳細 ----------
+// content/beers.json から作る。1銘柄=1ページ(版や仕込み回が違っても同じ銘柄は1つにまとめて載せる)。
+// ファイルが無い・空のときは /beer/ を出さず、PRODUCT は従来どおりトップの該当欄へ向ける。
+const BEER_FILE = path.join(ROOT, 'content/beers.json');
+const rawBeers = fs.existsSync(BEER_FILE) ? JSON.parse(fs.readFileSync(BEER_FILE, 'utf8')).beers ?? [] : [];
+const beerSlugs = new Set();
+const beers = rawBeers.map((b, i) => {
+  for (const k of ['slug', 'name', 'style', 'status']) if (!b[k]) throw new Error(`content/beers.json の ${i + 1} 件目: "${k}" がありません`);
+  if (!/^[a-z0-9-]+$/.test(b.slug)) throw new Error(`content/beers.json: slug は半角英小文字・数字・ハイフンだけ(${b.slug})`);
+  if (beerSlugs.has(b.slug)) throw new Error(`content/beers.json: slug が重複しています(${b.slug})`);
+  beerSlugs.add(b.slug);
+  if (!['current', 'retired'].includes(b.status)) throw new Error(`content/beers.json: ${b.slug} の status は current か retired`);
+  // 数字は、無いものは載せない(0 として出さない)。入っているなら数として読めること
+  for (const k of ['abv', 'ibu', 'og', 'fg']) if (b[k] != null && !Number.isFinite(Number(b[k]))) throw new Error(`content/beers.json: ${b.slug} の ${k} が数ではありません`);
+  return b;
+}).filter((b) => !b.draft || STAGING);
+const PRODUCT_HREF = beers.length ? '/beer/' : '/#product';
+const ALL_PRODUCTS_HREF = beers.length ? '/beer/' : cfg.shopUrl;
 const write = (rel, html) => {
-  html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN);
+  html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF);
   if (rel.endsWith('.html') && rel !== '404.html') {
     OUT_PAGES.push(rel);
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
@@ -203,6 +221,110 @@ document.querySelectorAll('button[data-cat]').forEach(function (b) {
 </script>`;
 write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POSTS: cards, SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }).replace('</body>', filterJs + '\n</body>'));
 
+
+// ---------- ビールの一覧・詳細ページ ----------
+if (beers.length) {
+  const labelOf = { current: '販売中', retired: '終売(アーカイブ)' };
+  const stat = (b) => [b.abv != null ? `ABV ${Number(b.abv).toFixed(1)}%` : '', b.ibu != null ? `IBU ${Number(b.ibu)}` : ''].filter(Boolean).join(' ／ ');
+  const badge = (b) => `<span style="display: inline-block; border: 1px solid ${b.status === 'current' ? '#C9AA6E' : '#4A4A4A'}; color: ${b.status === 'current' ? '#C9AA6E' : '#BDB7A9'}; padding: 2px 12px; font-size: 14px; letter-spacing: 0.1em">${labelOf[b.status]}</span>`;
+  const head = (title, desc) => `<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(desc)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:image" content="%%SITE_URL%%/images/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+body{margin:0;background:#0B0B0B}
+a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
+</style>
+<style>*,*::before,*::after{box-sizing:border-box} img{max-width:100%}</style>
+<link rel="stylesheet" href="/css/mobile.css">
+</head>
+<body>
+<div style="background: #0B0B0B; color: #EFE9DC; font-family: 'Zen Kaku Gothic New', sans-serif; width: 100%">
+<!--include:brewery-header current=beer-->
+`;
+  const foot = `
+<!--include:brewery-footer-->
+</div>
+</body>
+</html>
+`;
+  const ordered = [...beers.filter((b) => b.status === 'current'), ...beers.filter((b) => b.status === 'retired')];
+  const card = (b) => `<a href="/beer/${b.slug}/" style="display: flex; flex-direction: column; gap: 10px; padding: 24px 26px; border: 1px solid #2E2E2E; background: #121212; min-height: 44px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.22em; color: #C9AA6E">${esc(b.style)}</span>
+<span style="font-family: Cinzel, 'Shippori Mincho', serif; font-size: 26px; letter-spacing: 0.04em">${esc(b.name)}</span>
+<span style="font-size: 15px; color: #CFC8B8; letter-spacing: 0.08em">${esc(stat(b))}</span>
+<span>${badge(b)}</span>
+</a>`;
+  const group = (title, sub, list) => list.length ? `<section style="max-width: 1168px; margin: 0 auto; padding: 24px 56px 56px">
+<div style="display: flex; align-items: baseline; gap: 16px; margin-bottom: 28px; border-bottom: 1px solid #262626; padding-bottom: 14px"><h2 style="margin: 0; font-family: Cinzel, 'Times New Roman', serif; font-weight: 400; font-size: 28px; letter-spacing: 0.12em">${title}</h2><span style="font-family: 'Shippori Mincho', serif; font-size: 16px; color: #CFC8B8; letter-spacing: 0.2em">${sub}</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px">
+${list.map(card).join('\n')}
+</div>
+</section>` : '';
+  const notice = `<p style="margin: 0; font-size: 14px; color: #BDB7A9; line-height: 1.9">お酒は20歳になってから。20歳未満の方の飲酒は法律で禁止されています。</p>`;
+  const indexHtml = head('PRODUCT ビール一覧 | 矢切ブルワリー', '矢切ブルワリーがこれまでに造ったビールの一覧。スタイル、ABV、IBU、使ったホップ・モルト・酵母を銘柄ごとに掲載しています。') + `
+<section style="max-width: 1168px; margin: 0 auto; padding: 96px 56px 40px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 17px; letter-spacing: 0.3em; color: #C9AA6E">II.</span>
+<h1 style="margin: 12px 0 8px; font-family: Cinzel, 'Times New Roman', serif; font-weight: 400; font-size: 88px; line-height: 1; letter-spacing: 0.04em">Our Product</h1>
+<p style="margin: 0; font-family: 'Shippori Mincho', serif; font-size: 18px; letter-spacing: 0.2em; color: #DCD4C0">泡製品 ─ これまでに造った、すべてのビール。</p>
+<p style="margin: 28px 0 0; max-width: 720px; font-size: 17px; line-height: 2; color: #CFC8B8">同じ銘柄は、仕込みを重ねても1ページにまとめています。いま買えるものは「販売中」、過去に造ったものは「終売」としてアーカイブに残しています。</p>
+</section>
+${group('NOW ON SALE', '販売中', ordered.filter((b) => b.status === 'current'))}
+${group('ARCHIVE', '終売・過去の銘柄', ordered.filter((b) => b.status === 'retired'))}
+<section style="max-width: 1168px; margin: 0 auto; padding: 0 56px 96px; display: flex; flex-direction: column; gap: 24px">
+<a href="%%SHOP_URL%%" style="align-self: flex-start; background: #7A1E2B; color: #FFFFFF; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em">SHOP で買う ↗</a>
+${notice}
+</section>` + foot;
+  write('beer/index.html', include(fill(indexHtml, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }), 'beer/index.html'));
+
+  const list = (arr) => (arr ?? []).map(esc).join('、');
+  for (const b of ordered) {
+    const rows = [
+      ['STYLE', esc(b.style)],
+      ['ABV', b.abv != null ? `${Number(b.abv).toFixed(1)}%` : ''],
+      ['IBU', b.ibu != null ? String(Number(b.ibu)) : ''],
+      ['OG', b.og != null ? Number(b.og).toFixed(3) : ''],
+      ['FG', b.fg != null ? Number(b.fg).toFixed(3) : ''],
+      ['HOPS', list(b.hops)],
+      ['MALTS', list(b.malts)],
+      ['YEAST', list(b.yeast)],
+    ].filter(([, v]) => v);
+    const desc = `${b.name}(${b.style})。${stat(b) ? stat(b) + '。' : ''}矢切ブルワリーのビール。`;
+    const buy = b.status === 'current'
+      ? `<a href="${esc(b.shop_url ?? cfg.shopUrl)}" style="align-self: flex-start; background: #7A1E2B; color: #FFFFFF; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em">SHOP で買う ↗</a>`
+      : `<p style="margin: 0; font-size: 16px; color: #CFC8B8; line-height: 1.9">この銘柄は終売です。記録としてスペックを残しています。</p>`;
+    const html = head(`${b.name} | PRODUCT | 矢切ブルワリー`, desc) + `
+<article style="max-width: 1168px; margin: 0 auto; padding: 64px 56px 96px">
+<nav aria-label="パンくず" style="font-size: 15px; color: #BDB7A9; display: flex; gap: 10px; flex-wrap: wrap"><a href="/">TOP</a><span>/</span><a href="/beer/">PRODUCT</a><span>/</span><span>${esc(b.name)}</span></nav>
+<div style="max-width: 820px; margin: 48px 0 40px; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.3em; color: #C9AA6E">${esc(b.style)}</span>
+<h1 style="margin: 0; font-family: Cinzel, 'Shippori Mincho', serif; font-weight: 400; font-size: 56px; line-height: 1.2; letter-spacing: 0.04em">${esc(b.name)}</h1>
+${b.ruby ? `<span style="font-size: 16px; color: #CFC8B8; letter-spacing: 0.1em">${esc(b.ruby)}</span>` : ''}
+<span>${badge(b)}</span>
+${b.first ? `<span style="font-size: 15px; color: #CFC8B8">初めて仕込んだ年: ${esc(b.first)}</span>` : ''}
+</div>
+${b.desc ? `<p style="max-width: 720px; margin: 0 0 48px; font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 2.1; color: #E6E0D2">${esc(b.desc)}</p>` : ''}
+<div style="max-width: 720px; border-top: 1px solid #C9AA6E; margin-bottom: 48px">
+${rows.map(([k, v]) => `<div style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid #262626"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em; color: #C9AA6E">${k}</span><span style="font-size: 18px; line-height: 1.8">${v}</span></div>`).join('\n')}
+</div>
+<div style="display: flex; flex-direction: column; gap: 24px; max-width: 720px">
+${buy}
+${notice}
+<a href="/beer/" style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em; min-height: 44px; display: inline-flex; align-items: center">← ビール一覧へ</a>
+</div>
+</article>` + foot;
+    write(`beer/${b.slug}/index.html`, include(fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }), `beer/${b.slug}`));
+  }
+}
+
 // ---------- 静的アセット ----------
 copyDir(path.join(ROOT, 'public'), DIST);
 // 旧BASEのURL(www.〜/items/… など)を、ショップの新しいドメインへ転送する(検索結果・SNS・ブックマーク対策)
@@ -219,4 +341,4 @@ if (STAGING) {
   fs.writeFileSync(path.join(DIST, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
   fs.writeFileSync(path.join(DIST, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 }
-console.log(`built${STAGING ? ' (staging)' : ''}: ${posts.length} articles -> dist/`);
+console.log(`built${STAGING ? ' (staging)' : ''}: ${posts.length} articles, ${beers.length} beers -> dist/`);
