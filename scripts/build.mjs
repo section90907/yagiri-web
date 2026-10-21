@@ -61,7 +61,11 @@ const OUT_PAGES = []; // sitemap 用(出力した公開ページ)
 // content/beers.json から作る。1銘柄=1ページ(版や仕込み回が違っても同じ銘柄は1つにまとめて載せる)。
 // ファイルが無い・空のときは /beer/ を出さず、PRODUCT は従来どおりトップの該当欄へ向ける。
 const BEER_FILE = path.join(ROOT, 'content/beers.json');
-const rawBeers = fs.existsSync(BEER_FILE) ? JSON.parse(fs.readFileSync(BEER_FILE, 'utf8')).beers ?? [] : [];
+const beerData = fs.existsSync(BEER_FILE) ? JSON.parse(fs.readFileSync(BEER_FILE, 'utf8')) : {};
+const rawBeers = beerData.beers ?? [];
+// ショップで売っていない間(全銘柄が売り切れのとき)は shopOpen:false。「販売中」「買う」と出さない(買えないのに買えると見せない)
+const SHOP_OPEN = beerData.shopOpen !== false;
+const INSTAGRAM_URL = 'https://www.instagram.com/yagiribrewery';
 const beerSlugs = new Set();
 const beers = rawBeers.map((b, i) => {
   for (const k of ['slug', 'name', 'style', 'status']) if (!b[k]) throw new Error(`content/beers.json の ${i + 1} 件目: "${k}" がありません`);
@@ -229,7 +233,7 @@ write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POST
 
 // ---------- ビールの一覧・詳細ページ ----------
 if (beers.length) {
-  const labelOf = { current: '販売中', retired: '終売(アーカイブ)' };
+  const labelOf = { current: SHOP_OPEN ? '販売中' : 'ただいま売り切れ', retired: '終売(アーカイブ)' };
   const stat = (b) => [b.abv != null ? `ABV ${Number(b.abv).toFixed(1)}%` : '', b.ibu != null ? `IBU ${Number(b.ibu)}` : ''].filter(Boolean).join(' ／ ');
   const badge = (b) => `<span style="display: inline-block; border: 1px solid ${b.status === 'current' ? '#C9AA6E' : '#4A4A4A'}; color: ${b.status === 'current' ? '#C9AA6E' : '#BDB7A9'}; padding: 2px 12px; font-size: 14px; letter-spacing: 0.1em">${labelOf[b.status]}</span>`;
   const head = (title, desc) => `<!doctype html>
@@ -274,18 +278,19 @@ a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
 ${list.map(card).join('\n')}
 </div>
 </section>` : '';
+  const soldOutNote = `<div style="display: flex; flex-direction: column; gap: 16px; align-items: flex-start"><p style="margin: 0; font-size: 17px; line-height: 2; color: #E6E0D2">ただいま、すべての銘柄が売り切れです。再販や新作は、Instagram でお知らせします。</p><a href="${INSTAGRAM_URL}" style="border: 1px solid #C9AA6E; color: #C9AA6E; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.2em">INSTAGRAM ↗</a></div>`;
   const notice = `<p style="margin: 0; font-size: 14px; color: #BDB7A9; line-height: 1.9">お酒は20歳になってから。20歳未満の方の飲酒は法律で禁止されています。</p>`;
   const indexHtml = head('PRODUCT ビール一覧 | 矢切ブルワリー', '矢切ブルワリーがこれまでに造ったビールの一覧。スタイル、ABV、IBU、使ったホップ・モルト・酵母を銘柄ごとに掲載しています。') + `
 <section style="max-width: 1168px; margin: 0 auto; padding: 96px 56px 40px">
 <span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 17px; letter-spacing: 0.3em; color: #C9AA6E">II.</span>
 <h1 style="margin: 12px 0 8px; font-family: Cinzel, 'Times New Roman', serif; font-weight: 400; font-size: 88px; line-height: 1; letter-spacing: 0.04em">Our Product</h1>
 <p style="margin: 0; font-family: 'Shippori Mincho', serif; font-size: 18px; letter-spacing: 0.2em; color: #DCD4C0">泡製品 ─ これまでに造った、すべてのビール。</p>
-<p style="margin: 28px 0 0; max-width: 720px; font-size: 17px; line-height: 2; color: #CFC8B8">同じ銘柄は、仕込みを重ねても1ページにまとめています。いま買えるものは「販売中」、過去に造ったものは「終売」としてアーカイブに残しています。</p>
+<p style="margin: 28px 0 0; max-width: 720px; font-size: 17px; line-height: 2; color: #CFC8B8">同じ銘柄は、仕込みを重ねても1ページにまとめています。${SHOP_OPEN ? 'いま買えるものは「販売中」、過去に造ったものは「終売」としてアーカイブに残しています。' : '現在、ショップではすべての銘柄が売り切れです。再び仕込むもの(現行)と、過去に造ったもの(終売)をアーカイブとして残しています。'}</p>
 </section>
-${group('NOW ON SALE', '販売中', ordered.filter((b) => b.status === 'current'))}
+${SHOP_OPEN ? group('NOW ON SALE', '販売中', ordered.filter((b) => b.status === 'current')) : group('LINEUP', '現行ラインナップ(ただいま売り切れ)', ordered.filter((b) => b.status === 'current'))}
 ${group('ARCHIVE', '終売・過去の銘柄', ordered.filter((b) => b.status === 'retired'))}
 <section style="max-width: 1168px; margin: 0 auto; padding: 0 56px 96px; display: flex; flex-direction: column; gap: 24px">
-<a href="%%SHOP_URL%%" style="align-self: flex-start; background: #7A1E2B; color: #FFFFFF; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em">SHOP で買う ↗</a>
+${SHOP_OPEN ? `<a href="%%SHOP_URL%%" style="align-self: flex-start; background: #7A1E2B; color: #FFFFFF; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em">SHOP で買う ↗</a>` : soldOutNote}
 ${notice}
 </section>` + foot;
   write('beer/index.html', include(fill(indexHtml, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }), 'beer/index.html'));
@@ -304,7 +309,9 @@ ${notice}
       ['YEAST', list(b.yeast)],
     ].filter(([, v]) => v);
     const desc = `${b.name}(${b.style})。${stat(b) ? stat(b) + '。' : ''}矢切ブルワリーのビール。`;
-    const buy = b.status === 'current'
+    const buy = b.status === 'current' && !SHOP_OPEN
+      ? soldOutNote
+      : b.status === 'current'
       ? `<a href="${esc(b.shop_url ?? cfg.shopUrl)}" style="align-self: flex-start; background: #7A1E2B; color: #FFFFFF; padding: 14px 26px; min-height: 44px; display: inline-flex; align-items: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em">SHOP で買う ↗</a>`
       : `<p style="margin: 0; font-size: 16px; color: #CFC8B8; line-height: 1.9">この銘柄は終売です。記録としてスペックを残しています。</p>`;
     const html = head(`${b.name} | PRODUCT | 矢切ブルワリー`, desc) + `

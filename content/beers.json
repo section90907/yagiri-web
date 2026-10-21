@@ -1,5 +1,6 @@
 {
   "note": "数字は BrewLedger/Brewfather のレシピ(最新の版)の値。IBU は計算値(Tinseth)。原料の分量・原価は載せない。draft:true は確認用でだけ見える。",
+  "shopOpen": false,
   "beers": [
     {
       "slug": "canvas",
@@ -39,7 +40,7 @@
       "slug": "nelson-canvas",
       "name": "Nelson CANVAS",
       "style": "ヘイジーIPA",
-      "status": "retired",
+      "status": "current",
       "abv": 7.0,
       "ibu": 27,
       "og": 1.067,
@@ -96,7 +97,7 @@
       "slug": "peat-merckx",
       "name": "PEAT MERCKX",
       "style": "ベルジャン・ダークストロングエール",
-      "status": "retired",
+      "status": "current",
       "abv": 8.0,
       "ibu": 22,
       "og": 1.079,
@@ -227,7 +228,7 @@
       "slug": "sunparade-cocopie",
       "name": "SUNPARADE ココパイ",
       "style": "フルーツゴーゼ",
-      "status": "retired",
+      "status": "current",
       "abv": 6.8,
       "ibu": 7,
       "og": 1.072,
@@ -299,7 +300,7 @@
       "slug": "necchu-no-kajitsu",
       "name": "熱狂の果実",
       "style": "スムージー",
-      "status": "retired",
+      "status": "current",
       "abv": 5.0,
       "ibu": 6,
       "og": 1.067,
