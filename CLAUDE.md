@@ -4,8 +4,8 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 
 ## プロジェクト概要
 - 矢切ブルワリー合同会社(千葉県松戸市のクラフトビール醸造所)の公式サイトと、直営タップルーム「YAGIRIYA」のページ。
-- 現在の公式サイトは BASE で稼働中。このサイトが完成したら独自ドメインを切り替える(**ドメイン移行はまだ先**)。販売は引き続き BASE。
-- 公開用URL: https://yagiri-web.craftbeeraddict.workers.dev / 確認用URL: https://yagiri-web-staging.craftbeeraddict.workers.dev(2段階の流れは `docs/DEPLOY.md`)
+- 公式サイトは独自ドメイン `www.yagiribrewery.com` で稼働中(2026-10-21 に切り替え済み。裸ドメインは www へ転送)。販売は引き続き BASE で、ショップは `shop.yagiribrewery.com`。
+- 公開用URL: https://www.yagiribrewery.com(workers.dev の URL も残っている) / 確認用URL: https://yagiri-web-staging.craftbeeraddict.workers.dev(2段階の流れは `docs/DEPLOY.md`)
 - リポジトリ: https://github.com/section90907/yagiri-web(**公開リポジトリ**。秘密情報・個人情報を絶対にコミットしない)
 
 ## デプロイ(重要)
