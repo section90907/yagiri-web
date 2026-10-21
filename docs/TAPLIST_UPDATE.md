@@ -15,3 +15,7 @@ ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/ta
 5. 確認用で見る(ON TAP の一覧と、診断が動くこと)→ 公開用へ
 
 メモ: 診断の「点数のつけ方」は `src/partials/beer-finder.html` の `score()`。度数7%以上は、「軽く」「のどを潤す」を選んだ人や、飲み慣れていない人には、勧めない(減点)。
+
+## タップリストのQR
+- QR の行き先は `https://www.yagiribrewery.com/tap/`(ハブ。`src/pages/tap/index.html`)。ビール診断・読みもの・今日のタップリスト(`/yagiriya/#ontap`)の3つへ案内する。
+- URL は変えない(印刷したQRが無効になる)。ページの中身は後から直してよい。
