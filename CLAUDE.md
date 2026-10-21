@@ -13,6 +13,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - Claude Code は `wrangler deploy` や `wrangler login` を実行しない。Cloudflare の認証情報も扱わない。
 - 作業は必ずブランチを切って行い、PR を作る。**main への直接 push は、ユーザーが明示的に許可したときだけ。**
 - **確認用(`main`)へのマージは、確認なしで Claude が行ってよい**(ユーザーの常設の許可。2026-10)。条件は、`npm run build` と `npm run build:staging` が通り、画面を確認(スマホ幅の横スクロール0・JSエラー0)したあと。マージ後に、何を入れたかと、確認用で見てほしい点を報告する。
+- **確認用に入れたら、毎回、確認用URLと見てほしいページの直リンクを報告に書く**(ユーザーの指示。2026-10)。例: `https://yagiri-web-staging.craftbeeraddict.workers.dev/journal/foam/`。
 - **公開用(`production`)へのマージは、必ずユーザーが「マージして」と明示したときだけ。** PR は作ってよいが、マージは待つ。確認用の許可を公開用に流用しない。
 
 ## 構成とコマンド
