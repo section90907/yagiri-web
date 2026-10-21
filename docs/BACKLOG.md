@@ -22,3 +22,6 @@
 - `status` は確定(2026-10): 終売は SUNPARADE D.P. と SUNPARADE キウイだけ。ほかは「再び仕込む可能性あり」=current。
 - **確認待ち**: (確認事項なし。Nelson CANVAS・PEAT MERCKX は別ページで確定、トップの綴りは SUNPARADE に統一)
 - 新作を造ったら `content/beers.json` に1件足す(新規は `draft: true` で確認用に出し、見てから外す)。
+
+## YAGIRIYA
+- 済: `/tap/`(QRの受け先のハブ)。ACCESS に Google マップの埋め込み(外部のiframe。スクロールして見えるまで読み込まない)と「Googleマップで開く」。ピンの位置は住所検索なので、ずれていれば Google マップの共有リンクに差し替える。
