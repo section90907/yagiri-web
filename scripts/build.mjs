@@ -82,6 +82,8 @@ const PRODUCT_HREF = beers.length ? '/beer/' : '/#product';
 const beerBySlug = Object.fromEntries(beers.map((b) => [b.slug, b]));
 const specLine = (b) => [b.abv != null ? `ABV ${Number(b.abv).toFixed(1)}%` : '', b.ibu != null ? `IBU ${Number(b.ibu)}` : ''].filter(Boolean).join(' / ');
 const ALL_PRODUCTS_HREF = beers.length ? '/beer/' : cfg.shopUrl;
+// YAGIRIYA のデザインのページ(緑・生成り)。/tap/ は店内のQRの受け先(ハブ)
+const isYagiriya = (rel) => rel.startsWith('yagiriya') || rel.startsWith('tap/');
 const write = (rel, html) => {
   html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
@@ -93,10 +95,10 @@ const write = (rel, html) => {
   }
   // タブのアイコン(favicon)。醸造所は黒地のY+赤い矢、YAGIRIYA は深緑地のY。デザインを混ぜない
   if (rel.endsWith('.html')) {
-    const pre = rel.startsWith('yagiriya') ? 'yagiriya-' : '';
+    const pre = isYagiriya(rel) ? 'yagiriya-' : '';
     html = html.replace('</head>', `<link rel="icon" href="/${pre}favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/${pre}icon-192.png">\n<link rel="apple-touch-icon" href="/${pre}apple-touch-icon.png">\n</head>`);
   }
-  if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(rel.startsWith('yagiriya'))}\n</body>`);
+  if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(isYagiriya(rel))}\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
