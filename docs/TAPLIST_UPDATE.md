@@ -1,5 +1,7 @@
 # 毎週のタップの入れ替え手順
 
+メニュー作成のスレッドへの指示文と、`likes`(味の方向)の判断基準は **`docs/MENU_THREAD_PROMPT.md`**。そこで出力されたJSONを、`content/taplist.json` に取り込む。基準は、すべてのスレッドで共通にする。
+
 ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/taplist.json` から作られる。入れ替えは、このファイルを直すだけ。
 
 1. `updated`(日付)を直す
