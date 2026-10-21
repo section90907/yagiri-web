@@ -307,14 +307,14 @@ ${notice}
 <nav aria-label="パンくず" style="font-size: 15px; color: #BDB7A9; display: flex; gap: 10px; flex-wrap: wrap"><a href="/">TOP</a><span>/</span><a href="/beer/">PRODUCT</a><span>/</span><span>${esc(b.name)}</span></nav>
 <div style="max-width: 820px; margin: 48px 0 40px; display: flex; flex-direction: column; gap: 16px">
 <span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.3em; color: #C9AA6E">${esc(b.style)}</span>
-<h1 style="margin: 0; font-family: Cinzel, 'Shippori Mincho', serif; font-weight: 400; font-size: 56px; line-height: 1.2; letter-spacing: 0.04em">${esc(b.name)}</h1>
+<h1 style="margin: 0; font-family: Cinzel, 'Shippori Mincho', serif; font-weight: 400; font-size: clamp(34px, 9vw, 56px); line-height: 1.2; letter-spacing: 0.04em; overflow-wrap: anywhere">${esc(b.name)}</h1>
 ${b.ruby ? `<span style="font-size: 16px; color: #CFC8B8; letter-spacing: 0.1em">${esc(b.ruby)}</span>` : ''}
 <span>${badge(b)}</span>
 ${b.first ? `<span style="font-size: 15px; color: #CFC8B8">初めて仕込んだ年: ${esc(b.first)}</span>` : ''}
 </div>
 ${b.desc ? `<p style="max-width: 720px; margin: 0 0 48px; font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 2.1; color: #E6E0D2">${esc(b.desc)}</p>` : ''}
 <div style="max-width: 720px; border-top: 1px solid #C9AA6E; margin-bottom: 48px">
-${rows.map(([k, v]) => `<div style="display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid #262626"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em; color: #C9AA6E">${k}</span><span style="font-size: 18px; line-height: 1.8">${v}</span></div>`).join('\n')}
+${rows.map(([k, v]) => `<div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding: 18px 0; border-bottom: 1px solid #262626"><span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 15px; letter-spacing: 0.25em; color: #C9AA6E">${k}</span><span style="font-size: 18px; line-height: 1.8; overflow-wrap: anywhere; min-width: 0">${v}</span></div>`).join('\n')}
 </div>
 <div style="display: flex; flex-direction: column; gap: 24px; max-width: 720px">
 ${buy}
