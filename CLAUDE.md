@@ -12,14 +12,16 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - **確認用と公開用の2段階。** `main` へ入れると確認用(`yagiri-web-staging`)が、`production` ブランチへ入れると公開用(`yagiri-web`)が Cloudflare Workers Builds で自動更新される。詳細と初回設定は `docs/DEPLOY.md`(設定を切り替えるまでは、従来どおり `main` で公開用が更新される)。`production` へは、確認用で見たものだけを PR で入れる。
 - Claude Code は `wrangler deploy` や `wrangler login` を実行しない。Cloudflare の認証情報も扱わない。
 - 作業は必ずブランチを切って行い、PR を作る。**main への直接 push は、ユーザーが明示的に許可したときだけ。**
-- push・PR作成の前に、変更内容の要約を見せてユーザーに確認する。
+- **確認用(`main`)へのマージは、確認なしで Claude が行ってよい**(ユーザーの常設の許可。2026-10)。条件は、`npm run build` と `npm run build:staging` が通り、画面を確認(スマホ幅の横スクロール0・JSエラー0)したあと。マージ後に、何を入れたかと、確認用で見てほしい点を報告する。
+- **公開用(`production`)へのマージは、必ずユーザーが「マージして」と明示したときだけ。** PR は作ってよいが、マージは待つ。確認用の許可を公開用に流用しない。
 
 ## 構成とコマンド
 - `src/pages/` 静的ページ(`index.html` トップ / `story/` / `guide/` / `future/` / `yagiriya/` / `404.html`)
 - `src/partials/` 共通ヘッダー・フッター(`brewery-*` と `yagiriya-*` の2系統)。ページには `<!--include:brewery-header current=story-->` のように書く。ナビの `data-nav="キー"` が current と一致したリンクだけ強調される。トップの大きなフッターと404のヘッダーは意図的に独自
 - `src/templates/` 読み物の一覧(`journal-list.html`)・詳細(`article.html`)テンプレート
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
-- `content/taplist.json` YAGIRIYA の ON TAP(毎週入れ替わる。直すとビルドが欄を作る)
+- `content/taplist.json` YAGIRIYA の ON TAP とビール診断(毎週入れ替わる。直すとビルドが欄を作る。手順は `docs/TAPLIST_UPDATE.md`。メニュー作成スレッドへの指示文と `likes` の判断基準は `docs/MENU_THREAD_PROMPT.md`)
+- `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
 - `site.config.json` BASE ショップURLなど(`%%SHOP_URL%%` に差し込まれる)
 - `scripts/build.mjs` `dist/` を生成(依存は marked と gray-matter のみ。フレームワークは使わない方針)
