@@ -74,9 +74,14 @@ const beers = rawBeers.map((b, i) => {
   return b;
 }).filter((b) => !b.draft || STAGING);
 const PRODUCT_HREF = beers.length ? '/beer/' : '/#product';
+// トップの PRODUCT 欄: 銘柄のページがあればそこへ、無ければショップへ。スペック行も同じデータから出す(二重に書かない)
+const beerBySlug = Object.fromEntries(beers.map((b) => [b.slug, b]));
+const specLine = (b) => [b.abv != null ? `ABV ${Number(b.abv).toFixed(1)}%` : '', b.ibu != null ? `IBU ${Number(b.ibu)}` : ''].filter(Boolean).join(' / ');
 const ALL_PRODUCTS_HREF = beers.length ? '/beer/' : cfg.shopUrl;
 const write = (rel, html) => {
-  html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF);
+  html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
+    .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
+    .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
   if (rel.endsWith('.html') && rel !== '404.html') {
     OUT_PAGES.push(rel);
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない

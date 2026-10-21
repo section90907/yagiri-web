@@ -14,7 +14,9 @@
 10. **ドメイン切り替え** — **済(2026-10-21)**。手順と記録は `docs/DOMAIN_SWITCH.md`。残り: Instagram・Google ビジネスプロフィール・名刺のリンク更新、SPF/DMARC(任意)、Search Console
 
 ## 隠してあるもの(`data-pending`。揃ったら `hidden` を外す。`grep -rn data-pending src`)
-- `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `spec`: 製品の ABV・IBU の行 / `release`: NEW RELEASE のバナー / `future`: FUTURE のナビとトップの欄
+- `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `release`: NEW RELEASE のバナー / `future`: FUTURE のナビとトップの欄
 
 ## PRODUCT(ビールのスペックとアーカイブ)
-- 仕組みは作成済み(`docs/BEER_ARCHIVE.md`)。**データ待ち**: 銘柄ごとの スタイル / ABV / IBU / OG / FG / ホップ / モルト / 酵母 を `content/beers.json` に入れる。CANVAS=CANVASX2、SUNPARADE D.P.=SUNPARADEANNIN、PEETAIPA は OEM のため除外。
+- 12銘柄を `content/beers.json` に入力済み(`docs/BEER_ARCHIVE.md`)。トップの製品カードの ABV・IBU の行は、このデータから自動で出る(`spec` の隠しは外した)。
+- **確認待ち**: 各銘柄の `status`(販売中/終売)は仮置き。Nelson CANVAS・PEAT MERCKX を別銘柄にしたことの確認。トップの「Sunparede」の綴り。
+- 新作を造ったら `content/beers.json` に1件足す(新規は `draft: true` で確認用に出し、見てから外す)。
