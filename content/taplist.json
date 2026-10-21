@@ -43,7 +43,8 @@
       },
       "likes": [
         "roasty"
-      ]
+      ],
+      "comingSoon": true
     },
     {
       "no": 3,
@@ -87,7 +88,8 @@
       },
       "likes": [
         "fruity"
-      ]
+      ],
+      "comingSoon": true
     },
     {
       "no": 5,
@@ -108,7 +110,8 @@
       },
       "likes": [
         "fruity"
-      ]
+      ],
+      "comingSoon": true
     },
     {
       "no": 6,
@@ -152,7 +155,8 @@
       "likes": [
         "hoppy",
         "classic"
-      ]
+      ],
+      "comingSoon": true
     },
     {
       "no": 8,

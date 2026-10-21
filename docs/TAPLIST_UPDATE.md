@@ -19,3 +19,8 @@ ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/ta
 ## タップリストのQR
 - QR の行き先は `https://www.yagiribrewery.com/tap/`(ハブ。`src/pages/tap/index.html`)。ビール診断・読みもの・今日のタップリスト(`/yagiriya/#ontap`)の3つへ案内する。
 - URL は変えない(印刷したQRが無効になる)。ページの中身は後から直してよい。
+
+## まだ届いていないタップ(COMING SOON)
+- `content/taplist.json` の該当銘柄に `"comingSoon": true` を入れる。カードは点線で「COMING SOON ─ もうすぐ到着」になり、価格は出さない。
+- そのタップを含む飲み比べセットにも「COMING SOON」が付く。ビール診断のおすすめからも外れる(出していないビールを勧めない)。
+- **届いたら、その行を消す**(`false` にしてもよい)。
