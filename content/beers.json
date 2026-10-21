@@ -1,0 +1,325 @@
+{
+  "note": "数字は BrewLedger/Brewfather のレシピ(最新の版)の値。IBU は計算値(Tinseth)。原料の分量・原価は載せない。draft:true は確認用でだけ見える。",
+  "beers": [
+    {
+      "slug": "canvas",
+      "name": "CANVAS",
+      "style": "ヘイジーIPA",
+      "status": "current",
+      "abv": 7.0,
+      "ibu": 24,
+      "og": 1.067,
+      "fg": 1.014,
+      "hops": [
+        "Cascade",
+        "Saaz",
+        "El Dorado",
+        "Amarillo",
+        "Idaho 7",
+        "Cryo Citra",
+        "Mosaic",
+        "Nectaron",
+        "Citra"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Oat Flake (Canada Malting Co)",
+        "Wheat Flaked (Canada Malting Co)",
+        "Carapils/Carafoam (Weyermann)"
+      ],
+      "adjuncts": [
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)"
+      ],
+      "yeast": [
+        "White Labs WLP077"
+      ]
+    },
+    {
+      "slug": "nelson-canvas",
+      "name": "Nelson CANVAS",
+      "style": "ヘイジーIPA",
+      "status": "retired",
+      "abv": 7.0,
+      "ibu": 27,
+      "og": 1.067,
+      "fg": 1.014,
+      "hops": [
+        "Amarillo",
+        "Simcoe",
+        "Cryo Citra",
+        "Citra",
+        "Nectaron",
+        "Nelson Sauvin"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Oat Flake (Canada Malting Co)",
+        "Wheat Flaked (Canada Malting Co)",
+        "Vienna Malt (Weyermann)"
+      ],
+      "adjuncts": [
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)"
+      ],
+      "yeast": [
+        "White Labs WLP067 Coastal Haze Ale Blend"
+      ]
+    },
+    {
+      "slug": "merckx",
+      "name": "Merckx",
+      "style": "ベルジャン・ダークストロングエール",
+      "status": "current",
+      "abv": 8.0,
+      "ibu": 21,
+      "og": 1.081,
+      "fg": 1.02,
+      "hops": [
+        "Saaz",
+        "Northern Brewer",
+        "Styrian Goldings"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Aroma Malt (Ireks)",
+        "Carafa III (Weyermann)"
+      ],
+      "adjuncts": [
+        "ブドウ糖(コーンシュガー)"
+      ],
+      "yeast": [
+        "Fermentis S-33"
+      ]
+    },
+    {
+      "slug": "peat-merckx",
+      "name": "PEAT MERCKX",
+      "style": "ベルジャン・ダークストロングエール",
+      "status": "retired",
+      "abv": 8.0,
+      "ibu": 22,
+      "og": 1.079,
+      "fg": 1.018,
+      "hops": [
+        "Saaz",
+        "Northern Brewer",
+        "Styrian Goldings"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Peat Malt (Pauls)",
+        "Aroma Malt (Ireks)",
+        "Carafa III (Weyermann)"
+      ],
+      "adjuncts": [
+        "ブドウ糖(コーンシュガー)"
+      ],
+      "yeast": [
+        "Fermentis S-33"
+      ]
+    },
+    {
+      "slug": "saison-de-blue",
+      "name": "Saison de Blue",
+      "style": "セゾン",
+      "status": "current",
+      "abv": 6.6,
+      "ibu": 13,
+      "og": 1.054,
+      "fg": 1.004,
+      "hops": [
+        "Saaz",
+        "Styrian Goldings",
+        "Cryo Citra"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Carapils/Carafoam (Weyermann)",
+        "Vienna Malt (Avangard)",
+        "Wheat Malt Pale (Weyermann)",
+        "Munich I (Weyermann)"
+      ],
+      "yeast": [
+        "Fermentis BE-134"
+      ]
+    },
+    {
+      "slug": "sunparade",
+      "name": "SUNPARADE",
+      "style": "フルーツゴーゼ",
+      "status": "current",
+      "abv": 6.6,
+      "ibu": 6,
+      "og": 1.074,
+      "fg": 1.024,
+      "hops": [
+        "Nelson Sauvin"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)"
+      ],
+      "adjuncts": [
+        "グレープフルーツ",
+        "ライム",
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)",
+        "塩"
+      ],
+      "yeast": [
+        "Lallemand LalBrew Philly Sour"
+      ]
+    },
+    {
+      "slug": "sunparade-dp",
+      "name": "SUNPARADE D.P.",
+      "style": "フルーツゴーゼ",
+      "status": "retired",
+      "abv": 7.0,
+      "ibu": 22,
+      "og": 1.071,
+      "fg": 1.018,
+      "hops": [
+        "Chinook"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Oat Flake (Canada Malting Co)"
+      ],
+      "adjuncts": [
+        "ラズベリー",
+        "アーモンドエクストラクト",
+        "バニラビーンズ",
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)",
+        "塩"
+      ],
+      "yeast": [
+        "Lallemand LalBrew Philly Sour"
+      ]
+    },
+    {
+      "slug": "sunparade-kiwi",
+      "name": "SUNPARADE キウイ",
+      "style": "フルーツゴーゼ",
+      "status": "retired",
+      "abv": 3.5,
+      "ibu": 5,
+      "og": 1.04,
+      "fg": 1.013,
+      "hops": [
+        "Centennial"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)"
+      ],
+      "adjuncts": [
+        "キウイフルーツ",
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)",
+        "塩"
+      ],
+      "yeast": [
+        "Lallemand LalBrew Philly Sour"
+      ]
+    },
+    {
+      "slug": "sunparade-cocopie",
+      "name": "SUNPARADE ココパイ",
+      "style": "フルーツゴーゼ",
+      "status": "retired",
+      "abv": 6.8,
+      "ibu": 7,
+      "og": 1.072,
+      "fg": 1.02,
+      "hops": [
+        "Chinook"
+      ],
+      "malts": [
+        "Pilsner Malt (Avangard)"
+      ],
+      "adjuncts": [
+        "パイナップル",
+        "ココナッツパウダー",
+        "乳糖(ラクトース)",
+        "ブドウ糖(コーンシュガー)",
+        "塩"
+      ],
+      "yeast": [
+        "Lallemand LalBrew Philly Sour"
+      ]
+    },
+    {
+      "slug": "himmel",
+      "name": "Himmel",
+      "style": "ピルスナー",
+      "status": "current",
+      "abv": 5.5,
+      "ibu": 22,
+      "og": 1.057,
+      "fg": 1.015,
+      "hops": [
+        "Hallertauer Hersbrucker",
+        "Northern Brewer"
+      ],
+      "malts": [
+        "Lager Malt (Pauls Malt)",
+        "Carahell (Weyermann)"
+      ],
+      "yeast": [
+        "Imperial Yeast L17 Harvest"
+      ]
+    },
+    {
+      "slug": "daily-ipa",
+      "name": "日常 Daily IPA",
+      "style": "アメリカンIPA",
+      "status": "current",
+      "abv": 6.4,
+      "ibu": 55,
+      "og": 1.06,
+      "fg": 1.011,
+      "hops": [
+        "Chinook",
+        "Ahtanum",
+        "Simcoe",
+        "Nelson Sauvin",
+        "Amarillo",
+        "Cascade"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Carahell (Weyermann)"
+      ],
+      "yeast": [
+        "Fermentis US-05"
+      ]
+    },
+    {
+      "slug": "necchu-no-kajitsu",
+      "name": "熱狂の果実",
+      "style": "スムージー",
+      "status": "retired",
+      "abv": 5.0,
+      "ibu": 6,
+      "og": 1.067,
+      "fg": 1.029,
+      "hops": [
+        "Chinook"
+      ],
+      "malts": [
+        "Pale Whale (Pauls Malt)",
+        "Oat Flake (Canada Malting Co)",
+        "Wheat Flaked"
+      ],
+      "adjuncts": [
+        "マンゴー",
+        "乳糖(ラクトース)",
+        "ペクチン"
+      ],
+      "yeast": [
+        "Lallemand LalBrew Philly Sour"
+      ]
+    }
+  ]
+}

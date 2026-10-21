@@ -4,8 +4,8 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 
 ## プロジェクト概要
 - 矢切ブルワリー合同会社(千葉県松戸市のクラフトビール醸造所)の公式サイトと、直営タップルーム「YAGIRIYA」のページ。
-- 現在の公式サイトは BASE で稼働中。このサイトが完成したら独自ドメインを切り替える(**ドメイン移行はまだ先**)。販売は引き続き BASE。
-- 公開用URL: https://yagiri-web.craftbeeraddict.workers.dev / 確認用URL: https://yagiri-web-staging.craftbeeraddict.workers.dev(2段階の流れは `docs/DEPLOY.md`)
+- 公式サイトは独自ドメイン `www.yagiribrewery.com` で稼働中(2026-10-21 に切り替え済み。裸ドメインは www へ転送)。販売は引き続き BASE で、ショップは `shop.yagiribrewery.com`。
+- 公開用URL: https://www.yagiribrewery.com(workers.dev の URL も残っている) / 確認用URL: https://yagiri-web-staging.craftbeeraddict.workers.dev(2段階の流れは `docs/DEPLOY.md`)
 - リポジトリ: https://github.com/section90907/yagiri-web(**公開リポジトリ**。秘密情報・個人情報を絶対にコミットしない)
 
 ## デプロイ(重要)
@@ -20,6 +20,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `src/partials/` 共通ヘッダー・フッター(`brewery-*` と `yagiriya-*` の2系統)。ページには `<!--include:brewery-header current=story-->` のように書く。ナビの `data-nav="キー"` が current と一致したリンクだけ強調される。トップの大きなフッターと404のヘッダーは意図的に独自
 - `src/templates/` 読み物の一覧(`journal-list.html`)・詳細(`article.html`)テンプレート
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
+- `content/beers.json` PRODUCT(ビールのスペックとアーカイブ)。1銘柄=1ページ。載せる項目と載せない項目は `docs/BEER_ARCHIVE.md`(**原料の分量・原価は公開リポジトリに入れない**)
 - `content/taplist.json` YAGIRIYA の ON TAP とビール診断(毎週入れ替わる。直すとビルドが欄を作る。手順は `docs/TAPLIST_UPDATE.md`。メニュー作成スレッドへの指示文と `likes` の判断基準は `docs/MENU_THREAD_PROMPT.md`)
 - `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
