@@ -147,17 +147,19 @@ const tap = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/taplist.json'), 
 const yen = (n) => '¥' + Number(n).toLocaleString('en-US');
 const circled = (n) => String.fromCodePoint(0x2460 + n - 1); // ①〜⑩(10まで)
 const tapDate = tap.updated.replace(/-/g, '.');
-const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px solid #7FA89C; background: rgba(0, 0, 0, 0.12)">
+// まだ届いていないタップは comingSoon:true。価格は出さず「COMING SOON」と出す(出していない商品の値段を見せない)
+const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px ${t.comingSoon ? 'dashed' : 'solid'} #7FA89C; background: rgba(0, 0, 0, 0.12)${t.comingSoon ? '; opacity: 0.78' : ''}">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">${t.no ? String(t.no).padStart(2, '0') : '─'}</span><span style="font-size: 14px; text-align: right">${t.original ? '<span style="background: #E3D3A8; color: #145E50; padding: 2px 10px; font-weight: 700">オリジナル</span>' : esc(t.brewery ?? '')}</span></div>
 <div><span style="font-size: 22px; font-weight: 700">${esc(t.name)}</span>${t.ruby ? ` <span style="font-size: 14px">${esc(t.ruby)}</span>` : ''}</div>
 <div style="font-size: 15px">${esc(t.style)} ／ ALC.${Number(t.abv).toFixed(1)}%</div>
-<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>
+${t.comingSoon ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">COMING SOON <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ もうすぐ到着</span></div>` : `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>`}
 <p style="margin: 0; font-size: 15px; line-height: 1.9">${esc(t.desc)}</p>
 <div><span style="display: inline-block; border: 1px solid #E3D3A8; padding: 2px 12px; font-size: 14px">${esc(t.tag)}</span></div>
 </div>`).join('\n');
+const comingNos = new Set(tap.items.filter((t) => t.comingSoon).map((t) => t.no)); // 届いていないタップを含むセットは COMING SOON
 const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px solid #E3D3A8; display: flex; flex-direction: column; gap: 14px">
 <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px"><span style="font-family: 'Alfa Slab One', serif; font-size: 24px; color: #E3D3A8">${esc(tap.sets.title)}</span><span style="font-family: 'Alfa Slab One', serif; font-size: 22px">${yen(tap.sets.price)}</span><span style="font-size: 14px">${esc(tap.sets.size)}</span></div>
-${tap.sets.items.map((x) => `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span></span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`).join('\n')}
+${tap.sets.items.map((x) => { const soon = x.order.some((n) => comingNos.has(n)); return `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C${soon ? '; opacity: 0.78' : ''}"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span>${soon ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">COMING SOON</span>' : ''}</span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`; }).join('\n')}
 <span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
 </div>`;
 // ビール診断用のデータ(味の目安 profile がある銘柄だけ。無い銘柄は診断の対象外にして、推測で入れない)
@@ -165,7 +167,7 @@ const finderMissing = tap.items.filter((t) => !t.profile || !t.likes).map((t) =>
 if (finderMissing.length) console.warn(`診断の対象外(profile か likes がない): ${finderMissing.join(', ')}`);
 const FINDER_DATA = JSON.stringify({
   updated: tapDate, setPrice: tap.sets.price,
-  items: tap.items.filter((t) => t.profile && t.likes).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes })),
+  items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes })),
 }).replace(/</g, '\\u003c');
 const TAPLIST = `<p style="margin: 0 0 20px; font-size: 15px">${esc(tap.sizes)}</p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
