@@ -9,7 +9,8 @@
    - 隠してある(素材待ち。`data-pending`): PHOTO 02、製品 03〜07、S3。MOVIE 01 はイラスト、S1 は背景なし、Y2 は店内の写真で仮もとの撮影指示は `docs/PHOTO_SLOTS.md`。外観・店内はハロウィン装飾の時期の写真なので、季節が変わったら撮り直し
 8. **OGP画像・favicon・sitemap.xml・robots.txt**
    - 済: OGP画像(`public/images/og.png`。正式ロゴの暗い版)と `og:image` / `twitter:card`(醸造所の各ページ。URLは `site.config.json` の `siteUrl`)。公開用の `robots.txt`・`sitemap.xml`・canonical(ドメイン切り替えのPRに含む)
-   - 未: favicon(正式ロゴには小さく使えるマークが無いので、決めてから)、YAGIRIYA ページ用のOGP
+   - 済: favicon(醸造所=黒地に正式ロゴの Y と赤い矢 / YAGIRIYA=深緑地に生成りの Y と二重罫。`public/*favicon.ico` など。YAGIRIYA 側は仮のデザイン)
+   - 未: YAGIRIYA ページ用のOGP
 9. **読み物の運用開始** — 連載計画は `docs/JOURNAL_PLAN.md`。1本目(ビールの歴史)は公開(`beer-history.md`)。IPA(`ipa-origin.md`)も公開。「ブルワーのひとこと」は付けない(石田さんが書きたいときだけ追加)。次の記事は計画のとおり
 10. **ドメイン切り替え** — **済(2026-10-21)**。手順と記録は `docs/DOMAIN_SWITCH.md`。残り: Instagram・Google ビジネスプロフィール・名刺のリンク更新、SPF/DMARC(任意)、Search Console
 
