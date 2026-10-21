@@ -18,5 +18,6 @@
 
 ## PRODUCT(ビールのスペックとアーカイブ)
 - 12銘柄を `content/beers.json` に入力済み(`docs/BEER_ARCHIVE.md`)。トップの製品カードの ABV・IBU の行は、このデータから自動で出る(`spec` の隠しは外した)。
-- **確認待ち**: 各銘柄の `status`(販売中/終売)は仮置き。Nelson CANVAS・PEAT MERCKX を別銘柄にしたことの確認。トップの「Sunparede」の綴り。
+- `status` は確定(2026-10): 終売は SUNPARADE D.P. と SUNPARADE キウイだけ。ほかは「再び仕込む可能性あり」=current。
+- **確認待ち**: Nelson CANVAS・PEAT MERCKX を別銘柄にしたことの確認。トップの「Sunparede」の綴り。
 - 新作を造ったら `content/beers.json` に1件足す(新規は `draft: true` で確認用に出し、見てから外す)。
