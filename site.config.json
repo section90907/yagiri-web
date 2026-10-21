@@ -1,9 +1,16 @@
 {
   "siteName": "矢切ブルワリー",
-  "shopUrl": "https://www.yagiribrewery.com/items/all",
-  "siteUrl": "https://yagiri-web.craftbeeraddict.workers.dev",
+  "shopUrl": "https://shop.yagiribrewery.com/items/all",
+  "siteUrl": "https://www.yagiribrewery.com",
   "stagingUrl": "https://yagiri-web-staging.craftbeeraddict.workers.dev",
   "hiddenPages": [
     "future"
+  ],
+  "baseRedirectPaths": [
+    "/items/*",
+    "/categories/*",
+    "/cart",
+    "/law",
+    "/privacy"
   ]
 }
