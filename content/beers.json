@@ -1,5 +1,6 @@
 {
   "note": "数字は BrewLedger/Brewfather のレシピ(最新の版)の値。IBU は計算値(Tinseth)。原料の分量・原価は載せない。draft:true は確認用でだけ見える。",
+  "shopOpen": false,
   "beers": [
     {
       "slug": "canvas",
