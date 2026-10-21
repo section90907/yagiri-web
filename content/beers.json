@@ -1,0 +1,64 @@
+{
+  "note": "数字は BrewLedger/Brewfather のレシピ(最新の版)の値。IBU は計算値(Tinseth)。原料の分量・原価は載せない。draft:true は確認用でだけ見える。",
+  "beers": [
+    {
+      "slug": "canvas",
+      "name": "CANVAS",
+      "style": "ヘイジーIPA",
+      "status": "current",
+      "draft": true,
+      "abv": 7.0, "ibu": 24, "og": 1.067, "fg": 1.014,
+      "hops": ["Cascade", "Saaz", "El Dorado", "Amarillo", "Idaho 7", "Cryo Citra", "Mosaic", "Nectaron", "Citra"],
+      "malts": ["Pale Whale (Pauls Malt)", "Oat Flake (Canada Malting Co)", "Wheat Flaked (Canada Malting Co)", "Carapils/Carafoam (Weyermann)"],
+      "adjuncts": ["乳糖(ラクトース)", "ブドウ糖(コーンシュガー)"],
+      "yeast": ["White Labs WLP077"]
+    },
+    {
+      "slug": "nelson-canvas",
+      "name": "Nelson CANVAS",
+      "style": "ヘイジーIPA",
+      "status": "retired",
+      "draft": true,
+      "abv": 7.0, "ibu": 27, "og": 1.067, "fg": 1.014,
+      "hops": ["Amarillo", "Simcoe", "Cryo Citra", "Citra", "Nectaron", "Nelson Sauvin"],
+      "malts": ["Pale Whale (Pauls Malt)", "Oat Flake (Canada Malting Co)", "Wheat Flaked (Canada Malting Co)", "Vienna Malt (Weyermann)"],
+      "adjuncts": ["乳糖(ラクトース)", "ブドウ糖(コーンシュガー)"],
+      "yeast": ["White Labs WLP067 Coastal Haze Ale Blend"]
+    },
+    {
+      "slug": "merckx",
+      "name": "Merckx",
+      "style": "ベルジャン・ダークストロングエール",
+      "status": "current",
+      "draft": true,
+      "abv": 8.0, "ibu": 21, "og": 1.081, "fg": 1.020,
+      "hops": ["Saaz", "Northern Brewer", "Styrian Goldings"],
+      "malts": ["Pale Whale (Pauls Malt)", "Aroma Malt (Ireks)", "Carafa III (Weyermann)"],
+      "adjuncts": ["ブドウ糖(コーンシュガー)"],
+      "yeast": ["Fermentis S-33"]
+    },
+    {
+      "slug": "peat-merckx",
+      "name": "PEAT MERCKX",
+      "style": "ベルジャン・ダークストロングエール",
+      "status": "retired",
+      "draft": true,
+      "abv": 8.0, "ibu": 22, "og": 1.079, "fg": 1.018,
+      "hops": ["Saaz", "Northern Brewer", "Styrian Goldings"],
+      "malts": ["Pale Whale (Pauls Malt)", "Peat Malt (Pauls)", "Aroma Malt (Ireks)", "Carafa III (Weyermann)"],
+      "adjuncts": ["ブドウ糖(コーンシュガー)"],
+      "yeast": ["Fermentis S-33"]
+    },
+    {
+      "slug": "saison-de-bleu",
+      "name": "Saison de Bleu",
+      "style": "セゾン",
+      "status": "current",
+      "draft": true,
+      "abv": 6.6, "ibu": 13, "og": 1.054, "fg": 1.004,
+      "hops": ["Saaz", "Styrian Goldings", "Cryo Citra"],
+      "malts": ["Pale Whale (Pauls Malt)", "Carapils/Carafoam (Weyermann)", "Vienna Malt (Avangard)", "Wheat Malt Pale (Weyermann)", "Munich I (Weyermann)"],
+      "yeast": ["Fermentis BE-134"]
+    }
+  ]
+}

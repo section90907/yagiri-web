@@ -6,7 +6,7 @@ PRODUCT を「買う場所」から「スペックと過去の記録を見る場
 - データは `content/beers.json` の `beers` 配列。**1銘柄=1件=1ページ**。版や仕込み回が違っても同じ銘柄は1つにまとめる。
 - ファイルが無い・空のときは `/beer/` を出さない(PRODUCT のリンクはトップの該当欄に戻る)。
 - ビルドで `/beer/`(一覧。販売中 → アーカイブの順)と `/beer/<slug>/`(詳細)を作る。
-- 項目: `slug`(半角英小文字・数字・ハイフン。URLになるので決めたら変えない) / `name` / `ruby` / `style` / `status`(`current` か `retired`) / `abv` / `ibu` / `og` / `fg` / `hops[]` / `malts[]` / `yeast[]` / `first`(初めて仕込んだ年) / `desc`(ひとこと) / `shop_url`(販売中のみ。省略するとショップのトップ) / `draft`(true だと確認用でだけ見える)。
+- 項目: `slug`(半角英小文字・数字・ハイフン。URLになるので決めたら変えない) / `name` / `ruby` / `style` / `status`(`current` か `retired`) / `abv` / `ibu` / `og` / `fg` / `hops[]` / `malts[]` / `adjuncts[]`(副原料。乳糖・ブドウ糖など。乳糖は乳成分なので必ず載せる) / `yeast[]` / `first`(初めて仕込んだ年) / `desc`(ひとこと) / `shop_url`(販売中のみ。省略するとショップのトップ) / `draft`(true だと確認用でだけ見える)。
 - **無い項目は載せない**(0 として出さない)。`name` `style` `slug` `status` 以外は省略してよい。
 - 数字は、レシピ(最新の版)の値。仕込みごとの実測値は載せない。
 
