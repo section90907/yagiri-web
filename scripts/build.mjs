@@ -91,6 +91,11 @@ const write = (rel, html) => {
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
     if (!STAGING) html = html.replace('</head>', `<link rel="canonical" href="${cfg.siteUrl}/${rel.replace(/index\.html$/, '')}">\n</head>`);
   }
+  // タブのアイコン(favicon)。醸造所は黒地のY+赤い矢、YAGIRIYA は深緑地のY。デザインを混ぜない
+  if (rel.endsWith('.html')) {
+    const pre = rel.startsWith('yagiriya') ? 'yagiriya-' : '';
+    html = html.replace('</head>', `<link rel="icon" href="/${pre}favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/${pre}icon-192.png">\n<link rel="apple-touch-icon" href="/${pre}apple-touch-icon.png">\n</head>`);
+  }
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(rel.startsWith('yagiriya'))}\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
