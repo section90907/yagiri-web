@@ -295,6 +295,7 @@ ${notice}
       ['FG', b.fg != null ? Number(b.fg).toFixed(3) : ''],
       ['HOPS', list(b.hops)],
       ['MALTS', list(b.malts)],
+      ['ADJUNCTS', list(b.adjuncts)],
       ['YEAST', list(b.yeast)],
     ].filter(([, v]) => v);
     const desc = `${b.name}(${b.style})。${stat(b) ? stat(b) + '。' : ''}矢切ブルワリーのビール。`;
