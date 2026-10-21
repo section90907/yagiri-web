@@ -24,6 +24,15 @@ a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
 .prose ul,.prose ol{margin:0 0 32px;padding-left:1.4em}
 .prose img{max-width:100%;height:auto;display:block;margin:0 0 32px}
 .prose a{color:#C9AA6E;text-decoration:underline;overflow-wrap:anywhere}
+.prose details.refs{margin:56px 0 0;border-top:1px solid #262626}
+.prose details.refs>summary{cursor:pointer;list-style:none;min-height:44px;padding:32px 0 8px;display:flex;align-items:baseline;gap:12px}
+.prose details.refs>summary::-webkit-details-marker{display:none}
+.prose details.refs>summary::after{content:'\25BE';margin-left:auto;font-size:24px;color:#C9AA6E;transition:transform .2s}
+.prose details.refs[open]>summary::after{transform:rotate(180deg)}
+.prose details.refs>summary:focus-visible{outline:2px solid #C9AA6E;outline-offset:4px}
+.prose details.refs>summary h2{margin:0;border:0;padding:0}
+.prose .refs-count{margin-left:14px;font-size:15px;font-weight:400;color:#CFC8B8}
+.prose details.refs ol{margin-top:12px}
 .prose table{border-collapse:collapse;margin:0 0 32px;display:block;overflow-x:auto;font-family:'Zen Kaku Gothic New',sans-serif;font-size:15px}
 .prose th,.prose td{border:1px solid #333;padding:8px 12px}
 .prose code{font-size:.9em}
@@ -76,5 +85,6 @@ a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
 
 <!--include:brewery-footer-->
 </div>
+<script>(function(){function o(){var id=location.hash.slice(1);if(!id)return;var e=document.getElementById(id);var d=e&&e.closest&&e.closest('details');if(d)d.open=true;}window.addEventListener('hashchange',o);o();})();</script>
 </body>
 </html>
