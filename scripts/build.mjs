@@ -86,6 +86,11 @@ const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsW
   let n = 0;
   html = html.replace(/<h2>(.*?)<\/h2>/g, (m, inner) => { n += 1; toc.push({ id: `s${n}`, text: inner.replace(/<[^>]+>/g, '') }); return `<h2 id="s${n}">${inner}</h2>`; });
   const chars = content.replace(/\s/g, '').length;
+  // 参考文献は長いので、折りたたむ(見出しを押すと開く。目次から飛んだときも開く)
+  html = html.replace(/(<h2 id="s\d+">)参考文献(<\/h2>)([\s\S]*)$/, (m, open, close, rest) => {
+    const count = (rest.match(/<li>/g) || []).length;
+    return `<details class="refs"><summary>${open}参考文献<span class="refs-count">(${count}件・押すと開きます)</span>${close}</summary>${rest}</details>`;
+  });
   return { slug: f.replace(/\.md$/, ''), ...data, html, toc, minutes: Math.max(1, Math.round(chars / 500)) };
 }).filter((p) => !p.draft || STAGING).sort((a, b) => new Date(b.date) - new Date(a.date) || (b.seq ?? 0) - (a.seq ?? 0)); // 同じ日の記事は連載の順(seq)
 if (STAGING) posts.forEach((p) => { if (p.draft) p.title = `【下書き】${p.title}`; }); // 下書きは確認用でだけ見える
