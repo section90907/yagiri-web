@@ -24,6 +24,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `src/templates/` 読み物の一覧(`journal-list.html`)・詳細(`article.html`)テンプレート
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
 - `content/beers.json` PRODUCT(ビールのスペックとアーカイブ)。1銘柄=1ページ。載せる項目と載せない項目は `docs/BEER_ARCHIVE.md`(**原料の分量・原価は公開リポジトリに入れない**)
+- `content/future/` 未来年表(/future/)のデータ。元は CSV、ページ用は JSON。更新の手順は `docs/FUTURE_UPDATE.md`(**文言は醸造家の監修済み。勝手に要約・言い換えしない**)
 - `content/taplist.json` YAGIRIYA の ON TAP とビール診断(毎週入れ替わる。直すとビルドが欄を作る。手順は `docs/TAPLIST_UPDATE.md`。メニュー作成スレッドへの指示文と `likes` の判断基準は `docs/MENU_THREAD_PROMPT.md`)
 - `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
@@ -36,7 +37,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 ## 守ること
 - デザインのルールは `docs/DESIGN.md`。特に **醸造所ページと YAGIRIYA ページのデザインを混ぜない**。
 - 事実(住所・営業時間・価格・ビール名など)は `docs/SITE_FACTS.md` を正とする。載っていない事実は推測で書かず、ユーザーに聞く。
-- `[ ]` の空欄はプレースホルダー。実データが来るまで消さない・でっち上げない。写真の枠は、素材が無い間は `hidden`(`data-pending="photo"`)で隠してある。消さない(もとの撮影指示は `docs/PHOTO_SLOTS.md`)。素材が揃ったら `<img>` に差し替えて、枠の `hidden` ごと外す。未記入の数値の行・新作バナー・FUTURE も同様に `data-pending` で隠してある(一覧は `docs/BACKLOG.md`)。FUTURE ページは `site.config.json` の `hiddenPages` で出力していない。
+- `[ ]` の空欄はプレースホルダー。実データが来るまで消さない・でっち上げない。写真の枠は、素材が無い間は `hidden`(`data-pending="photo"`)で隠してある。消さない(もとの撮影指示は `docs/PHOTO_SLOTS.md`)。素材が揃ったら `<img>` に差し替えて、枠の `hidden` ごと外す。未記入の数値の行・新作バナー・FUTURE も同様に `data-pending` で隠してある(一覧は `docs/BACKLOG.md`)。
 - 読み物記事は `docs/ARTICLE_GUIDE.md` に従う。参考文献は実在を確認できたものだけ。出典を捏造しない。新規記事は必ず `draft: true`。
 - 外部スクリプトや外部画像を増やさない(Google Fonts は可)。サイトは静的のまま保つ。
 - タップ領域は 44px 以上、スマホ幅で横スクロールが出ないこと。

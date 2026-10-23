@@ -3,7 +3,7 @@
 
 4. **YAGIRIYA の空欄** — 済(メニュー・容量・土日ランチ・現金)。ON TAP は `content/taplist.json`
 5. **製品データの外出し** — 製品一覧を `content/products.json` にして、ABV/IBU/BASEリンクを管理
-6. **未来年表のデータ化** — `content/future.json` から年表を生成(内容は別スレッドで作成中のものを受け取る)。できるまで、FUTURE ページは出力しない(`site.config.json` の `hiddenPages`)、ナビとトップの欄は `data-pending="future"` で隠してある。公開するとき: `hiddenPages` から `future` を外し、`hidden` を外す
+6. **未来年表** — **済(2026-10)**。`content/future/` から生成。更新の手順は `docs/FUTURE_UPDATE.md`
 7. **写真・動画の差し替え** — 点線枠を実素材に。画像は WebP、幅 1600px 以下。
    - 済(既存素材): Y1・トップのYAGIRIYAタイル(外観)/ Y3(タップ)/ S2(渡辺・石田)/ S4(カウンター)/ トップのヒーロー背景(旧トップのイラスト。動画 MOVIE 01 ができるまでの仮)
    - 隠してある(素材待ち。`data-pending`): PHOTO 02、製品 03〜07、S3。MOVIE 01 はイラスト、S1 は背景なし、Y2 は店内の写真で仮もとの撮影指示は `docs/PHOTO_SLOTS.md`。外観・店内はハロウィン装飾の時期の写真なので、季節が変わったら撮り直し
@@ -15,7 +15,7 @@
 10. **ドメイン切り替え** — **済(2026-10-21)**。手順と記録は `docs/DOMAIN_SWITCH.md`。残り: Instagram・Google ビジネスプロフィール・名刺のリンク更新、SPF/DMARC(任意)、Search Console
 
 ## 隠してあるもの(`data-pending`。揃ったら `hidden` を外す。`grep -rn data-pending src`)
-- `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `release`: NEW RELEASE のバナー / `future`: FUTURE のナビとトップの欄
+- `photo`: 写真の枠(PHOTO 02・製品 03〜07・S3)/ `release`: NEW RELEASE のバナー / 
 
 ## PRODUCT(ビールのスペックとアーカイブ)
 - 12銘柄を `content/beers.json` に入力済み(`docs/BEER_ARCHIVE.md`)。トップの製品カードの ABV・IBU の行は、このデータから自動で出る(`spec` の隠しは外した)。
