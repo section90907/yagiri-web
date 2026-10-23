@@ -4,7 +4,7 @@
 
 ## 仕組み
 - 元データ(人が編集する): `content/future/timeline_public_v1.csv`
-- 変換した、ページ用のデータ: `content/future/future-timeline.json`(216項目。確認中の項目は `pending: true`)
+- 変換した、ページ用のデータ: `content/future/future-timeline.json`(217項目。確認中の項目は `pending: true`)
 - ビルドが、ハイライト(これまで・2030・2035・2040・2050+・YAGIRI'S TAKE)を、HTML に直接出力する(検索に載せるため)。
 - アーカイブ(全項目の絞り込み)は、ビルドが出す `/future/timeline.json` を、ブラウザが読んで描く。**確認中(pending)の項目は、このデータにも入れない。**
 - 絞り込みの状態は、URLに入る(例 `/future/?cat=Y&kind=pred`)。共有できる。
