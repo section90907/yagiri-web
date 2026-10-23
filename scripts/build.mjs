@@ -152,7 +152,7 @@ const circled = (n) => String.fromCodePoint(0x2460 + n - 1); // ①〜⑩(10ま�
 const tapDate = tap.updated.replace(/-/g, '.');
 // まだ届いていないタップは comingSoon:true。価格は出さず「COMING SOON」と出す(出していない商品の値段を見せない)
 // AGU(矢切ブルワリーの量の単位): 一杯の純アルコール量(g) ÷ 基準(厚労省の目安。site.config.json の agu.baseG)。小数第1位
-const AGU = cfg.agu ?? { baseG: 20, baseYear: 2026, since: '2026-10-25' };
+const AGU = cfg.agu ?? { baseG: 20, baseYear: 2026, since: '2026-10-24' };
 const aguName = `AGU${AGU.baseYear}`;
 const aguSinceJa = AGU.since.replace(/^(\d+)-(\d+)-(\d+)$/, (m, y, mo, d) => `${y}年${Number(mo)}月${Number(d)}日`);
 const aguOf = (abv, ml) => (Number(abv) * Number(ml) * 0.8 / 100 / AGU.baseG).toFixed(1);
