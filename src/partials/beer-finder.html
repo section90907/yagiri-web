@@ -79,6 +79,7 @@
     c.appendChild(head);
     c.appendChild(el('div', 'font-size: 15px', b.style + ' ／ ALC.' + b.abv.toFixed(1) + '%' + (b.brewery ? ' ／ ' + b.brewery : (b.original ? ' ／ オリジナル' : ''))));
     c.appendChild(el('div', "font-family: 'Alfa Slab One', serif; font-size: 16px", 'レギュラー ' + yen(b.regular) + ' ／ ビッグ ' + yen(b.big)));
+    if (b.aguR) c.appendChild(el('div', 'font-size: 15px', b.aguR + ' AGU(レギュラー)・' + b.aguB + ' AGU(ビッグ)'));
     if (r.why.length) { var ul = el('ul', 'margin: 0; padding-left: 1.3em; font-size: 16px; line-height: 1.8'); r.why.forEach(function (w) { ul.appendChild(el('li', '', w)); }); c.appendChild(ul); }
     if (big) c.appendChild(el('p', 'margin: 0; font-size: 15px; line-height: 1.9', b.desc));
     return c;

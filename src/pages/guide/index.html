@@ -348,6 +348,11 @@ a{color:#EFE9DC;text-decoration:none}a:hover{color:#C9AA6E}
 </div>
 
 <div data-gcat="数値" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">AGU(アグ)</span><span style="font-size: 13px; color: #C9AA6E">数値</span></div>
+<span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">一杯の純アルコール量が、厚生労働省の目安(約%%AGU_BASE_G%%g)の何倍か。「0.7 AGU」のように表す。<a href="#agu" style="color: #C9AA6E; text-decoration: underline">くわしく ↓</a></span>
+</div>
+
+<div data-gcat="数値" style="border: 1px solid #2E2E2E; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
 <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline"><span style="font-size: 19px; font-weight: 700">IBU</span><span style="font-size: 13px; color: #C9AA6E">数値</span></div>
 <span style="font-size: 16px; line-height: 1.85; color: #CFC8B8">苦味の単位。数字が大きいほど苦い(感じ方は甘みとのバランスでも変わる)。</span>
 </div>
@@ -477,6 +482,44 @@ document.querySelectorAll('button[data-gtab]').forEach(function (b) {
   });
 });
 </script>
+</section>
+
+<section id="agu" style="border-top: 1px solid #262626; padding: 96px 56px; background: #101010">
+<div style="max-width: 1168px; margin: 0 auto">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 40px; color: #C9AA6E">07</span>
+<h2 style="margin: 8px 0 16px; font-family: 'Shippori Mincho', serif; font-size: 36px; font-weight: 800">AGU ─ お酒の量を、ひと目で。</h2>
+<p style="margin: 0 0 32px; max-width: 760px; font-size: 18px; line-height: 2; color: #DCD4C0">ABV(度数)だけでは、「どれだけ飲んだか」は分かりません。矢切ブルワリーは、一杯に含まれる純アルコール量を、厚生労働省の目安に対する割合で表す「AGU(アグ)」を、%%AGU_SINCE_JA%%から、表示しています。</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px">
+<div style="border: 1px solid #2E2E2E; padding: 24px 26px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.25em; color: #C9AA6E">定義</span>
+<span style="font-size: 17px; line-height: 2; color: #E6E0D2">1 AGU = 厚生労働省が示す「節度ある適度な飲酒」の1日平均量(現在は、純アルコール約%%AGU_BASE_G%%g)。正式には「%%AGU_NAME%%」。制定年の基準を、名前に入れています。</span>
+</div>
+<div style="border: 1px solid #2E2E2E; padding: 24px 26px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.25em; color: #C9AA6E">計算</span>
+<span style="font-size: 17px; line-height: 2; color: #E6E0D2">量(ml)× 度数(%)÷ 100 × 0.8 ÷ %%AGU_BASE_G%%。小数第1位まで。例:260ml、6.6% のビールは、純アルコール約13.7g。0.7 AGU。</span>
+</div>
+<div style="border: 1px solid #2E2E2E; padding: 24px 26px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.25em; color: #C9AA6E">基準が変わるとき</span>
+<span style="font-size: 17px; line-height: 2; color: #E6E0D2">厚労省の目安が改定されたら、この数字を見直し、「AGU20XX」と、年を改めます。変更の日と内容は、このページに記録します。</span>
+</div>
+</div>
+<div style="border: 1px solid #C9AA6E; padding: 28px 32px; max-width: 860px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.25em; color: #C9AA6E">NOTICE ─ ご注意</span>
+<ul style="margin: 12px 0 0; padding-left: 1.3em; font-size: 16px; line-height: 2.1; color: #E6E0D2">
+<li>AGUは、厚生労働省の目安に対する「量の割合」を示す、矢切ブルワリーの表示です。<b>安全な量を示すものではありません。</b></li>
+<li>1 AGUは、お酒に強い人の「1日平均」の目安です。女性、高齢の方、お酒に弱い体質の方は、これより少ない量が適当とされています。</li>
+<li>ご自身の許容量を、AGUでも把握しておいてください。体質、その日の体調、これまでの飲み方をふまえて、無理のない量を、ご自身で判断してください。</li>
+<li>20歳未満の方、妊娠中・授乳中の方は、お酒を飲まないでください。</li>
+<li>飲酒運転は、法律で禁止されています。</li>
+</ul>
+</div>
+<p style="margin: 28px 0 0; max-width: 760px; font-size: 16px; line-height: 2; color: #CFC8B8">くわしい考え方と、数字の根拠は、読みものに書きました。 <a href="/journal/agu/" style="color: #C9AA6E; text-decoration: underline">AGUという単位を、つくりました →</a></p>
+<table style="margin-top: 32px; border-collapse: collapse; font-size: 15px; color: #CFC8B8; max-width: 760px; width: 100%">
+<caption style="text-align: left; padding-bottom: 8px; font-family: Cinzel, 'Times New Roman', serif; letter-spacing: 0.2em; color: #C9AA6E">変更の記録</caption>
+<tr><th style="text-align: left; border: 1px solid #333; padding: 8px 12px; width: 180px">日付</th><th style="text-align: left; border: 1px solid #333; padding: 8px 12px">内容</th></tr>
+<tr><td style="border: 1px solid #333; padding: 8px 12px">%%AGU_SINCE_JA%%</td><td style="border: 1px solid #333; padding: 8px 12px">%%AGU_NAME%% を制定。1 AGU = 純アルコール約%%AGU_BASE_G%%g(厚労省「節度ある適度な飲酒」の目安)。</td></tr>
+</table>
+</div>
 </section>
 
 <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr))">
