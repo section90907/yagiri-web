@@ -239,7 +239,11 @@
       },
       "likes": [
         "classic"
-      ]
+      ],
+      "ml": {
+        "regular": 300,
+        "big": 500
+      }
     }
   ],
   "sets": {

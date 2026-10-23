@@ -25,6 +25,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `content/journal/*.md` 読み物記事。`_` 始まりはビルド対象外
 - `content/beers.json` PRODUCT(ビールのスペックとアーカイブ)。1銘柄=1ページ。載せる項目と載せない項目は `docs/BEER_ARCHIVE.md`(**原料の分量・原価は公開リポジトリに入れない**)
 - `content/future/` 未来年表(/future/)のデータ。元は CSV、ページ用は JSON。更新の手順は `docs/FUTURE_UPDATE.md`(**文言は醸造家の監修済み。勝手に要約・言い換えしない**)
+- AGU(矢切ブルワリーの量の単位。1 AGU=厚労省の目安 約20g)の基準は `site.config.json` の `agu`。決まりと改定の手順は `docs/AGU.md`(**安全な量を示すものではない、という注意書きを、必ず出す**)
 - `content/taplist.json` YAGIRIYA の ON TAP とビール診断(毎週入れ替わる。直すとビルドが欄を作る。手順は `docs/TAPLIST_UPDATE.md`。メニュー作成スレッドへの指示文と `likes` の判断基準は `docs/MENU_THREAD_PROMPT.md`)
 - `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)
