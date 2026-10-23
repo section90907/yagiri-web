@@ -179,7 +179,7 @@ const FINDER_DATA = JSON.stringify({
   updated: tapDate, setPrice: tap.sets.price,
   items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes, aguR: aguOf(t.abv, mlOf(t).regular), aguB: aguOf(t.abv, mlOf(t).big) })),
 }).replace(/</g, '\\u003c');
-const TAPLIST = `<p style="margin: 0 0 8px; font-size: 15px">${esc(tap.sizes)}</p>\n<p style="margin: 0 0 20px; font-size: 14px; line-height: 1.9">AGU:一杯の純アルコール量が、厚生労働省の目安(約${AGU.baseG}g)の何倍かを表す数字です。安全な量を示すものではありません。ご自身の許容量を、AGUでも把握して、無理のない量でお楽しみください。<a href="/guide/#agu" style="text-decoration: underline">くわしくは BEER 101</a></p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
+const TAPLIST = `<p style="margin: 0 0 8px; font-size: 15px">${esc(tap.sizes)}</p>\n<p style="margin: 0 0 20px; font-size: 14px; line-height: 1.9">AGU:一杯の純アルコール量が、厚生労働省の目安(約${AGU.baseG}g)の何倍かを表す数字です。安全な量を示すものではありません。ご自身の許容量を、AGUでも把握して、無理のない量でお楽しみください。<a href="/guide/#agu" style="text-decoration: underline; color: #E3D3A8">くわしくは BEER 101</a></p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
 // ---------- 未来年表(content/future/future-timeline.json から) ----------
 // 確認中(pending)の項目は、ページにも、配るデータ(timeline.json)にも出さない。
