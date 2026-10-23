@@ -174,6 +174,25 @@ const FINDER_DATA = JSON.stringify({
 }).replace(/</g, '\\u003c');
 const TAPLIST = `<p style="margin: 0 0 20px; font-size: 15px">${esc(tap.sizes)}</p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
+// ---------- 未来年表(content/future/future-timeline.json から) ----------
+// 確認中(pending)の項目は、ページにも、配るデータ(timeline.json)にも出さない。
+// 文言は醸造家の監修済みなので、そのまま出す(要約・言い換えをしない)。
+const FUT = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/future/future-timeline.json'), 'utf8'));
+const futPool = FUT.items.filter((x) => !x.pending);
+const futById = Object.fromEntries(futPool.map((x) => [x.id, x]));
+const futGet = (id) => { const x = futById[id]; if (!x) throw new Error(`future-timeline.json: ハイライトの項目 ${id} が、公開できる項目にありません(確認中か、存在しません)`); return x; };
+const futBadges = (x) => `<span class="badge badge--${x.kind}">${esc(FUT.kinds[x.kind])}</span>${(x.kind === 'plan' || x.kind === 'pred') && x.dots ? `<span class="dots" title="${esc(x.confLabel)}" aria-label="${esc(x.confLabel)}">${x.dots}</span>` : ''}`;
+const futSource = (x) => x.url ? `<a class="row__src" href="${esc(x.url)}" target="_blank" rel="noopener">出典:${esc(x.src)} ↗</a>` : (x.src ? `<span class="row__src">出典:${esc(x.src)}</span>` : '');
+const futRow = (x) => `<article class="row"><div class="row__meta"><span class="row__year">${esc(x.year)}</span><div class="row__badges">${futBadges(x)}</div></div><div class="row__body"><span class="row__cat">${esc(x.cat)}</span><h3 class="row__title" style="margin:0">${esc(x.title)}</h3><p class="row__text">${esc(x.body)}</p>${x.why ? `<p class="row__why">なぜこの年? — ${esc(x.why)}</p>` : ''}${futSource(x)}</div></article>`;
+const FUT_PAST = FUT.highlights.past.map((id) => futRow(futGet(id))).join('');
+const FUT_BUCKETS = FUT.highlights.buckets.map((b) => `<div class="block" id="${esc(b.anchor)}"><div class="block__side"><span class="block__year">${esc(b.label)}</span><span class="block__range">${esc(b.range)}</span><span class="block__lead">${esc(b.lead)}</span></div><div class="block__main">${b.items.map((id) => futRow(futGet(id))).join('')}<aside class="take" aria-label="醸造家の思索"><div class="take__head"><span class="take__label">YAGIRI’S TAKE</span><span class="take__note">醸造家の思索 — 根拠をもとにした想像です</span></div>${b.takes.map((id) => `<div><h3>${esc(futGet(id).title)}</h3><p>${esc(futGet(id).body)}</p></div>`).join('')}</aside></div></div>`).join('');
+// トップの「IV. Future」: 年代ごとの見出し(年表のリード文)
+const FUTURE_TOP = FUT.highlights.buckets.map((b) => `<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 34px; color: #C9AA6E">${esc(b.label)}</span>
+<span style="font-size: 17px; color: #E6E0D2">${esc(b.lead)}</span>
+</div>`).join('\n');
+const futUpdatedJa = FUT.updatedAt.replace('-', '年') + '月';
+
 // ---------- 静的ページ ----------
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
@@ -187,7 +206,7 @@ for (const f of walk(PAGES)) {
   if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP });
   write(rel, html);
 }
 
@@ -242,6 +261,15 @@ document.querySelectorAll('button[data-cat]').forEach(function (b) {
 </script>`;
 write('journal/index.html', fill(listTpl, { TABS: tabs, FEATURED: featured, POSTS: cards, SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl) }).replace('</body>', filterJs + '\n</body>'));
 
+
+// ---------- 未来年表のページ ----------
+if (!(cfg.hiddenPages ?? []).includes('future')) {
+  const futTpl = include(fs.readFileSync(path.join(ROOT, 'src/templates/future.html'), 'utf8'), 'future.html');
+  write('future/index.html', fill(futTpl, { SITE_URL: esc(cfg.siteUrl), PAST: FUT_PAST, BUCKETS: FUT_BUCKETS, TOTAL: String(futPool.length), NOW_JA: esc(futUpdatedJa), UPDATED_JA: esc(futUpdatedJa) }));
+  // アーカイブが読むデータ(確認中の項目は含めない)
+  fs.mkdirSync(path.join(DIST, 'future'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'future/timeline.json'), JSON.stringify({ updatedAt: FUT.updatedAt, categories: FUT.categories, eras: FUT.eras, kinds: FUT.kinds, items: futPool }));
+}
 
 // ---------- ビールの一覧・詳細ページ ----------
 if (beers.length) {

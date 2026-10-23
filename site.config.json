@@ -3,9 +3,7 @@
   "shopUrl": "https://shop.yagiribrewery.com/items/all",
   "siteUrl": "https://www.yagiribrewery.com",
   "stagingUrl": "https://yagiri-web-staging.craftbeeraddict.workers.dev",
-  "hiddenPages": [
-    "future"
-  ],
+  "hiddenPages": [],
   "baseRedirectPaths": [
     "/items/*",
     "/categories/*",
