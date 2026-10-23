@@ -28,7 +28,8 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - AGU(矢切ブルワリーの量の単位。1 AGU=厚労省の目安 約20g)の基準は `site.config.json` の `agu`。決まりと改定の手順は `docs/AGU.md`(**安全な量を示すものではない、という注意書きを、必ず出す**)
 - `content/taplist.json` YAGIRIYA の ON TAP とビール診断(毎週入れ替わる。直すとビルドが欄を作る。手順は `docs/TAPLIST_UPDATE.md`。メニュー作成スレッドへの指示文と `likes` の判断基準は `docs/MENU_THREAD_PROMPT.md`)
 - `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
-- `public/` そのまま公開される静的ファイル(画像は `public/images/`)
+- `public/` そのまま公開される静的ファイル(画像は `public/images/`)。`public/pulse.js` は匿名の計測(ビルドが全ページに差し込む)
+- `worker/index.js` 計測を受けて D1 に書く Worker(`/api/e` のみ)。説明は `docs/PULSE.md`
 - `site.config.json` BASE ショップURLなど(`%%SHOP_URL%%` に差し込まれる)
 - `scripts/build.mjs` `dist/` を生成(依存は marked と gray-matter のみ。フレームワークは使わない方針)
   - 全ページ(404を除く)の右下に「上に戻る」ボタンを、ビルドで差し込む(`toTop`。YAGIRIYA は緑、それ以外はえんじ。240px 以上スクロールすると出る)
@@ -40,6 +41,6 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - 事実(住所・営業時間・価格・ビール名など)は `docs/SITE_FACTS.md` を正とする。載っていない事実は推測で書かず、ユーザーに聞く。
 - `[ ]` の空欄はプレースホルダー。実データが来るまで消さない・でっち上げない。写真の枠は、素材が無い間は `hidden`(`data-pending="photo"`)で隠してある。消さない(もとの撮影指示は `docs/PHOTO_SLOTS.md`)。素材が揃ったら `<img>` に差し替えて、枠の `hidden` ごと外す。未記入の数値の行・新作バナー・FUTURE も同様に `data-pending` で隠してある(一覧は `docs/BACKLOG.md`)。
 - 読み物記事は `docs/ARTICLE_GUIDE.md` に従う。参考文献は実在を確認できたものだけ。出典を捏造しない。新規記事は必ず `draft: true`。
-- 外部スクリプトや外部画像を増やさない(Google Fonts は可)。サイトは静的のまま保つ。
+- 外部スクリプトや外部画像を増やさない(Google Fonts は可)。サイトの本体は静的のまま保つ。例外は計測用の Worker(`worker/index.js`、`/api/*` だけ。ユーザーの許可 2026-10)。**PHP は使わない**(ユーザーの指示)。計測は匿名のみ(IP・Cookie・識別IDを取らない)。詳細は `docs/PULSE.md`。
 - タップ領域は 44px 以上、スマホ幅で横スクロールが出ないこと。
 - 残タスクは `docs/BACKLOG.md`。終わったら更新する。
