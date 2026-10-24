@@ -8,8 +8,8 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
-  // 計測用の D1。database_id は書かない(初回のデプロイで wrangler が自動で作って紐づける)
-  "d1_databases": [{ "binding": "DB" }],
+  // 計測用の D1(公開用)。初回のデプロイで自動作成されたものの ID を固定(IDは秘密ではない)
+  "d1_databases": [{ "binding": "DB", "database_id": "177cb5f4-5c3f-4da3-8f91-af24bb1b79d8" }],
   // 気象(気温・降水)を1時間ごとに記録する。診断や閲覧と日付・時間で結びつけて見るため
   "triggers": { "crons": ["7 * * * *"] },
   "env": {
