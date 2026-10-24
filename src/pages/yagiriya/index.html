@@ -45,14 +45,40 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
+<section id="ontap" style="background: #145E50; color: #F4ECD9; padding: 96px 48px">
+<div style="max-width: 1088px; margin: 0 auto">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 40px">
+<h2 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; letter-spacing: 0.04em">ON TAP</h2>
+<span style="font-size: 16px">%%TAPLIST_DATE%% 現在 ／ 最新のラインナップは Instagram @yagiribrewery で</span>
+</div>
+<!--include:beer-finder-->
+%%TAPLIST%%
+</div>
+</section>
+
+<style>
+.menu-cat{margin:0}
+.menu-cat>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;border-bottom:2px solid #145E50;padding-bottom:8px}
+.menu-cat>summary::-webkit-details-marker{display:none}
+.menu-cat>summary::after{content:"+";font-family:'Alfa Slab One',serif;font-size:26px;line-height:1;color:#145E50}
+.menu-cat[open]>summary::after{content:"\2212"}
+.menu-cat[open]>summary{margin-bottom:6px}
+.menu-cat>summary:focus-visible,.menu-chips a:focus-visible,.menu-toggle:focus-visible{outline:3px solid #145E50;outline-offset:3px}
+.menu-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 10px;margin:0 0 48px}
+.menu-chips a,.menu-toggle{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:2px solid #145E50;background:transparent;color:#145E50;font:inherit;font-family:'Alfa Slab One',serif;font-size:14px;letter-spacing:.04em;cursor:pointer}
+.menu-toggle{background:#145E50;color:#F4ECD9}
+.menu-cat{scroll-margin-top:16px}
+</style>
 <section id="food" style="background: #FBF6EA; border-top: 3px double #145E50; border-bottom: 3px double #145E50; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <h2 style="margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; color: #145E50; text-align: center">FOOD</h2>
-<p style="margin: 0 0 56px; text-align: center; font-size: 16px">価格はすべて税込</p>
+<p style="margin: 0 0 24px; text-align: center; font-size: 16px">価格はすべて税込</p>
+<nav class="menu-chips" aria-label="FOODのカテゴリ"><a href="#food-lunch">LUNCH</a><a href="#food-dinner-bar">DINNER &amp; BAR</a><button type="button" class="menu-toggle" data-for="food" aria-pressed="false">すべて開く</button></nav>
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 56px; align-items: start">
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 26px; border-bottom: 2px solid #145E50; padding-bottom: 8px">LUNCH</h3>
+<details class="menu-cat" id="food-lunch" open data-sm-open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 26px">LUNCH</h3></summary>
+
 <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.8">11:30–14:00(L.O. 13:30)／ 単品はお料理のみ、ドリンクセットはドリンク1杯付き(セットは全品フライドポテト付き)。表示は 単品 / セット</p>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 12px 0; border-bottom: 1px dotted #9C8A62">
 <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 19px; font-weight: 700">プルドポークサンド</span><span style="font-size: 14px">豚肉・ザワークラウト・ピクルス・粒マスタード・チーズ ／ セット ¥1,300</span></span>
@@ -108,9 +134,10 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="font-size: 16px; line-height: 1.9">+¥100: カフェオレ ／ +¥300: 自家製奥市川レモネード・カフェラテ</span>
 <span style="font-size: 16px; line-height: 1.9">ドリンクセットは単品でドリンクを頼むより100円お得です。</span>
 </div>
-</div>
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 26px; border-bottom: 2px solid #145E50; padding-bottom: 8px">DINNER &amp; BAR</h3>
+</details>
+<details class="menu-cat" id="food-dinner-bar" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 26px">DINNER &amp; BAR</h3></summary>
+
 <p style="margin: 0 0 12px; font-size: 15px; line-height: 1.8">お酒に合うBBQとスナック</p>
 <div style="margin: 26px 0 2px; font-family: 'Alfa Slab One', serif; font-size: 17px; color: #145E50">STARTER スターター</div>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 12px 0; border-bottom: 1px dotted #9C8A62">
@@ -286,7 +313,7 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥700</span>
 </div>
-</div>
+</details>
 </div>
 </div>
 </section>
@@ -294,15 +321,17 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <section id="drink" style="padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <h2 style="margin: 0 0 8px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; color: #145E50; text-align: center">DRINK</h2>
-<p style="margin: 0 0 56px; text-align: center; font-size: 16px">価格はすべて税込</p>
+<p style="margin: 0 0 24px; text-align: center; font-size: 16px">価格はすべて税込</p>
+<nav class="menu-chips" aria-label="DRINKのカテゴリ"><a href="#drink-craft-beer">CRAFT BEER</a><a href="#drink-beer-high-ball">BEER &amp; HIGH BALL</a><a href="#drink-sour">SOUR</a><a href="#drink-cocktail">COCKTAIL</a><a href="#drink-gin-spirits">GIN &amp; SPIRITS</a><a href="#drink-wine">WINE</a><a href="#drink-whisky-shochu">WHISKY &amp; SHOCHU</a><a href="#drink-coffee-tea">COFFEE &amp; TEA</a><a href="#drink-soft-drink">SOFT DRINK</a><a href="#drink-float-soda">FLOAT &amp; SODA</a><button type="button" class="menu-toggle" data-for="drink" aria-pressed="false">すべて開く</button></nav>
 <div style="margin: 0 auto 48px; max-width: 760px; padding: 20px 28px; border: 2px dashed #145E50; text-align: center; line-height: 1.9">
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; color: #145E50">HAPPY HOUR</span> <span style="font-size: 17px">平日 16:00〜19:00</span><br>
 <span style="font-size: 17px">全品 200円引き ／ バドワイザー 100円引き(税込)</span>
 </div>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px 56px; align-items: start">
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">CRAFT BEER</h3>
+<details class="menu-cat" id="drink-craft-beer" open data-sm-open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">CRAFT BEER</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">飲み比べセット(3種×各100mL)</span>
 <span style="flex: 1"></span>
@@ -311,10 +340,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <p style="margin: 12px 0 0; font-size: 15px; line-height: 1.8">レギュラー/ビッグの価格は銘柄ごとに異なります。<a href="#ontap" style="border-bottom: 1px solid #145E50">ON TAP をご覧ください →</a></p>
 <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.8">選べないときは <a href="#finder" style="border-bottom: 1px solid #145E50">5つの質問でビール選び →</a></p>
 
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">BEER &amp; HIGH BALL</h3>
+<details class="menu-cat" id="drink-beer-high-ball" open data-sm-open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">BEER &amp; HIGH BALL</h3></summary>
+
 <div style="margin: 14px 0 0; font-size: 15px; font-weight: 700; color: #145E50">バドワイザー</div>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">ビッグ(500ml)</span>
@@ -347,10 +377,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥600</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">SOUR</h3>
+<details class="menu-cat" id="drink-sour" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">SOUR</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">レモンサワー</span>
 <span style="flex: 1"></span>
@@ -426,10 +457,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥900</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">COCKTAIL</h3>
+<details class="menu-cat" id="drink-cocktail" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">COCKTAIL</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">ジントニック</span>
 <span style="flex: 1"></span>
@@ -455,10 +487,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥700</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">GIN &amp; SPIRITS</h3>
+<details class="menu-cat" id="drink-gin-spirits" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">GIN &amp; SPIRITS</h3></summary>
+
 <div style="margin: 14px 0 0; font-size: 15px; font-weight: 700; color: #145E50">プレミアムジン</div>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">タンカレー No.10</span>
@@ -528,10 +561,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥1,200</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">WINE</h3>
+<details class="menu-cat" id="drink-wine" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">WINE</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">ボトルワイン</span>
 <span style="flex: 1"></span>
@@ -547,10 +581,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥500</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">WHISKY &amp; SHOCHU</h3>
+<details class="menu-cat" id="drink-whisky-shochu" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">WHISKY &amp; SHOCHU</h3></summary>
+
 <div style="margin: 14px 0 0; font-size: 15px; font-weight: 700; color: #145E50">アメリカン</div>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">ジャックダニエル(テネシー)</span>
@@ -672,10 +707,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥500</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">COFFEE &amp; TEA</h3>
+<details class="menu-cat" id="drink-coffee-tea" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">COFFEE &amp; TEA</h3></summary>
+
 <div style="margin: 14px 0 0; font-size: 15px; font-weight: 700; color: #145E50">コーヒー(スペシャリティブレンド)</div>
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">コーヒー(ホット/アイス)</span>
@@ -708,10 +744,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥400</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">SOFT DRINK</h3>
+<details class="menu-cat" id="drink-soft-drink" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">SOFT DRINK</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">コーラ</span>
 <span style="flex: 1"></span>
@@ -758,10 +795,11 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥300</span>
 </div>
-</div>
+</details>
 
-<div>
-<h3 style="margin: 0 0 6px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px; border-bottom: 2px solid #145E50; padding-bottom: 8px">FLOAT &amp; SODA</h3>
+<details class="menu-cat" id="drink-float-soda" open>
+<summary><h3 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 22px">FLOAT &amp; SODA</h3></summary>
+
 <div style="display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dotted #9C8A62">
 <span style="font-size: 18px; font-weight: 700">コーラフロート</span>
 <span style="flex: 1"></span>
@@ -782,20 +820,9 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <span style="flex: 1"></span>
 <span style="font-family: 'Alfa Slab One', serif; font-size: 18px; white-space: nowrap">¥700</span>
 </div>
-</div>
+</details>
 
 </div>
-</div>
-</section>
-
-<section id="ontap" style="background: #145E50; color: #F4ECD9; padding: 96px 48px">
-<div style="max-width: 1088px; margin: 0 auto">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 40px">
-<h2 style="margin: 0; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 56px; letter-spacing: 0.04em">ON TAP</h2>
-<span style="font-size: 16px">%%TAPLIST_DATE%% 現在 ／ 最新のラインナップは Instagram @yagiribrewery で</span>
-</div>
-<!--include:beer-finder-->
-%%TAPLIST%%
 </div>
 </section>
 
@@ -843,6 +870,33 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
+<script>
+(function () {
+  // スマホでは、カテゴリを閉じた状態で始める(data-sm-open のものだけ開く)。PCは全部開く。JS が無ければ全部開いたまま(検索にも全部載る)
+  var narrow = window.matchMedia('(max-width: 760px)').matches;
+  var cats = [].slice.call(document.querySelectorAll('.menu-cat'));
+  if (narrow) cats.forEach(function (d) { if (!d.hasAttribute('data-sm-open')) d.open = false; });
+  function openFor(hash) {
+    if (!hash || hash.length < 2) return;
+    var t = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!t) return;
+    var d = t.closest ? t.closest('.menu-cat') : null;
+    if (d) d.open = true;
+    if (t.classList && t.classList.contains('menu-cat') || d) t.scrollIntoView();
+  }
+  // ナビの FOOD / DRINK から来たときは、そのブロックの先頭へ(閉じたことで位置がずれるので、もう一度合わせる)
+  window.addEventListener('hashchange', function () { openFor(location.hash); });
+  document.querySelectorAll('.menu-chips a').forEach(function (a) { a.addEventListener('click', function () { var d = document.getElementById(a.getAttribute('href').slice(1)); if (d) d.open = true; }); });
+  document.querySelectorAll('.menu-toggle').forEach(function (b) {
+    var sec = document.getElementById(b.getAttribute('data-for'));
+    function sync() { var all = [].every.call(sec.querySelectorAll('.menu-cat'), function (d) { return d.open; }); b.textContent = all ? 'すべて閉じる' : 'すべて開く'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); }
+    b.addEventListener('click', function () { var all = [].every.call(sec.querySelectorAll('.menu-cat'), function (d) { return d.open; }); sec.querySelectorAll('.menu-cat').forEach(function (d) { d.open = !all; }); sync(); });
+    sec.querySelectorAll('.menu-cat').forEach(function (d) { d.addEventListener('toggle', sync); });
+    sync();
+  });
+  if (location.hash) { openFor(location.hash); window.addEventListener('load', function () { openFor(location.hash); }); } // 画像の読み込みで位置がずれるので、読み込み後にもう一度合わせる
+})();
+</script>
 <!--include:yagiriya-footer-->
 </div>
 </body>
