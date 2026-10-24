@@ -90,7 +90,7 @@ const write = (rel, html) => {
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
   if (rel.endsWith('.html') && rel !== '404.html') {
-    OUT_PAGES.push(rel);
+    if (!rel.startsWith('ops/')) OUT_PAGES.push(rel); // 管理者用のページは sitemap に載せない
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
     if (!STAGING) html = html.replace('</head>', `<link rel="canonical" href="${cfg.siteUrl}/${rel.replace(/index\.html$/, '')}">\n</head>`);
   }
@@ -100,6 +100,8 @@ const write = (rel, html) => {
     html = html.replace('</head>', `<link rel="icon" href="/${pre}favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/${pre}icon-192.png">\n<link rel="apple-touch-icon" href="/${pre}apple-touch-icon.png">\n</head>`);
   }
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(isYagiriya(rel))}\n</body>`);
+  // 読まれ方の計測(匿名。中身は public/pulse.js と worker/index.js、説明は docs/PULSE.md)
+  if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', '<script src="/pulse.js" defer></script>\n</body>');
   // クラウドファンディングの導線(data-fund)は、期限(fundEnd。その日の終わりまで)を過ぎたら自動で隠す。見ている人の端末の暦日で判定する
   if (rel.endsWith('.html') && html.includes('data-fund')) html = html.replace('</body>', `<script>(function(){var end='${cfg.fundEnd}',d=new Date(),t=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(t>end){document.querySelectorAll('[data-fund]').forEach(function(e){e.hidden=true;e.style.display='none';});}})();</script>\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
