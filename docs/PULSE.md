@@ -19,7 +19,7 @@
 
 ## 管理者用のページ
 - `/ops/pulse/`(検索に載せない)。記事ごとの閲覧・平均秒・読み進め率、記事末のボタン、診断の気分別/気温・雨別の結果が見られる
-- 開くには合言葉が要る。Cloudflare の Workers → 該当の Worker → Settings → Variables and secrets に、**シークレット `STATS_TOKEN`**(長いランダムな文字列)を登録する。確認用と公開用で別々に。**コードやGitには書かない**(公開リポジトリ)。未登録のあいだは `/api/stats` は 404
+- 開くには合言葉が要る。Cloudflare の Workers → 該当の Worker → Settings → Variables and secrets に、**シークレット `STATS_TOKEN`**(長いランダムな文字列)を登録する。確認用と公開用で別々に。**コードやGitには書かない**(公開リポジトリ)。未登録のあいだは `/api/stats` は 503(404 なら Worker 自体が動いていない)。**種類は「シークレット」にする**(平文の変数は、次のデプロイで消えることがある)
 
 ## Cloudflare 側の設定
 - 最初は `database_id` を書かず、初回のデプロイで wrangler が D1 を自動で作って紐づけた(確認用・公開用それぞれ)。いまは両方のIDを固定している

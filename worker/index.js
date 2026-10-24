@@ -99,7 +99,8 @@ async function recordWeather(env) {
 
 // ---- 管理者用の集計(STATS_TOKEN を Cloudflare のシークレットに入れたときだけ開く)
 async function stats(request, env) {
-  if (!env.STATS_TOKEN) return reply(404);
+  // 未登録は 503(Worker は動いているが合言葉が見えていない)。静的ファイルの 404 と見分けるため、404 にしない
+  if (!env.STATS_TOKEN) return reply(503);
   const given = request.headers.get('Authorization') || '';
   if (given !== 'Bearer ' + env.STATS_TOKEN) return reply(401);
   await ensureSchema(env.DB);
