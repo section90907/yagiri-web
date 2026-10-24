@@ -100,7 +100,11 @@ async function recordWeather(env) {
 // ---- 管理者用の集計(STATS_TOKEN を Cloudflare のシークレットに入れたときだけ開く)
 async function stats(request, env) {
   // 未登録は 503(Worker は動いているが合言葉が見えていない)。静的ファイルの 404 と見分けるため、404 にしない
-  if (!env.STATS_TOKEN) return reply(503);
+  if (!env.STATS_TOKEN) {
+    // 名前の打ち間違い(空白・全角・大小文字)を見つけるため、STAT/TOKEN を含む名前だけを返す(値は返さない)
+    const near = Object.keys(env).filter((k) => /stat|token/i.test(k));
+    return new Response(JSON.stringify({ near }), { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+  }
   const given = request.headers.get('Authorization') || '';
   if (given !== 'Bearer ' + env.STATS_TOKEN) return reply(401);
   await ensureSchema(env.DB);
