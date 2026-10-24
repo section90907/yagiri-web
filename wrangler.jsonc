@@ -10,6 +10,8 @@
   },
   // 計測用の D1。database_id は書かない(初回のデプロイで wrangler が自動で作って紐づける)
   "d1_databases": [{ "binding": "DB" }],
+  // 気象(気温・降水)を1時間ごとに記録する。診断や閲覧と日付・時間で結びつけて見るため
+  "triggers": { "crons": ["7 * * * *"] },
   "env": {
     "staging": {
       "name": "yagiri-web-staging",
@@ -21,7 +23,8 @@
         "binding": "ASSETS",
         "run_worker_first": ["/api/*"]
       },
-      "d1_databases": [{ "binding": "DB" }]
+      "d1_databases": [{ "binding": "DB", "database_name": "yagiri-web-staging-db", "database_id": "5148df65-8173-416f-9648-a59976cb00e4" }],
+      "triggers": { "crons": ["7 * * * *"] }
     }
   }
 }
