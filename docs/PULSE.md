@@ -22,8 +22,8 @@
 - 開くには合言葉が要る。Cloudflare の Workers → 該当の Worker → Settings → Variables and secrets に、**シークレット `STATS_TOKEN`**(長いランダムな文字列)を登録する。確認用と公開用で別々に。**コードやGitには書かない**(公開リポジトリ)。未登録のあいだは `/api/stats` は 404
 
 ## Cloudflare 側の設定
-- `wrangler.jsonc` の `d1_databases` に `database_id` を書いていない。初回のデプロイで、wrangler が D1 を自動で作って紐づける(確認用・公開用それぞれ)
-- 確認用は、自動で作られた `yagiri-web-staging-db` の ID を `wrangler.jsonc` に書いて固定してある(IDは秘密ではない)。公開用は初回のデプロイのあとで同じ形にする
+- 最初は `database_id` を書かず、初回のデプロイで wrangler が D1 を自動で作って紐づけた(確認用・公開用それぞれ)。いまは両方のIDを固定している
+- 確認用は、自動で作られた `yagiri-web-staging-db` の ID を `wrangler.jsonc` に書いて固定してある(IDは秘密ではない)。公開用も同じ形で固定してある
 - cron(毎時7分)で気象を記録する。`wrangler.jsonc` の `triggers.crons`
 - 気象庁のデータを使うので、データを使ったページや報告に出典(気象庁)を示す
 - 自動で作れなかったとき(ビルドのログに D1 の権限や作成のエラーが出る): ダッシュボードの Storage & Databases → D1 で作り、Workers の Settings → Bindings に `DB` を追加する。または `wrangler.jsonc` の該当箇所へ `database_id` を書く(IDは秘密ではない)
