@@ -3,11 +3,14 @@
 (function () {
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
   var path = location.pathname;
-  if (!/^\/[a-z0-9\-_/]*$/.test(path) || path.indexOf('/api') === 0) return;
+  if (!/^\/[a-z0-9\-_/]*$/.test(path) || path.indexOf('/api') === 0 || path.indexOf('/ops/') === 0) return;
   var send = function (o) {
     o.path = path;
     try { navigator.sendBeacon('/api/e', new Blob([JSON.stringify(o)], { type: 'application/json' })); } catch (e) { /* 計測は失敗しても何も出さない */ }
   };
+
+  // ビール診断が使う(診断の完了時に、回答と出たビール名を送る)。DNT のときはここまで来ないので、送られない
+  window.yagiriPulse = { finder: function (a, top) { send({ t: 'finder', a: a, top: String(top).slice(0, 40) }); } };
 
   // 見出し(h2)を何個、画面の上のほうまで読み進めたか
   var heads = [].slice.call(document.querySelectorAll('main h2, article h2'));

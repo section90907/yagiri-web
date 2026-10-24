@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>読まれ方の集計(管理者用)</title>
+<style>
+body{margin:0;background:#0B0B0B;color:#E6E0D2;font-family:'Zen Kaku Gothic New',sans-serif;line-height:1.8}
+main{max-width:960px;margin:0 auto;padding:32px 16px 96px}
+h1{font-size:24px;margin:0 0 8px} h2{font-size:18px;margin:40px 0 10px;color:#C9AA6E;border-top:1px solid #3A3A3A;padding-top:20px}
+input,button{font:inherit;min-height:44px;padding:0 14px;background:#141414;color:#E6E0D2;border:1px solid #C9AA6E}
+button{cursor:pointer} input{min-width:min(100%,320px)}
+.wrap{overflow-x:auto} table{border-collapse:collapse;min-width:100%;font-size:15px}
+th,td{border-bottom:1px solid #2A2A2A;padding:6px 10px;text-align:left;white-space:nowrap} th{color:#BDB7A9;font-weight:400}
+td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
+</style>
+</head>
+<body>
+<main>
+<h1>読まれ方の集計</h1>
+<p class="note">管理者用です。合言葉(STATS_TOKEN)を入れると、記事ごとの数字が出ます。合言葉はこのタブを閉じると忘れます。</p>
+<form id="f"><input id="t" type="password" autocomplete="off" placeholder="合言葉" aria-label="合言葉"> <button type="submit">表示</button></form>
+<p id="msg" class="note" role="status"></p>
+<div id="out"></div>
+</main>
+<script>
+(function () {
+  var out = document.getElementById('out'), msg = document.getElementById('msg'), t = document.getElementById('t');
+  var CH = { good: '役に立った', more: 'もっと知りたい', off: 'ちょっと違う' };
+  var MOOD = { refresh: 'スッキリ', savor: 'ゆっくり味わう', adventure: '冒険', fun: '盛り上がる' };
+  function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function table(head, rows) {
+    var w = el('div', null, 'wrap'), tb = el('table'), tr = el('tr');
+    head.forEach(function (h) { tr.appendChild(el('th', h)); }); tb.appendChild(tr);
+    rows.forEach(function (r) { var x = el('tr'); r.forEach(function (c) { x.appendChild(el('td', c, typeof c === 'number' ? 'n' : '')); }); tb.appendChild(x); });
+    w.appendChild(tb); return w;
+  }
+  function section(title, node, note) { out.appendChild(el('h2', title)); if (note) out.appendChild(el('p', note, 'note')); out.appendChild(node); }
+  function render(d) {
+    out.textContent = '';
+    var votes = {};
+    d.votes.forEach(function (v) { (votes[v.path] = votes[v.path] || {})[v.choice] = v.n; });
+    section('ページごとの閲覧', table(['ページ', '閲覧', '平均秒', '読み進め率'], d.pages.map(function (p) {
+      return [p.path, p.n, p.avg_secs, p.total ? Math.round(100 * p.reached / p.total) + '%' : '―'];
+    })), '「読み進め」は、見出しが画面の上のほうまで来た割合。読んだ証明ではないので、平均秒と合わせて見る。');
+    var vr = Object.keys(votes).map(function (k) { return [k, votes[k].good || 0, votes[k].more || 0, votes[k].off || 0]; });
+    section('記事末のボタン', table(['記事', CH.good, CH.more, CH.off], vr));
+    section('ビール診断:気分ごとに出たビール', table(['気分', '出たビール', '回数'], d.finder.map(function (f) { return [MOOD[f.mood] || f.mood, f.top, f.n]; })));
+    section('ビール診断:気温と雨ごとに出たビール', table(['気温', '雨', '出たビール', '回数'], d.weather.map(function (w) { return [w.temp_band, w.rain, w.top, w.n]; })),
+      '気象は松戸に近い観測点(気象庁 AMeDAS)から1時間ごとに記録。記録済み ' + d.weather_rows + ' 時間分。診断の回数が少ないうちは、傾向として読まない。');
+  }
+  document.getElementById('f').addEventListener('submit', function (e) {
+    e.preventDefault(); msg.textContent = '読み込み中…';
+    fetch('/api/stats', { headers: { Authorization: 'Bearer ' + t.value }, cache: 'no-store' }).then(function (r) {
+      if (r.status === 401) throw new Error('合言葉が違います。');
+      if (r.status === 404) throw new Error('まだ使えません(Cloudflare に STATS_TOKEN が登録されていません)。');
+      if (!r.ok) throw new Error('取得できませんでした(' + r.status + ')。');
+      return r.json();
+    }).then(function (d) { msg.textContent = ''; render(d); }).catch(function (er) { msg.textContent = er.message; });
+  });
+})();
+</script>
+</body>
+</html>

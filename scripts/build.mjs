@@ -90,7 +90,7 @@ const write = (rel, html) => {
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
   if (rel.endsWith('.html') && rel !== '404.html') {
-    OUT_PAGES.push(rel);
+    if (!rel.startsWith('ops/')) OUT_PAGES.push(rel); // 管理者用のページは sitemap に載せない
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
     if (!STAGING) html = html.replace('</head>', `<link rel="canonical" href="${cfg.siteUrl}/${rel.replace(/index\.html$/, '')}">\n</head>`);
   }

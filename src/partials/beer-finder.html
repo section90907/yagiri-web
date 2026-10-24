@@ -4,6 +4,7 @@
 <div id="finder-body" aria-live="polite">
 <p style="margin: 0 0 20px; font-size: 17px; line-height: 1.9">5つの質問に答えるだけ。いまのタップ(<span id="finder-date"></span> 現在)から、おすすめを選びます。</p>
 <button type="button" id="finder-start" style="min-height: 56px; padding: 0 32px; background: #145E50; color: #F4ECD9; border: 0; font: inherit; font-size: 18px; font-weight: 700; cursor: pointer">診断をはじめる →</button>
+<p style="margin: 16px 0 0; font-size: 13px; line-height: 1.8">答えた内容は、メニューづくりの参考にするため、個人を特定しない形で集計します。</p>
 </div>
 <p style="margin: 20px 0 0; font-size: 13px; line-height: 1.8">おすすめは、タップリストの味の目安をもとにした自動の目安です。お酒は20歳になってから。20歳未満の飲酒は法律で禁止されています。飲酒運転は法律で禁止されています。お酒は適量で。</p>
 <script type="application/json" id="finder-data">%%FINDER_DATA%%</script>
@@ -86,6 +87,8 @@
   }
   function show() {
     var list = pick(answers);
+    // 好みの傾向を知るため、回答と出たビール名だけを匿名で送る(個人は特定しない。DNT のときは送らない)
+    if (window.yagiriPulse) window.yagiriPulse.finder(answers, list[0].beer.name);
     body.textContent = '';
     title.textContent = 'あなたへのおすすめ';
     body.appendChild(el('p', 'margin: 0 0 12px; font-size: 14px; font-weight: 700', 'いちばん合いそうな一杯'));
