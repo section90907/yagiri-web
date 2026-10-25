@@ -46,6 +46,15 @@ td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
     })), '「読み進め」は、見出しが画面の上のほうまで来た割合。読んだ証明ではないので、平均秒と合わせて見る。');
     var vr = Object.keys(votes).map(function (k) { return [k, votes[k].good || 0, votes[k].more || 0, votes[k].off || 0]; });
     section('記事末のボタン', table(['記事', CH.good, CH.more, CH.off], vr));
+    var VC = { learn: 'もっと知りたい', beer: 'これって何?', site: 'HPの感想', yagiriya: 'YAGIRIYA' };
+    var vl = el('div', null, 'wrap');
+    (d.voice || []).forEach(function (v) {
+      var box = el('div'); box.setAttribute('style', 'border-bottom:1px solid #2A2A2A;padding:10px 0');
+      box.appendChild(el('div', v.day + ' ／ ' + (VC[v.cat] || v.cat) + ' ／ ' + v.path, 'note'));
+      var m = el('div', v.msg); m.style.whiteSpace = 'pre-wrap'; m.style.overflowWrap = 'anywhere'; box.appendChild(m); vl.appendChild(box);
+    });
+    if (!(d.voice || []).length) vl.appendChild(el('p', 'まだ届いていません。', 'note'));
+    section('ご意見箱(新しい順・最大200件)', vl, '匿名で届いた文章です。個人情報が書かれていたら、D1 から該当の行を消してください。');
     section('ビール診断:気分ごとに出たビール', table(['気分', '出たビール', '回数'], d.finder.map(function (f) { return [MOOD[f.mood] || f.mood, f.top, f.n]; })));
     section('ビール診断:気温と雨ごとに出たビール', table(['気温', '雨', '出たビール', '回数'], d.weather.map(function (w) { return [w.temp_band, w.rain, w.top, w.n]; })),
       '気象は松戸に近い観測点(気象庁 AMeDAS)から1時間ごとに記録。記録済み ' + d.weather_rows + ' 時間分。診断の回数が少ないうちは、傾向として読まない。');
