@@ -1,0 +1,26 @@
+{
+  "_note": "最新情報・イベント告知。items に足すだけ。表示期間は、イベントなら開催日(eventEnd か eventDate)まで、お知らせなら date から autoArchiveDays 日間。過ぎたら自動でアーカイブへ移る。すぐ移したいときは archived を true に。site は brewery / yagiriya / both。手順は docs/NEWS.md",
+  "autoArchiveDays": 30,
+  "items": [
+    {
+      "id": "agu-launch",
+      "date": "2026-10-24",
+      "kind": "news",
+      "site": "both",
+      "title": "「AGU」の表示を始めました",
+      "body": "一杯の純アルコール量を、厚生労働省の目安(約20g)を1として表す、矢切ブルワリーの物差しです。ON TAPとBEER 101でご覧いただけます。",
+      "link": "/journal/agu/",
+      "linkLabel": "読みものを見る"
+    },
+    {
+      "id": "future-timeline",
+      "date": "2026-10-23",
+      "kind": "news",
+      "site": "brewery",
+      "title": "クラフトビール未来年表を公開しました",
+      "body": "法律・気候・技術・暮らしの変化を、出典つきで年代ごとに並べた年表です。",
+      "link": "/future/",
+      "linkLabel": "年表を見る"
+    }
+  ]
+}
