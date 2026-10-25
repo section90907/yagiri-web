@@ -15,6 +15,8 @@ const FINDER = {
   likes: ['classic', 'fruity', 'roasty', 'spicy', 'hoppy', 'any'],
   exp: ['rare', 'some', 'often'],
 };
+const VOICE_CATS = new Set(['learn', 'beer', 'site', 'yagiriya']);
+const VOICE_DAILY_MAX = 300; // 1日の受付の上限(IP を取らないので、荒らされたときの歯止めは全体の件数で持つ)
 const TOP_RE = /^[\p{L}\p{N} ._\-・&'()]{1,40}$/u;
 // 気象の観測点は、松戸市の中心に最も近く、気温を観測している AMeDAS の地点を自動で選ぶ(利用者の居場所は取らない)
 const MATSUDO = { lat: 35.787, lon: 139.903 };
@@ -29,6 +31,7 @@ const ensureSchema = (db) => (ready ??= db.batch([
   db.prepare('CREATE INDEX IF NOT EXISTS votes_path ON votes (path, choice)'),
   db.prepare('CREATE TABLE IF NOT EXISTS finder (id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, hour INTEGER NOT NULL, mood TEXT NOT NULL, purpose TEXT NOT NULL, bitter TEXT NOT NULL, likes TEXT NOT NULL, exp TEXT NOT NULL, top TEXT NOT NULL)'),
   db.prepare('CREATE INDEX IF NOT EXISTS finder_day ON finder (day, hour)'),
+  db.prepare('CREATE TABLE IF NOT EXISTS voice (id INTEGER PRIMARY KEY AUTOINCREMENT, day TEXT NOT NULL, path TEXT NOT NULL, cat TEXT NOT NULL, msg TEXT NOT NULL)'),
   db.prepare('CREATE TABLE IF NOT EXISTS weather (day TEXT NOT NULL, hour INTEGER NOT NULL, temp REAL, precip REAL, humidity INTEGER, station TEXT, PRIMARY KEY (day, hour))'),
 ]).catch((e) => { ready = undefined; throw e; }));
 
@@ -66,6 +69,27 @@ async function collect(request, env) {
     return reply(204);
   }
   return reply(400);
+}
+
+// ---- ご意見箱。計測と違い、送れなかったときは正直に失敗を返す(「送れた」と見せかけない)
+async function voice(request, env) {
+  const origin = request.headers.get('Origin');
+  if (origin && new URL(origin).host !== new URL(request.url).host) return reply(403);
+  const raw = await request.text();
+  if (raw.length > 4096) return reply(413);
+  let b;
+  try { b = JSON.parse(raw); } catch { return reply(400); }
+  if (!b || typeof b.path !== 'string' || !PATH_RE.test(b.path) || !VOICE_CATS.has(b.cat) || typeof b.msg !== 'string') return reply(400);
+  // 自動入力(人が見ない欄に値がある/表示から3秒未満の送信)は、受けたふりをして捨てる
+  if (b.hp || !(b.ms >= 3000)) return reply(204);
+  const msg = b.msg.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim();
+  if (msg.length < 5 || msg.length > 500) return reply(400);
+  await ensureSchema(env.DB);
+  const day = dayJst();
+  const n = (await env.DB.prepare('SELECT COUNT(*) AS n FROM voice WHERE day = ?1').bind(day).first()).n;
+  if (n >= VOICE_DAILY_MAX) return reply(429);
+  await env.DB.prepare('INSERT INTO voice (day, path, cat, msg) VALUES (?1, ?2, ?3, ?4)').bind(day, b.path, b.cat, msg).run();
+  return reply(204);
 }
 
 // ---- 気象(1時間ごと)。診断や閲覧と、日付・時間で結びつけて「雨の日に何が選ばれるか」を見るため
@@ -116,6 +140,7 @@ async function stats(request, env) {
     weather: await q(`SELECT CASE WHEN w.temp IS NULL THEN '気温不明' WHEN w.temp < 10 THEN '10℃未満' WHEN w.temp < 20 THEN '10〜19℃' WHEN w.temp < 28 THEN '20〜27℃' ELSE '28℃以上' END AS temp_band,
       CASE WHEN w.precip IS NULL THEN '降水不明' WHEN w.precip > 0 THEN '雨' ELSE '雨なし' END AS rain, f.top, COUNT(*) AS n
       FROM finder f LEFT JOIN weather w ON w.day = f.day AND w.hour = f.hour GROUP BY temp_band, rain, f.top ORDER BY temp_band, n DESC LIMIT 200`),
+    voice: await q('SELECT id, day, path, cat, msg FROM voice ORDER BY id DESC LIMIT 200'),
     weather_rows: (await q('SELECT COUNT(*) AS n FROM weather'))[0].n,
   };
   return new Response(JSON.stringify(body), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
@@ -131,6 +156,10 @@ export default {
       if (request.method !== 'POST') return reply(405);
       // 計測の失敗でページの表示に影響を出さない(失敗は 204 で黙って返す。画面に何も出さない)
       try { return await collect(request, env); } catch { return reply(204); }
+    }
+    if (url.pathname === '/api/voice') {
+      if (request.method !== 'POST') return reply(405);
+      try { return await voice(request, env); } catch { return reply(500); }
     }
     if (url.pathname === '/api/stats') return request.method === 'GET' ? stats(request, env) : reply(405);
     return env.ASSETS.fetch(request);
