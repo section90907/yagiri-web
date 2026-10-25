@@ -100,6 +100,7 @@ const write = (rel, html) => {
     html = html.replace('</head>', `<link rel="icon" href="/${pre}favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="192x192" href="/${pre}icon-192.png">\n<link rel="apple-touch-icon" href="/${pre}apple-touch-icon.png">\n</head>`);
   }
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(isYagiriya(rel))}\n</body>`);
+  if (rel.endsWith('.html') && html.includes('data-news')) html = html.replace('</body>', `${NEWS_JS}\n</body>`);
   // ご意見箱(フォームのあるページにだけ)
   if (rel.endsWith('.html') && html.includes('data-voice')) html = html.replace('</body>', '<script src="/voice.js" defer></script>\n</body>');
   // 読まれ方の計測(匿名。中身は public/pulse.js と worker/index.js、説明は docs/PULSE.md)
@@ -205,6 +206,63 @@ const FUTURE_TOP = FUT.highlights.buckets.map((b) => `<div style="display: flex;
 const futUpdatedJa = FUT.updatedAt.replace('-', '年') + '月';
 
 // ---------- 静的ページ ----------
+// ---------- 最新情報・イベント(content/news.json から) ----------
+// 表示期限を過ぎたものは、アーカイブへ移る。静的なサイトなので、ビルド時点の区分に加えて、見る人の端末の暦日でも切り替える(data-until)
+const NEWS = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/news.json'), 'utf8'));
+const jstToday = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+const addDaysIso = (d, n) => new Date(Date.parse(d + 'T00:00:00Z') + n * 86400000).toISOString().slice(0, 10);
+const WD = ['日', '月', '火', '水', '木', '金', '土'];
+const jaDay = (d) => { const t = new Date(Date.parse(d + 'T00:00:00Z')); return `${t.getUTCFullYear()}年${t.getUTCMonth() + 1}月${t.getUTCDate()}日(${WD[t.getUTCDay()]})`; };
+const KIND_JA = { news: 'お知らせ', event: 'イベント', menu: 'メニュー' };
+const newsItems = (NEWS.items ?? []).map((n) => {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(n.date) || !n.title) throw new Error(`news.json: ${n.id ?? '(idなし)'} の date か title が正しくありません`);
+  const until = n.archived ? '0000-00-00' : (n.until ?? n.eventEnd ?? n.eventDate ?? addDaysIso(n.date, NEWS.autoArchiveDays ?? 30));
+  return { ...n, kind: KIND_JA[n.kind] ? n.kind : 'news', site: n.site ?? 'both', until };
+}).sort((a, b) => (b.date < a.date ? -1 : b.date > a.date ? 1 : 0));
+const newsFor = (site) => newsItems.filter((n) => n.site === 'both' || n.site === site);
+const newsCard = (n, theme) => {
+  const y = theme === 'yagiriya';
+  const c = y ? { line: '#145E50', badge: 'border: 2px solid #145E50; color: #145E50', date: '#145E50', title: "font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900", body: '#0F3D34', link: 'border-bottom: 2px solid #145E50; color: #145E50' }
+    : { line: '#3A3A3A', badge: 'border: 1px solid #C9AA6E; color: #C9AA6E', date: '#BDB7A9', title: "font-family: 'Shippori Mincho', serif; font-weight: 800", body: '#DCD4C0', link: 'border-bottom: 1px solid #C9AA6E; color: #C9AA6E' };
+  const ev = n.eventDate ? `<div style="font-size: 16px; font-weight: 700">開催日 ${jaDay(n.eventDate)}${n.eventEnd && n.eventEnd !== n.eventDate ? ` 〜 ${jaDay(n.eventEnd)}` : ''}${n.eventTime ? ` ／ ${esc(n.eventTime)}` : ''}</div>` : '';
+  const link = n.link ? `<a href="${esc(n.link)}"${/^https?:/.test(n.link) ? ' target="_blank" rel="noopener"' : ''} style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; ${c.link}">${esc(n.linkLabel ?? '詳しく見る')} →</a>` : '';
+  return `<article data-news-item data-until="${n.until}" data-date="${n.date}" style="padding: 22px 0; border-top: ${y ? '2px dotted' : '1px solid'} ${c.line}; display: flex; flex-direction: column; gap: 8px; color: ${c.body}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 14px"><span style="padding: 2px 10px; ${c.badge}">${KIND_JA[n.kind]}</span><span style="color: ${c.date}; letter-spacing: 0.08em">${n.date.replace(/-/g, '.')}</span></div>
+<h3 style="margin: 0; font-size: 22px; line-height: 1.5; ${c.title}">${esc(n.title)}</h3>
+${ev}${n.body ? `<p style="margin: 0; font-size: 16px; line-height: 1.9">${esc(n.body)}</p>` : ''}${link}
+</article>`;
+};
+const NEWS_IG = 'https://www.instagram.com/yagiribrewery/';
+const newsSection = (theme) => {
+  const y = theme === 'yagiriya';
+  const list = newsFor(theme).filter((n) => n.until >= jstToday).slice(0, 3);
+  const arch = y ? '/yagiriya/news/' : '/news/';
+  const head = y ? `font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 40px; color: #145E50` : `font-family: Cinzel, 'Times New Roman', serif; font-weight: 400; font-size: 34px; letter-spacing: 0.2em; color: #C9AA6E`;
+  const lk = y ? 'border-bottom: 2px solid #145E50; color: #145E50' : 'border-bottom: 1px solid #C9AA6E; color: #C9AA6E';
+  return `<section data-news${list.length ? '' : ' hidden'} style="${y ? 'max-width: 1184px; margin: 0 auto; padding: 24px 48px 56px' : 'max-width: 1168px; margin: 0 auto; padding: 72px 56px 24px'}">
+<h2 style="margin: 0 0 8px; ${head}">NEWS</h2>
+<div data-news-list="active">
+${list.map((n) => newsCard(n, theme)).join('\n')}
+</div>
+<p style="margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 8px 28px"><a href="${arch}" style="display: inline-flex; align-items: center; min-height: 44px; ${lk}">過去のお知らせ →</a><a href="${NEWS_IG}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 44px; ${lk}">Instagram @yagiribrewery ↗</a></p>
+</section>`;
+};
+const newsPageBody = (theme) => {
+  const all = newsFor(theme);
+  const act = all.filter((n) => n.until >= jstToday), old = all.filter((n) => n.until < jstToday);
+  const y = theme === 'yagiriya';
+  const h2 = y ? `font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 32px; color: #145E50` : `font-family: Cinzel, 'Times New Roman', serif; font-weight: 400; font-size: 26px; letter-spacing: 0.2em; color: #C9AA6E`;
+  const empty = (k, t) => `<p data-news-empty="${k}" style="margin: 16px 0; font-size: 16px"${(k === 'active' ? act : old).length ? ' hidden' : ''}>${t}</p>`;
+  return `<h2 style="margin: 48px 0 0; ${h2}">最新情報・開催予定</h2>
+<div data-news-list="active">${act.map((n) => newsCard(n, theme)).join('\n')}</div>
+${empty('active', 'いま掲載しているお知らせはありません。')}
+<h2 style="margin: 56px 0 0; ${h2}">過去のお知らせ(アーカイブ)</h2>
+<div data-news-list="archive">${old.map((n) => newsCard(n, theme)).join('\n')}</div>
+${empty('archive', 'まだありません。')}`;
+};
+// 見る人の端末の暦日で、期限を過ぎたものをアーカイブへ移す(ビルド後に日が過ぎても、再公開を待たずに切り替わる)
+const NEWS_JS = `<script>(function(){var d=new Date(),t=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');var act=document.querySelector('[data-news-list="active"]'),arc=document.querySelector('[data-news-list="archive"]');var items=[].slice.call(document.querySelectorAll('[data-news-item]'));items.forEach(function(e){if(e.getAttribute('data-until')<t){if(arc&&arc!==e.parentNode)arc.appendChild(e);else if(!arc)e.remove();}});if(arc){[].slice.call(arc.children).sort(function(a,b){return a.getAttribute('data-date')<b.getAttribute('data-date')?1:-1;}).forEach(function(e){arc.appendChild(e);});}document.querySelectorAll('[data-news-empty]').forEach(function(p){var l=document.querySelector('[data-news-list="'+p.getAttribute('data-news-empty')+'"]');p.hidden=!!(l&&l.children.length);});var sec=document.querySelector('section[data-news]');if(sec&&act&&!act.children.length)sec.hidden=true;})();</script>`;
+
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
 <span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F">${p.image ? `<img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover">` : ''}</span>
@@ -217,8 +275,13 @@ for (const f of walk(PAGES)) {
   if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, NEWS_BREWERY: newsSection('brewery'), NEWS_YAGIRIYA: newsSection('yagiriya'), AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
   write(rel, html);
+}
+
+// ---------- 最新情報のアーカイブ(醸造所用 /news/、YAGIRIYA用 /yagiriya/news/) ----------
+for (const [theme, tpl, out] of [['brewery', 'news.html', 'news/index.html'], ['yagiriya', 'news-yagiriya.html', 'yagiriya/news/index.html']]) {
+  write(out, fill(include(fs.readFileSync(path.join(ROOT, 'src/templates', tpl), 'utf8'), tpl), { SITE_URL: esc(cfg.siteUrl), NEWS_BODY: newsPageBody(theme), NEWS_IG }));
 }
 
 // ---------- 記事詳細 ----------

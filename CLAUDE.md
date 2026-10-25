@@ -30,6 +30,7 @@ Claude Code はこのファイルと `docs/` を最初に読むこと。ユー�
 - `src/partials/beer-finder.html` ビール診断(5つの質問。点数のつけ方は `score()`。データは taplist.json の `profile` と `likes`)
 - `public/` そのまま公開される静的ファイル(画像は `public/images/`)。`public/pulse.js` は匿名の計測(ビルドが全ページに差し込む)
 - `worker/index.js` 計測を受けて D1 に書く Worker(`/api/e` のみ)。説明は `docs/PULSE.md`
+- `content/news.json` 最新情報・イベント(トップと YAGIRIYA の NEWS 欄、`/news/`、`/yagiriya/news/`)。期限を過ぎると自動でアーカイブへ。手順は `docs/NEWS.md`
 - `site.config.json` BASE ショップURLなど(`%%SHOP_URL%%` に差し込まれる)
 - `scripts/build.mjs` `dist/` を生成(依存は marked と gray-matter のみ。フレームワークは使わない方針)
   - 全ページ(404を除く)の右下に「上に戻る」ボタンを、ビルドで差し込む(`toTop`。YAGIRIYA は緑、それ以外はえんじ。240px 以上スクロールすると出る)
