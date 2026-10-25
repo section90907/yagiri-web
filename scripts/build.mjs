@@ -158,7 +158,7 @@ const AGU = cfg.agu ?? { baseG: 20, baseYear: 2026, since: '2026-10-24' };
 const aguName = `AGU${AGU.baseYear}`;
 const aguSinceJa = AGU.since.replace(/^(\d+)-(\d+)-(\d+)$/, (m, y, mo, d) => `${y}年${Number(mo)}月${Number(d)}日`);
 const aguOf = (abv, ml) => (Number(abv) * Number(ml) * 0.8 / 100 / AGU.baseG).toFixed(1);
-const mlOf = (t) => ({ regular: t.ml?.regular ?? 260, big: t.ml?.big ?? 470 }); // 既定の容量。バドワイザーだけ taplist.json の ml で上書き
+const mlOf = (t) => ({ regular: t.ml?.regular ?? 240, big: t.ml?.big ?? 470 }); // 既定の容量。バドワイザーだけ taplist.json の ml で上書き
 const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px ${t.comingSoon ? 'dashed' : 'solid'} #7FA89C; background: rgba(0, 0, 0, 0.12)${t.comingSoon ? '; opacity: 0.78' : ''}">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">${t.no ? String(t.no).padStart(2, '0') : '─'}</span><span style="font-size: 14px; text-align: right">${t.original ? '<span style="background: #E3D3A8; color: #145E50; padding: 2px 10px; font-weight: 700">オリジナル</span>' : esc(t.brewery ?? '')}</span></div>
 <div><span style="font-size: 22px; font-weight: 700">${esc(t.name)}</span>${t.ruby ? ` <span style="font-size: 14px">${esc(t.ruby)}</span>` : ''}</div>
