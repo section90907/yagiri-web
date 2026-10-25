@@ -5,7 +5,7 @@
 ## 更新のしかた
 - `items` に1件足すだけ。インスタに投稿したら、キャプションと写真(あれば)を Claude に渡せば、整えて足す
 - 項目: `id`(英数字) / `date`(掲載日 YYYY-MM-DD) / `kind`(`news` お知らせ・`event` イベント・`menu` メニュー) / `site`(`brewery` `yagiriya` `both`) / `title` / `body` / `link`(任意。サイト内は `/…`、外は `https://…`) / `linkLabel`
-- イベントは `eventDate`(開催日)、複数日は `eventEnd`、時間は `eventTime`(例 `17:00〜`)も入れる
+- イベントは `eventDate`(開催日)、複数日は `eventEnd`、時間は `eventTime`(例 `17:00〜`)、会場は `eventPlace` も入れる
 - **本文に事実を書くときは、`docs/SITE_FACTS.md` を正にする。日時・価格・出演者などの未確定は、書かずに確認する**
 
 ## アーカイブへ移るタイミング
