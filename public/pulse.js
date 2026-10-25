@@ -13,7 +13,7 @@
   window.yagiriPulse = { finder: function (a, top) { send({ t: 'finder', a: a, top: String(top).slice(0, 40) }); } };
 
   // 見出し(h2)を何個、画面の上のほうまで読み進めたか
-  var heads = [].slice.call(document.querySelectorAll('main h2, article h2'));
+  var heads = [].slice.call(document.querySelectorAll('main h2, article h2')).filter(function (h) { return !h.closest('[data-voice]'); }); // ご意見箱の見出しは数えない
   var seen = 0;
   if (heads.length && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
@@ -59,5 +59,5 @@
   });
   box.appendChild(q); box.appendChild(row); box.appendChild(note);
   if (done) thanks();
-  prose.parentNode.appendChild(box);
+  prose.parentNode.insertBefore(box, prose.nextSibling); // ご意見箱(voice.js)より前に置く
 })();
