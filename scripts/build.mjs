@@ -84,11 +84,15 @@ const specLine = (b) => [b.abv != null ? `ABV ${Number(b.abv).toFixed(1)}%` : ''
 const ALL_PRODUCTS_HREF = beers.length ? '/beer/' : cfg.shopUrl;
 // YAGIRIYA のデザインのページ(緑・生成り)。/tap/ は店内のQRの受け先(ハブ)
 const isYagiriya = (rel) => rel.startsWith('yagiriya') || rel.startsWith('tap/');
+// 構造化データ(JSON-LD)。検索エンジンに「何の会社・店か」を機械で読める形で伝える。事実は docs/SITE_FACTS.md が正
+const LD_BY_REL = {};
+const ldTag = (o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`;
 const write = (rel, html) => {
   html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
     .replace(/%%FUND_URL%%/g, cfg.fundUrl)
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
+  if (LD_BY_REL[rel]) html = html.replace('</head>', `${LD_BY_REL[rel].map(ldTag).join('\n')}\n</head>`);
   if (rel.endsWith('.html') && rel !== '404.html') {
     if (!rel.startsWith('ops/')) OUT_PAGES.push(rel); // 管理者用のページは sitemap に載せない
     // 正式なURL(workers.dev など別のアドレスで開かれても、検索には正式なURLを伝える)。確認用には付けない
@@ -263,6 +267,34 @@ ${empty('archive', 'まだありません。')}`;
 // 見る人の端末の暦日で、期限を過ぎたものをアーカイブへ移す(ビルド後に日が過ぎても、再公開を待たずに切り替わる)
 const NEWS_JS = `<script>(function(){var d=new Date(),t=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');var act=document.querySelector('[data-news-list="active"]'),arc=document.querySelector('[data-news-list="archive"]');var items=[].slice.call(document.querySelectorAll('[data-news-item]'));items.forEach(function(e){if(e.getAttribute('data-until')<t){if(arc&&arc!==e.parentNode)arc.appendChild(e);else if(!arc)e.remove();}});if(arc){[].slice.call(arc.children).sort(function(a,b){return a.getAttribute('data-date')<b.getAttribute('data-date')?1:-1;}).forEach(function(e){arc.appendChild(e);});}document.querySelectorAll('[data-news-empty]').forEach(function(p){var l=document.querySelector('[data-news-list="'+p.getAttribute('data-news-empty')+'"]');p.hidden=!!(l&&l.children.length);});var sec=document.querySelector('section[data-news]');if(sec&&act&&!act.children.length)sec.hidden=true;})();</script>`;
 
+const SITE = cfg.siteUrl;
+const ORG_ID = `${SITE}/#organization`;
+const ORG = {
+  '@type': 'Organization', '@id': ORG_ID, name: '矢切ブルワリー合同会社', alternateName: ['矢切ブルワリー', 'YAGIRI BREWERY'],
+  url: `${SITE}/`, logo: `${SITE}/images/logo-dark.webp`,
+  description: '千葉県松戸市・矢切のクラフトビール醸造所。',
+  address: { '@type': 'PostalAddress', addressLocality: '松戸市', addressRegion: '千葉県', addressCountry: 'JP' }, // 醸造所の所在地は載せない方針(SITE_FACTS)
+  sameAs: ['https://www.instagram.com/yagiribrewery/']
+};
+LD_BY_REL['index.html'] = [{ '@context': 'https://schema.org', ...ORG }, { '@context': 'https://schema.org', '@type': 'WebSite', name: '矢切ブルワリー', url: `${SITE}/`, inLanguage: 'ja', publisher: { '@id': ORG_ID } }];
+LD_BY_REL['yagiriya/index.html'] = [{
+  '@context': 'https://schema.org', '@type': 'BarOrPub', '@id': `${SITE}/yagiriya/#taproom`, name: 'PUBLIC HOUSE YAGIRIYA', alternateName: 'YAGIRIYA',
+  url: `${SITE}/yagiriya/`, image: [`${SITE}/images/yagiriya-exterior.webp`, `${SITE}/images/yagiriya-taps.webp`],
+  description: '矢切駅から徒歩30秒。昼はカフェ、夜はクラフトビールとアメリカンBBQのパブリックハウス。',
+  address: { '@type': 'PostalAddress', streetAddress: '下矢切132-1', addressLocality: '松戸市', addressRegion: '千葉県', addressCountry: 'JP' },
+  servesCuisine: ['アメリカンBBQ', 'カフェ', 'クラフトビール'],
+  paymentAccepted: '現金, クレジットカード, 電子マネー, 交通系IC, au PAY, PayPay, d払い',
+  hasMenu: `${SITE}/yagiriya/#food`,
+  // 祝日は表現できないので、曜日で書ける範囲だけ(平日 11:30–14:00 と 17:00–24:00 / 土日 11:30–24:00)。定休日なし
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '11:30', closes: '14:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '17:00', closes: '00:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday', 'Sunday'], opens: '11:30', closes: '00:00' }
+  ],
+  parentOrganization: { '@id': ORG_ID }, sameAs: ['https://www.instagram.com/yagiribrewery/']
+}];
+const isoDay = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : String(d).slice(0, 10));
+
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
 <span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F">${p.image ? `<img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover">` : ''}</span>
@@ -301,6 +333,12 @@ posts.forEach((p, i) => {
     PREV: navLink(posts[i + 1], 'prev'), NEXT: navLink(posts[i - 1], 'next'),
     SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl),
   });
+  LD_BY_REL[`journal/${p.slug}/index.html`] = [{
+    '@context': 'https://schema.org', '@type': 'Article', headline: p.title, description: p.lead, inLanguage: 'ja',
+    datePublished: isoDay(p.date), ...(p.updated ? { dateModified: isoDay(p.updated) } : {}),
+    mainEntityOfPage: `${SITE}/journal/${p.slug}/`, image: [p.image ? new URL(p.image, SITE + '/').href : `${SITE}/images/og.png`],
+    author: { '@type': 'Organization', name: p.author ?? '矢切ブルワリー', '@id': ORG_ID }, publisher: { '@id': ORG_ID }
+  }];
   write(`journal/${p.slug}/index.html`, html);
 });
 
