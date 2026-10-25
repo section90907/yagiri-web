@@ -282,6 +282,9 @@ LD_BY_REL['yagiriya/index.html'] = [{
   url: `${SITE}/yagiriya/`, image: [`${SITE}/images/yagiriya-exterior.webp`, `${SITE}/images/yagiriya-taps.webp`],
   description: '矢切駅から徒歩30秒。昼はカフェ、夜はクラフトビールとアメリカンBBQのパブリックハウス。',
   address: { '@type': 'PostalAddress', streetAddress: '下矢切132-1', addressLocality: '松戸市', addressRegion: '千葉県', addressCountry: 'JP' },
+  telephone: '+81-47-706-5387',
+  geo: { '@type': 'GeoCoordinates', latitude: 35.75794, longitude: 139.89969 }, // プラスコード 8Q7XQV5X+5V(QV5X+5V 松戸市)から
+  hasMap: 'https://www.google.com/maps/search/?api=1&query=35.75794,139.89969',
   servesCuisine: ['アメリカンBBQ', 'カフェ', 'クラフトビール'],
   paymentAccepted: '現金, クレジットカード, 電子マネー, 交通系IC, au PAY, PayPay, d払い',
   hasMenu: `${SITE}/yagiriya/#food`,
