@@ -281,6 +281,6 @@
     ],
     "note": "「→」はおすすめの飲む順番"
   },
-  "sizes": "容量:クラフトビール レギュラー 260ml ／ ビッグ 470ml(バドワイザーのみ レギュラー 300ml ／ ビッグ 500ml)",
+  "sizes": "容量:クラフトビール レギュラー 240ml ／ ビッグ 470ml(バドワイザーのみ レギュラー 300ml ／ ビッグ 500ml)",
   "profileNote": "profile=タップリストのレーダーチャートの値(1〜5。bitter=苦味, sweet=甘味, fruity=フルーティー, body=コク, special=銘柄ごとの軸)。likes=ビール診断の「味の方向」(classic=すっきり王道, fruity, roasty=香ばしい・黒, spicy=スパイス・ハーブ, hoppy=ホップの香りと苦味)。新しい銘柄は profile と likes を入れる。無い銘柄は診断の対象外。 判断基準の正は docs/MENU_THREAD_PROMPT.md。"
 }
