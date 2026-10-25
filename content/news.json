@@ -3,6 +3,17 @@
   "autoArchiveDays": 30,
   "items": [
     {
+      "id": "matsudo-craft-beer-fest-2026",
+      "date": "2026-10-25",
+      "kind": "event",
+      "site": "both",
+      "title": "松戸クラフトビールフェス with はしご酒",
+      "eventDate": "2026-10-30",
+      "eventEnd": "2026-11-03",
+      "eventPlace": "松戸駅西口ペデストリアンデッキ",
+      "body": "松戸にゆかりのあるブルワリーと、過去に出店したブルワリーが大集合するイベントです。"
+    },
+    {
       "id": "agu-launch",
       "date": "2026-10-24",
       "kind": "news",
