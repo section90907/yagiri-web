@@ -46,6 +46,12 @@ td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
     })), '「読み進め」は、見出しが画面の上のほうまで来た割合。読んだ証明ではないので、平均秒と合わせて見る。');
     var vr = Object.keys(votes).map(function (k) { return [k, votes[k].good || 0, votes[k].more || 0, votes[k].off || 0]; });
     section('記事末のボタン', table(['記事', CH.good, CH.more, CH.off], vr));
+    var KN = { direct: '直接(ブックマーク・QRなど)', ext: '外のサイト', from: '目印(?from=)' };
+    var CK = { shop: 'ショップ', ig: 'Instagram', fund: 'クラウドファンディング', map: '地図', tel: '電話', ext: 'その他の外部' };
+    section('入口(どこから来たか)', table(['種類', '入口', '回数'], (d.entries || []).map(function (e) { return [KN[e.kind] || e.kind, e.val, e.n]; })), '外のサイトはドメイン名だけ。Instagramのアプリ内ブラウザなどは「直接」に入る。');
+    section('ページ間の遷移(どのページから、どのページへ)', table(['から', 'へ', '回数'], (d.flows || []).map(function (f) { return [f.src, f.dst, f.n]; })));
+    section('よくある順路(同じタブ・最大6ページ)', table(['順路', '件数'], (d.routes || []).map(function (r) { return [r.route, r.n]; })), 'タブを閉じれば切れる使い捨ての印でつなげた順路。同じ人の別の日・別のタブはつながらない。件数が少ないうちは、傾向として読まない。');
+    section('外へ出るリンク・電話の押下', table(['ページ', '種類', '回数'], (d.clicks || []).map(function (c) { return [c.path, CK[c.kind] || c.kind, c.n]; })));
     var VC = { learn: 'もっと知りたい', beer: 'これって何?', site: 'HPの感想', yagiriya: 'YAGIRIYA' };
     var vl = el('div', null, 'wrap');
     (d.voice || []).forEach(function (v) {
