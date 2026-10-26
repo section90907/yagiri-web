@@ -9,6 +9,17 @@
     try { navigator.sendBeacon('/api/e', new Blob([JSON.stringify(o)], { type: 'application/json' })); } catch (e) { /* 計測は失敗しても何も出さない */ }
   };
 
+  // 外へ出るリンクと電話の押下を、種類だけ数える(行き先のURLは残さない)
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var kind = null, h = a.getAttribute('href') || '';
+    if (/^tel:/i.test(h)) kind = 'tel';
+    else { try { var u = new URL(h, location.href); if (/^https?:$/.test(u.protocol) && u.host !== location.host) { var x = u.hostname.toLowerCase();
+      kind = /(^|\.)instagram\.com$/.test(x) ? 'ig' : x === 'shop.yagiribrewery.com' ? 'shop' : x === 'fund.yagiribrewery.com' ? 'fund' : (x === 'maps.app.goo.gl' || /(^|\.)google\.[a-z.]+$/.test(x) && /\/maps/.test(u.pathname)) ? 'map' : 'ext'; } } catch (er) { kind = null; } }
+    if (kind) send({ t: 'click', kind: kind, sid: sid });
+  }, true);
+
   // ビール診断が使う(診断の完了時に、回答と出たビール名を送る)。DNT のときはここまで来ないので、送られない
   window.yagiriPulse = { finder: function (a, top) { send({ t: 'finder', a: a, top: String(top).slice(0, 40) }); } };
 
@@ -23,12 +34,26 @@
   }
 
   // 画面が前面にあった秒数。読み込みごとの使い捨ての印(vid)で、同じ読み込みの再送を1件にまとめる
+  // このタブだけの使い捨ての印(sid)。タブを閉じれば消える。Cookie でも localStorage でもない。使えない環境では付けない
+  var sid = null;
+  try { sid = sessionStorage.getItem('pulse_sid'); if (!sid) { sid = Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4); sessionStorage.setItem('pulse_sid', sid); } } catch (e) { sid = null; }
+  // どこから来たか。同じサイトの中なら直前のページのパス、外ならドメイン名だけ。QR などの目印(?from=)があればそれ
+  var rk = null, rv = null;
+  try {
+    var fromQ = new URLSearchParams(location.search).get('from');
+    if (fromQ && /^[a-z0-9-]{1,12}$/.test(fromQ)) { rk = 'from'; rv = fromQ; }
+    else if (document.referrer) {
+      var ru = new URL(document.referrer);
+      if (ru.host === location.host) { if (/^\/[a-z0-9\-_/]{0,120}$/.test(ru.pathname)) { rk = 'in'; rv = ru.pathname; } }
+      else { rk = 'ext'; rv = ru.hostname.toLowerCase().replace(/^www\./, ''); }
+    }
+  } catch (e) { rk = null; rv = null; }
   var vid = Math.random().toString(36).slice(2, 14) + Date.now().toString(36).slice(-4);
   var shown = document.visibilityState === 'visible' ? Date.now() : 0, acc = 0;
   var flush = function () {
     if (shown) { acc += Date.now() - shown; shown = 0; }
     var secs = Math.min(3600, Math.round(acc / 1000));
-    send({ t: 'visit', vid: vid, secs: secs, reached: Math.min(seen, heads.length, 99), total: Math.min(heads.length, 99) });
+    send({ t: 'visit', vid: vid, sid: sid, rk: rk, rv: rv, secs: secs, reached: Math.min(seen, heads.length, 99), total: Math.min(heads.length, 99) });
   };
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') flush(); else shown = Date.now();
