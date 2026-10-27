@@ -3,6 +3,17 @@
   "autoArchiveDays": 30,
   "items": [
     {
+      "id": "year-end-party-2026",
+      "date": "2026-10-27",
+      "kind": "news",
+      "site": "yagiriya",
+      "title": "年末宴会コース(12月限定)のご予約を受け付けています",
+      "body": "飲み放題つき、4名様から。乾杯コース ¥4,000、定番コース ¥5,000、肉盛りコース ¥6,000(1名様・税込)。",
+      "link": "/yagiriya/#party",
+      "linkLabel": "コースを見る",
+      "until": "2026-12-31"
+    },
+    {
       "id": "matsudo-craft-beer-fest-2026",
       "date": "2026-10-25",
       "kind": "event",
