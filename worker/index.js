@@ -44,6 +44,7 @@ const ensureSchema = (db) => (ready ??= db.batch([
 ]).then(async () => {
   // 後から足した列(すでにある DB には ALTER で足す。2回目以降は「列が既にある」で失敗するので無視する)
   for (const col of ['ts INTEGER', 'sid TEXT', 'rk TEXT', 'rv TEXT']) await db.prepare(`ALTER TABLE visits ADD COLUMN ${col}`).run().catch(() => {});
+  for (const col of ['ts INTEGER', 'sid TEXT']) await db.prepare(`ALTER TABLE finder ADD COLUMN ${col}`).run().catch(() => {});
 }).catch((e) => { ready = undefined; throw e; }));
 
 // 日付は日本時間の暦日(UTC のままだと、朝9時前の分が前日に入る)
@@ -82,8 +83,9 @@ async function collect(request, env) {
   }
   if (b.t === 'finder' && b.a && typeof b.a === 'object' && typeof b.top === 'string' && TOP_RE.test(b.top)
     && Object.keys(FINDER).every((k) => FINDER[k].includes(b.a[k]))) {
-    await env.DB.prepare('INSERT INTO finder (day, hour, mood, purpose, bitter, likes, exp, top) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)')
-      .bind(dayJst(), jst().getUTCHours(), b.a.mood, b.a.purpose, b.a.bitter, b.a.likes, b.a.exp, b.top).run();
+    const sid = typeof b.sid === 'string' && VID_RE.test(b.sid) ? b.sid : null; // 同じタブで先に読んだページと、診断の結果を、つなげて見るため(90日で消す)
+    await env.DB.prepare('INSERT INTO finder (day, hour, mood, purpose, bitter, likes, exp, top, ts, sid) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)')
+      .bind(dayJst(), jst().getUTCHours(), b.a.mood, b.a.purpose, b.a.bitter, b.a.likes, b.a.exp, b.top, Math.floor(Date.now() / 1000), sid).run();
     return reply(204);
   }
   return reply(400);
@@ -143,7 +145,7 @@ async function recordWeather(env) {
 async function dropOldSid(env) {
   await ensureSchema(env.DB);
   const cut = new Date(Date.now() + 9 * 3600 * 1000 - SID_KEEP_DAYS * 86400000).toISOString().slice(0, 10);
-  await env.DB.batch([env.DB.prepare('UPDATE visits SET sid = NULL WHERE day < ?1 AND sid IS NOT NULL').bind(cut), env.DB.prepare('UPDATE clicks SET sid = NULL WHERE day < ?1 AND sid IS NOT NULL').bind(cut)]);
+  await env.DB.batch([env.DB.prepare('UPDATE visits SET sid = NULL WHERE day < ?1 AND sid IS NOT NULL').bind(cut), env.DB.prepare('UPDATE clicks SET sid = NULL WHERE day < ?1 AND sid IS NOT NULL').bind(cut), env.DB.prepare('UPDATE finder SET sid = NULL WHERE day < ?1 AND sid IS NOT NULL').bind(cut)]);
 }
 
 // ---- 管理者用の集計(STATS_TOKEN を Cloudflare のシークレットに入れたときだけ開く)
@@ -178,6 +180,9 @@ async function stats(request, env) {
     entries: await q("SELECT COALESCE(rk, 'direct') AS kind, COALESCE(rv, '') AS val, COUNT(*) AS n FROM visits GROUP BY rk, rv HAVING kind != 'in' ORDER BY n DESC LIMIT 40"),
     clicks: await q('SELECT path, kind, COUNT(*) AS n FROM clicks GROUP BY path, kind ORDER BY n DESC LIMIT 60'),
     routes: await routes(env.DB),
+    direct_pages: await q("SELECT path, COUNT(*) AS n FROM visits WHERE rk IS NULL GROUP BY path ORDER BY n DESC LIMIT 20"),
+    finder_reads: await q("SELECT f.top AS top, v.path AS path, COUNT(DISTINCT f.id) AS n FROM finder f JOIN visits v ON v.sid = f.sid AND v.ts <= f.ts WHERE f.sid IS NOT NULL AND v.path LIKE '/journal/%' GROUP BY f.top, v.path ORDER BY n DESC LIMIT 60"),
+    finder_with_sid: (await q('SELECT COUNT(*) AS n, SUM(sid IS NOT NULL) AS s FROM finder'))[0],
     voice: await q('SELECT id, day, path, cat, msg FROM voice ORDER BY id DESC LIMIT 200'),
     weather_rows: (await q('SELECT COUNT(*) AS n FROM weather'))[0].n,
   };

@@ -50,8 +50,12 @@ td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
     var CK = { shop: 'ショップ', ig: 'Instagram', fund: 'クラウドファンディング', map: '地図', tel: '電話', ext: 'その他の外部' };
     section('入口(どこから来たか)', table(['種類', '入口', '回数'], (d.entries || []).map(function (e) { return [KN[e.kind] || e.kind, e.val, e.n]; })), '外のサイトはドメイン名だけ。Instagramのアプリ内ブラウザなどは「直接」に入る。');
     section('ページ間の遷移(どのページから、どのページへ)', table(['から', 'へ', '回数'], (d.flows || []).map(function (f) { return [f.src, f.dst, f.n]; })));
+    section('直接アクセスで入ったページ', table(['ページ', '回数'], (d.direct_pages || []).map(function (x) { return [x.path, x.n]; })), 'リファラーが無い入口(ブックマーク・QR・メッセージのリンク・アプリ内ブラウザ)。QRのURLに ?from=qr を付けると、「目印」に分かれる。');
     section('よくある順路(同じタブ・最大6ページ)', table(['順路', '件数'], (d.routes || []).map(function (r) { return [r.route, r.n]; })), 'タブを閉じれば切れる使い捨ての印でつなげた順路。同じ人の別の日・別のタブはつながらない。件数が少ないうちは、傾向として読まない。');
     section('外へ出るリンク・電話の押下', table(['ページ', '種類', '回数'], (d.clicks || []).map(function (c) { return [c.path, CK[c.kind] || c.kind, c.n]; })));
+    var fr = d.finder_with_sid || {};
+    section('ビール診断の結果ごとに、その前に同じタブで読んだ読みもの', table(['出たビール', '読んだ記事', '回数'], (d.finder_reads || []).map(function (x) { return [x.top, x.path, x.n]; })),
+      '診断の回数 ' + (fr.n || 0) + ' 件のうち、同じタブの順路を見られたもの ' + (fr.s || 0) + ' 件。少ないうちは、傾向として読まない。タブを閉じれば切れる使い捨ての印でつなげていて、人は特定できない。');
     var VC = { learn: 'もっと知りたい', beer: 'これって何?', site: 'HPの感想', yagiriya: 'YAGIRIYA' };
     var vl = el('div', null, 'wrap');
     (d.voice || []).forEach(function (v) {

@@ -21,7 +21,7 @@
   }, true);
 
   // ビール診断が使う(診断の完了時に、回答と出たビール名を送る)。DNT のときはここまで来ないので、送られない
-  window.yagiriPulse = { finder: function (a, top) { send({ t: 'finder', a: a, top: String(top).slice(0, 40) }); } };
+  window.yagiriPulse = { finder: function (a, top) { send({ t: 'finder', a: a, top: String(top).slice(0, 40), sid: sid }); } };
 
   // 見出し(h2)を何個、画面の上のほうまで読み進めたか
   var heads = [].slice.call(document.querySelectorAll('main h2, article h2')).filter(function (h) { return !h.closest('[data-voice]'); }); // ご意見箱の見出しは数えない
