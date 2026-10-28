@@ -8,6 +8,8 @@
 //         保存は90日まで(それを過ぎたら sid を消して、順路は集計だけ残す)。IP・端末の情報とは一緒に持たない
 // 遷移(どのページから来たか)は、直前のページのパスか、外から来たときはドメイン名だけを記録する。
 
+import GBP from './gbp-data.json'; // ビルドが作る(scripts/build.mjs)。Git には入れない
+
 const PATH_RE = /^\/[a-z0-9\-_/]{0,120}$/;
 const VID_RE = /^[a-z0-9]{8,24}$/;
 const CHOICES = new Set(['good', 'more', 'off']);
@@ -158,6 +160,21 @@ async function routes(db) {
   for (const a of by.values()) if (a.length >= 2) { const k = a.slice(0, 6).join(' → '); cnt.set(k, (cnt.get(k) ?? 0) + 1); }
   return [...cnt.entries()].sort((x, y) => y[1] - x[1]).slice(0, 30).map(([route, n]) => ({ route, n }));
 }
+// 合言葉の確認(集計と投稿文の下書きで共通)。通ったら null、通らなければ返す応答
+function denied(request, env) {
+  // 未登録は 503(Worker は動いているが合言葉が見えていない)。静的ファイルの 404 と見分けるため、404 にしない
+  if (!env.STATS_TOKEN) {
+    // 名前の打ち間違い(空白・全角・大小文字)を見つけるため、STAT/TOKEN を含む名前だけを返す(値は返さない)
+    const near = Object.keys(env).filter((k) => /stat|token/i.test(k));
+    return new Response(JSON.stringify({ near }), { status: 503, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+  }
+  return (request.headers.get('Authorization') || '') === 'Bearer ' + env.STATS_TOKEN ? null : reply(401);
+}
+function gbp(request, env) {
+  const d = denied(request, env);
+  if (d) return d;
+  return new Response(JSON.stringify(GBP), { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } });
+}
 async function stats(request, env) {
   // 未登録は 503(Worker は動いているが合言葉が見えていない)。静的ファイルの 404 と見分けるため、404 にしない
   if (!env.STATS_TOKEN) {
@@ -205,6 +222,7 @@ export default {
       if (request.method !== 'POST') return reply(405);
       try { return await voice(request, env); } catch { return reply(500); }
     }
+    if (url.pathname === '/api/gbp') return request.method === 'GET' ? gbp(request, env) : reply(405);
     if (url.pathname === '/api/stats') return request.method === 'GET' ? stats(request, env) : reply(405);
     return env.ASSETS.fetch(request);
   },

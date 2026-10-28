@@ -17,7 +17,7 @@ ol,ul{margin:8px 0;padding-left:1.3em} p.note{font-size:14px;color:#BDB7A9}
 <body>
 <main>
 <h1>Googleビジネスプロフィール用の投稿文</h1>
-<p class="note">管理者用です。「最新情報・イベント」(<code>content/news.json</code>)の項目から、プロフィールの投稿に貼る文面を作ります。自動では投稿されません。</p>
+<p class="note">管理者用です。合言葉(<code>STATS_TOKEN</code>。集計ページと同じもの)を入れると出ます。「最新情報・イベント」(<code>content/news.json</code>)の項目から、プロフィールの投稿に貼る文面を作ります。自動では投稿されません。</p>
 <ol>
 <li>下の項目の「コピー」を押す。</li>
 <li>Googleビジネスプロフィールの「最新情報を追加」(イベントなら「イベントを追加」)に貼る。</li>
@@ -25,18 +25,54 @@ ol,ul{margin:8px 0;padding-left:1.3em} p.note{font-size:14px;color:#BDB7A9}
 </ol>
 <p class="note">本文に URL・電話番号を入れていないのは、投稿の規則で受け付けられないことがあるためです。リンクはボタンに設定します。文面は、投稿する前に目で確認してください。</p>
 <p><a href="/ops/pulse/">← 読まれ方の集計へ</a></p>
-%%GBP_CARDS%%
+<form id="f"><input id="t" type="password" autocomplete="off" placeholder="合言葉" aria-label="合言葉" style="font:inherit;min-height:44px;padding:0 14px;background:#141414;color:#E6E0D2;border:1px solid #C9AA6E;min-width:min(100%,320px)"> <button type="submit" style="min-height:44px;padding:0 16px">表示</button></form>
+<p id="msg" class="note" role="status"></p>
+<div id="out"></div>
 </main>
 <script>
 (function () {
-  document.querySelectorAll('[data-copy]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var t = document.getElementById(b.getAttribute('data-copy')).textContent;
-      function done() { var o = b.textContent; b.textContent = 'コピーしました'; setTimeout(function () { b.textContent = o; }, 1500); }
-      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(done, function () { fallback(t, done); }); } else { fallback(t, done); }
+  var out = document.getElementById('out'), msg = document.getElementById('msg'), t = document.getElementById('t');
+  var SITE = { brewery: '醸造所のプロフィール向け', yagiriya: 'YAGIRIYA向け', both: 'YAGIRIYA・醸造所どちらでも' };
+  function el(tag, text, css) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (css) e.setAttribute('style', css); return e; }
+  function copyText(s, done) {
+    function fb() { var a = document.createElement('textarea'); a.value = s; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); done(); } catch (e) { /* 手でコピーしてもらう */ } a.remove(); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done, fb); else fb();
+  }
+  function field(parent, label, val, note) {
+    var box = el('div', null, 'margin:12px 0 0');
+    box.appendChild(el('div', label + (note || ''), 'font-size:14px;color:#BDB7A9'));
+    var row = el('div', null, 'display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start');
+    row.appendChild(el('pre', val, 'flex:1 1 280px;margin:4px 0 0;padding:10px 12px;background:#141414;border:1px solid #3A3A3A;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:15px;line-height:1.8'));
+    var b = el('button', 'コピー', 'min-height:44px;padding:0 16px'); b.type = 'button';
+    b.addEventListener('click', function () { copyText(val, function () { b.textContent = 'コピーしました'; setTimeout(function () { b.textContent = 'コピー'; }, 1500); }); });
+    row.appendChild(b); box.appendChild(row); parent.appendChild(box);
+  }
+  function render(list) {
+    out.textContent = '';
+    if (!list.length) { out.appendChild(el('p', 'お知らせがありません。')); return; }
+    list.forEach(function (n) {
+      var a = el('article', null, 'padding:22px 0;border-top:1px solid #3A3A3A');
+      a.appendChild(el('div', (n.ev ? 'イベント投稿' : '最新情報の投稿') + ' ／ ' + n.date.replace(/-/g, '.') + ' ／ ' + (SITE[n.site] || n.site) + ' ／ 表示期限 ' + (n.until === '0000-00-00' ? 'アーカイブ済み' : n.until), 'font-size:14px;color:#C9AA6E'));
+      a.appendChild(el('h3', n.title, 'margin:4px 0 0;font-size:20px;line-height:1.5'));
+      if (n.ev) { field(a, 'イベントのタイトル(58字まで)', n.evTitle); field(a, '開始日', n.start); field(a, '終了日', n.end); }
+      field(a, '本文', n.text, ' ／ ' + n.count + '字(1,500字まで)' + (n.count > 1500 ? ' ⚠ 長すぎます' : ''));
+      field(a, 'ボタン「詳細」のリンク', n.url);
+      out.appendChild(a);
     });
-  });
-  function fallback(t, done) { var a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); done(); } catch (e) { /* 手でコピーしてもらう */ } a.remove(); }
+  }
+  function load(token) {
+    msg.textContent = '読み込み中…';
+    fetch('/api/gbp', { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' }).then(function (r) {
+      if (r.status === 401) throw new Error('合言葉が違います。');
+      if (r.status === 503) throw new Error('Worker は動いていますが、STATS_TOKEN が見えていません。');
+      if (r.status === 404) throw new Error('計測の Worker が動いていません(最新のデプロイが反映されていない可能性)。');
+      if (!r.ok) throw new Error('取得できませんでした(' + r.status + ')。');
+      return r.json();
+    }).then(function (d) { msg.textContent = ''; try { sessionStorage.setItem('ops_token', token); } catch (e) { /* 保存できなくても動く */ } render(d); })
+      .catch(function (er) { msg.textContent = er.message; });
+  }
+  document.getElementById('f').addEventListener('submit', function (e) { e.preventDefault(); load(t.value); });
+  try { var saved = sessionStorage.getItem('ops_token'); if (saved) { t.value = saved; load(saved); } } catch (e) { /* 同上 */ }
 })();
 </script>
 </body>
