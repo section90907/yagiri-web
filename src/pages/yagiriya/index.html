@@ -47,6 +47,40 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 </div>
 </section>
 
+<section id="scenes" style="max-width: 1184px; margin: 0 auto; padding: 0 48px 80px">
+<span style="display: block; text-align: center; font-family: 'Alfa Slab One', serif; font-size: 16px; letter-spacing: 0.2em; color: #145E50">SCENES</span>
+<h2 style="margin: 4px 0 28px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 40px; color: #145E50; text-align: center">こんな使い方</h2>
+<style>.scene-grid{display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px}@media (max-width: 760px){.scene-grid{display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding-bottom: 8px; margin: 0 -48px; padding-left: 48px; padding-right: 48px; scroll-padding-left: 48px}.scene-grid>div{flex: 0 0 82%; scroll-snap-align: start}}.scene-grid:focus-visible{outline: 3px solid #145E50; outline-offset: 3px}</style>
+<div class="scene-grid" tabindex="0" role="region" aria-label="利用シーン(横にスクロールできます)">
+<div style="background: #FBF6EA; border: 2px solid #145E50; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 20px; font-weight: 900">ランチに</span>
+<span style="font-size: 16px; line-height: 1.9">平日も土日祝も11:30〜14:00(L.O. 13:30)。プルドポークサンド、オーバーライス、ハンバーグ、パスタ。ドリンク付きのセットで、ゆっくり長居もどうぞ。</span>
+<a href="#food-lunch" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; border-bottom: 2px solid #145E50; color: #145E50; font-weight: 700">ランチのメニュー →</a>
+</div>
+<div style="background: #FBF6EA; border: 2px solid #145E50; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 20px; font-weight: 900">仕事帰りの一杯</span>
+<span style="font-size: 16px; line-height: 1.9">矢切駅から徒歩30秒。平日16:00〜19:00のハッピーアワーは全品200円引き(バドワイザーは100円引き)。営業は24:00までです。</span>
+<a href="#ontap" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; border-bottom: 2px solid #145E50; color: #145E50; font-weight: 700">いまのタップ →</a>
+</div>
+<div style="background: #FBF6EA; border: 2px solid #145E50; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 20px; font-weight: 900">はじめてのクラフトビール</span>
+<span style="font-size: 16px; line-height: 1.9">3種類を100mLずつ飲み比べできるセット(¥1,000)。5つの質問に答えると、いまのタップからおすすめを選びます。</span>
+<a href="#finder" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; border-bottom: 2px solid #145E50; color: #145E50; font-weight: 700">ビール診断をやってみる →</a>
+</div>
+<div style="background: #FBF6EA; border: 2px solid #145E50; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 20px; font-weight: 900">週末のんびり</span>
+<span style="font-size: 16px; line-height: 1.9">土日祝は11:30から24:00まで通し営業。昼はカフェ、夜はクラフトビールとアメリカンBBQを。</span>
+<a href="#food" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; border-bottom: 2px solid #145E50; color: #145E50; font-weight: 700">フードのメニュー →</a>
+</div>
+<div data-party-scene data-party-end="2026-12-31" style="background: #FBF6EA; border: 2px solid #145E50; padding: 22px 24px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 20px; font-weight: 900">仲間と宴会</span>
+<span style="font-size: 16px; line-height: 1.9">4名様から、飲み放題つきの年末宴会コース(11月・12月限定)。ご予約はお電話かInstagramのDMで。</span>
+<a href="#party" style="align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; border-bottom: 2px solid #145E50; color: #145E50; font-weight: 700">コースを見る →</a>
+</div>
+</div>
+</section>
+<script>(function(){var d=new Date(),t=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');document.querySelectorAll('[data-party-scene]').forEach(function(e){if(t>e.getAttribute('data-party-end'))e.hidden=true;});})();</script>
+
 <section id="ontap" style="background: #145E50; color: #F4ECD9; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto">
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 40px">
@@ -891,6 +925,8 @@ a{color:#0F3D34;text-decoration:none}a:hover{color:#145E50}
 <a href="%%FUND_URL%%" style="min-height: 56px; padding: 0 30px; display: inline-flex; align-items: center; background: #145E50; color: #F4ECD9; font-weight: 700; font-size: 18px">応援する ↗</a>
 </div>
 </section>
+
+%%YAGIRIYA_FAQ%%
 
 <section id="access" style="background: #E9DEC4; padding: 96px 48px">
 <div style="max-width: 1088px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; align-items: start">
