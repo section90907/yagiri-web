@@ -296,6 +296,27 @@ LD_BY_REL['yagiriya/index.html'] = [{
   ],
   parentOrganization: { '@id': ORG_ID }, sameAs: ['https://www.instagram.com/yagiribrewery/']
 }];
+// YAGIRIYA のよくある質問。画面(details)と FAQPage の JSON-LD を、同じデータから作る(食い違わせない)。事実は docs/SITE_FACTS.md が正
+const YFAQ = [
+  ['YAGIRIYAはどこにありますか?', '千葉県松戸市下矢切132-1にあります。北総線 矢切駅から徒歩30秒です。'],
+  ['営業時間を教えてください。', '平日は11:30〜14:00(ランチ、ラストオーダー13:30)と17:00〜24:00、土日祝は11:30〜24:00の通し営業です。定休日はありません。'],
+  ['どんなクラフトビールがありますか?', '国内外から選んだクラフトビールを、タップ(生ビール)でご用意しています。タップの大半はゲストビールで、毎週入れ替わります。いまのラインナップはON TAPの欄と、Instagram @yagiribrewery でご覧いただけます。'],
+  ['クラフトビールがはじめてでも大丈夫ですか?', '大丈夫です。3種類を100mLずつ飲み比べできる「飲み比べセット」(1,000円・税込)があります。サイトには、5つの質問に答えるだけで、いまのタップからおすすめを選ぶ「ビール診断」もあります。'],
+  ['ビールの量と、アルコールの量の目安を知りたいです。', 'クラフトビールのレギュラーは240ml、ビッグは470mlです(バドワイザーのみ300ml / 500ml)。一杯の純アルコール量は、厚生労働省の目安(約20g)を1とする「AGU」で、ON TAPに表示しています。AGUは安全な量を示すものではありません。'],
+  ['ランチはありますか?', '平日・土日祝とも11:30〜14:00(ラストオーダー13:30)にランチをご用意しています。プルドポークサンド、オーバーライス、ハンバーグ、パスタなどがあり、ドリンク付きのセットもあります。'],
+  ['ハッピーアワーはありますか?', '平日の16:00〜19:00は、全品200円引きです(バドワイザーは100円引き)。価格はすべて税込です。'],
+  ['宴会や団体の予約はできますか?', '11月・12月限定で、飲み放題つきの「年末宴会コース」(1名様 4,000円・5,000円・6,000円、税込)があります。4名様から、前日までのご予約制です(肉盛りコースは2日前まで)。お電話(047-706-5387)またはInstagramのDM(@yagiribrewery)でご予約ください。'],
+  ['支払い方法は何が使えますか?', '現金、クレジットカード、電子マネー、交通系IC、au PAY、PayPay、d払いをご利用いただけます。'],
+  ['お酒が飲めなくても利用できますか?', 'ご利用いただけます。コーヒーや紅茶、ソフトドリンクもあります。お酒は20歳になってから。20歳未満の飲酒や、飲酒運転は法律で禁止されています。']
+];
+const yfaqHtml = `<section id="faq" style="max-width: 1088px; margin: 0 auto; padding: 96px 48px 24px">
+<style>.faq-item{border-bottom: 1px dotted #9C8A62}.faq-item>summary{list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 10px 0}.faq-item>summary::-webkit-details-marker{display: none}.faq-item>summary::after{content: "+"; font-family: 'Alfa Slab One', serif; font-size: 24px; color: #145E50}.faq-item[open]>summary::after{content: "\\2212"}.faq-item>summary:focus-visible{outline: 3px solid #145E50; outline-offset: 3px}</style>
+<span style="display: block; text-align: center; font-family: 'Alfa Slab One', serif; font-size: 16px; letter-spacing: 0.2em; color: #145E50">FAQ</span>
+<h2 style="margin: 4px 0 28px; font-family: 'Alfa Slab One', serif; font-weight: 400; font-size: 44px; color: #145E50; text-align: center">よくあるご質問</h2>
+${YFAQ.map(([q, a]) => `<details class="faq-item"><summary><h3 style="margin: 0; font-size: 19px; font-weight: 900; line-height: 1.6">${esc(q)}</h3></summary><p style="margin: 0 0 16px; font-size: 17px; line-height: 2">${esc(a)}</p></details>`).join('\n')}
+</section>
+`;
+LD_BY_REL['yagiriya/index.html'].push({ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'ja', mainEntity: YFAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
 const isoDay = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : String(d).slice(0, 10));
 
 const PAGES = path.join(ROOT, 'src/pages');
@@ -310,7 +331,7 @@ for (const f of walk(PAGES)) {
   if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, NEWS_BREWERY: newsSection('brewery'), NEWS_YAGIRIYA: newsSection('yagiriya'), AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, NEWS_BREWERY: newsSection('brewery'), NEWS_YAGIRIYA: newsSection('yagiriya'), YAGIRIYA_FAQ: yfaqHtml, AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
   write(rel, html);
 }
 
