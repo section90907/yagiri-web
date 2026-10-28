@@ -90,6 +90,7 @@ const ldTag = (o) => `<script type="application/ld+json">${JSON.stringify(o).rep
 const write = (rel, html) => {
   html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
     .replace(/%%FUND_URL%%/g, cfg.fundUrl)
+    .replace(/%%SHOP_URL%%/g, esc(cfg.shopUrl)) // 共通ヘッダーの SHOP ボタン。ページごとの fill に頼らない(未来年表・NEWS・ビール詳細で、置き換わらずエラーになっていた)
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
   if (LD_BY_REL[rel]) html = html.replace('</head>', `${LD_BY_REL[rel].map(ldTag).join('\n')}\n</head>`);
@@ -545,5 +546,11 @@ if (STAGING) {
   // 二重の保険: ヘッダーと robots.txt でも検索に載せない
   fs.writeFileSync(path.join(DIST, '_headers'), '/*\n  X-Robots-Tag: noindex, nofollow\n');
   fs.writeFileSync(path.join(DIST, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+}
+// 置き換え忘れの印(%%…%%)が、公開するHTMLに残っていたら、ビルドを止める(リンクが壊れたまま公開されるのを防ぐ)
+{
+  const left = [];
+  (function scan(d) { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const q = path.join(d, f.name); if (f.isDirectory()) scan(q); else if (f.name.endsWith('.html')) { const m = fs.readFileSync(q, 'utf8').match(/%%[A-Za-z_:-]+%%/g); if (m) left.push(`${path.relative(DIST, q)}: ${[...new Set(m)].join(' ')}`); } } })(DIST);
+  if (left.length) throw new Error(`置き換わっていない %%…%% があります:\n${left.join('\n')}`);
 }
 console.log(`built${STAGING ? ' (staging)' : ''}: ${posts.length} articles, ${beers.length} beers -> dist/`);
