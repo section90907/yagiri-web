@@ -339,25 +339,16 @@ for (const f of walk(PAGES)) {
 // NEWS の項目から、プロフィールの「最新情報」「イベント」の投稿に貼る文面を作る。自動投稿はしない(貼るのは人)。
 // 本文に URL・電話番号は入れない(投稿の規則に引っかかりやすいので、リンクは「ボタン」に設定する)
 const gbpAbs = (l) => (/^https?:/.test(l ?? '') ? l : `${cfg.siteUrl}${l ?? '/news/'}`);
-const gbpCards = newsItems.map((n) => {
-  const ev = n.kind === 'event' || n.eventDate;
+const gbpData = newsItems.map((n) => {
+  const ev = n.kind === 'event' || !!n.eventDate;
   const details = [n.eventDate ? `開催日: ${jaDay(n.eventDate)}${n.eventEnd && n.eventEnd !== n.eventDate ? ` 〜 ${jaDay(n.eventEnd)}` : ''}` : '', n.eventTime ? `時間: ${n.eventTime}` : '', n.eventPlace ? `会場: ${n.eventPlace}` : ''].filter(Boolean).join('\n');
-  const evTitle = [...n.title].slice(0, 58).join('');
   const text = ev ? [n.body ?? '', details].filter(Boolean).join('\n\n') : [n.title, n.body ?? '', details].filter(Boolean).join('\n\n');
-  const url = gbpAbs(n.link);
-  const count = [...text].length;
-  const fld = (label, val, id, note = '') => `<div style="margin: 12px 0 0"><div style="font-size: 14px; color: #BDB7A9">${label}${note}</div><div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start"><pre id="${id}" style="flex: 1 1 280px; margin: 4px 0 0; padding: 10px 12px; background: #141414; border: 1px solid #3A3A3A; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; font-size: 15px; line-height: 1.8">${esc(val)}</pre><button type="button" data-copy="${id}" style="min-height: 44px; padding: 0 16px">コピー</button></div></div>`;
-  return `<article style="padding: 22px 0; border-top: 1px solid #3A3A3A">
-<div style="font-size: 14px; color: #C9AA6E">${ev ? 'イベント投稿' : '最新情報の投稿'} ／ ${n.date.replace(/-/g, '.')} ／ ${n.site === 'brewery' ? '醸造所のプロフィール向け' : n.site === 'yagiriya' ? 'YAGIRIYA向け' : 'YAGIRIYA・醸造所どちらでも'} ／ 表示期限 ${n.until === '0000-00-00' ? 'アーカイブ済み' : n.until}</div>
-<h3 style="margin: 4px 0 0; font-size: 20px; line-height: 1.5">${esc(n.title)}</h3>
-${ev ? fld('イベントのタイトル(58字まで)', evTitle, `t-${n.id}`) : ''}
-${ev ? fld('開始日', n.eventDate ? jaDay(n.eventDate) : '', `s-${n.id}`) : ''}
-${ev ? fld('終了日', n.eventEnd ? jaDay(n.eventEnd) : (n.eventDate ? jaDay(n.eventDate) : ''), `e-${n.id}`) : ''}
-${fld('本文', text, `b-${n.id}`, ` ／ ${count}字(1,500字まで)${count > 1500 ? ' ⚠ 長すぎます' : ''}`)}
-${fld('ボタン「詳細」のリンク', url, `u-${n.id}`)}
-</article>`;
-}).join('\n');
-write('ops/gbp/index.html', fill(include(fs.readFileSync(path.join(ROOT, 'src/templates/gbp.html'), 'utf8'), 'gbp.html'), { GBP_CARDS: gbpCards || '<p>お知らせがありません。</p>' }));
+  return { id: n.id, ev, site: n.site, date: n.date, until: n.until, title: n.title, evTitle: [...n.title].slice(0, 58).join(''),
+    start: n.eventDate ? jaDay(n.eventDate) : '', end: n.eventEnd ? jaDay(n.eventEnd) : (n.eventDate ? jaDay(n.eventDate) : ''), text, count: [...text].length, url: gbpAbs(n.link) };
+});
+// 中身は公開ページに置かず、Worker に同梱して、合言葉(STATS_TOKEN)つきの /api/gbp から返す(worker/gbp-data.json は生成物。Git には入れない)
+fs.writeFileSync(path.join(ROOT, 'worker/gbp-data.json'), JSON.stringify(gbpData));
+write('ops/gbp/index.html', fill(include(fs.readFileSync(path.join(ROOT, 'src/templates/gbp.html'), 'utf8'), 'gbp.html'), {}));
 
 // ---------- 最新情報のアーカイブ(醸造所用 /news/、YAGIRIYA用 /yagiriya/news/) ----------
 for (const [theme, tpl, out] of [['brewery', 'news.html', 'news/index.html'], ['yagiriya', 'news-yagiriya.html', 'yagiriya/news/index.html']]) {
