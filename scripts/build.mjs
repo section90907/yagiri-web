@@ -278,7 +278,7 @@ const ORG = {
 };
 LD_BY_REL['index.html'] = [{ '@context': 'https://schema.org', ...ORG }, { '@context': 'https://schema.org', '@type': 'WebSite', name: '矢切ブルワリー', url: `${SITE}/`, inLanguage: 'ja', publisher: { '@id': ORG_ID } }];
 LD_BY_REL['yagiriya/index.html'] = [{
-  '@context': 'https://schema.org', '@type': 'BarOrPub', '@id': `${SITE}/yagiriya/#taproom`, name: 'PUBLIC HOUSE YAGIRIYA', alternateName: 'YAGIRIYA',
+  '@context': 'https://schema.org', '@type': 'BarOrPub', '@id': `${SITE}/yagiriya/#taproom`, name: 'PUBLIC HOUSE YAGIRIYA', alternateName: ['YAGIRIYA', '矢切屋', 'やぎりや'],
   url: `${SITE}/yagiriya/`, image: [`${SITE}/images/yagiriya-exterior.webp`, `${SITE}/images/yagiriya-taps.webp`],
   description: '矢切駅から徒歩30秒。昼はカフェ、夜はクラフトビールとアメリカンBBQのパブリックハウス。',
   address: { '@type': 'PostalAddress', streetAddress: '下矢切132-1', addressLocality: '松戸市', addressRegion: '千葉県', addressCountry: 'JP' },
@@ -298,7 +298,8 @@ LD_BY_REL['yagiriya/index.html'] = [{
 }];
 // YAGIRIYA のよくある質問。画面(details)と FAQPage の JSON-LD を、同じデータから作る(食い違わせない)。事実は docs/SITE_FACTS.md が正
 const YFAQ = [
-  ['YAGIRIYAはどこにありますか?', '千葉県松戸市下矢切132-1にあります。北総線 矢切駅から徒歩30秒です。'],
+  ['YAGIRIYA(矢切屋)はどこにありますか?', '千葉県松戸市下矢切132-1にあります。北総線 矢切駅から徒歩30秒です。'],
+  ['「矢切屋」とYAGIRIYAは、同じお店ですか?', '同じお店です。「矢切屋(やぎりや)」と書いても、矢切ブルワリーの直営タップルーム「PUBLIC HOUSE YAGIRIYA」のことです。'],
   ['営業時間を教えてください。', '平日は11:30〜14:00(ランチ、ラストオーダー13:30)と17:00〜24:00、土日祝は11:30〜24:00の通し営業です。定休日はありません。'],
   ['どんなクラフトビールがありますか?', '国内外から選んだクラフトビールを、タップ(生ビール)でご用意しています。タップの大半はゲストビールで、毎週入れ替わります。いまのラインナップはON TAPの欄と、Instagram @yagiribrewery でご覧いただけます。'],
   ['クラフトビールがはじめてでも大丈夫ですか?', '大丈夫です。3種類を100mLずつ飲み比べできる「飲み比べセット」(1,000円・税込)があります。サイトには、5つの質問に答えるだけで、いまのタップからおすすめを選ぶ「ビール診断」もあります。'],
