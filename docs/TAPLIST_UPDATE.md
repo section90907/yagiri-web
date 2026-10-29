@@ -21,6 +21,10 @@ ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/ta
 - QR の行き先は `https://www.yagiribrewery.com/tap/`(ハブ。`src/pages/tap/index.html`)。ビール診断・読みもの・今日のタップリスト(`/yagiriya/#ontap`)の3つへ案内する。
 - URL は変えない(印刷したQRが無効になる)。ページの中身は後から直してよい。
 
+## 売り切れ(SOLD OUT)
+- `content/taplist.json` の該当銘柄に `"soldOut": true` を入れる(銘柄は消さない。入荷したら、このフラグを外す)。カードは薄くなって「SOLD OUT ─ 売り切れ」になり、価格は出さない。ビール診断の対象から外れる。飲み比べセットに入っているときは、そのセットにも SOLD OUT が出る(セットの内容を入れ替えるなら、`sets.items` の `order` を直す)
+- 売り切れて、そのまま入れ替えるときは、銘柄ごと差し替える
+
 ## まだ届いていないタップ(COMING SOON)
 - `content/taplist.json` の該当銘柄に `"comingSoon": true` を入れる。カードは点線で「COMING SOON ─ もうすぐ到着」になり、価格は出さない。
 - そのタップを含む飲み比べセットにも「COMING SOON」が付く。ビール診断のおすすめからも外れる(出していないビールを勧めない)。

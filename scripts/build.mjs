@@ -151,9 +151,10 @@ const posts = fs.readdirSync(JDIR).filter((f) => f.endsWith('.md') && !f.startsW
 if (STAGING) posts.forEach((p) => { if (p.draft) p.title = `【下書き】${p.title}`; }); // 下書きは確認用でだけ見える
 posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0'); });
 
+// 画像が無い記事には、画像の欄を出さない(代わりの枠は置かない)
 const eyecatch = (p, ratio) => p.image
   ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
-  : `<div style="aspect-ratio: ${ratio}; background: #161616; border: 1px solid #2E2E2E; display: flex; align-items: center; justify-content: center; font-family: Cinzel, 'Times New Roman', serif; font-size: 16px; letter-spacing: 0.3em; color: #6E6A60">YAGIRI JOURNAL</div>`;
+  : '';
 
 // ---------- ON TAP(content/taplist.json から) ----------
 const tap = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/taplist.json'), 'utf8'));
@@ -167,19 +168,21 @@ const aguName = `AGU${AGU.baseYear}`;
 const aguSinceJa = AGU.since.replace(/^(\d+)-(\d+)-(\d+)$/, (m, y, mo, d) => `${y}年${Number(mo)}月${Number(d)}日`);
 const aguOf = (abv, ml) => (Number(abv) * Number(ml) * 0.8 / 100 / AGU.baseG).toFixed(1);
 const mlOf = (t) => ({ regular: t.ml?.regular ?? 240, big: t.ml?.big ?? 470 }); // 既定の容量。バドワイザーだけ taplist.json の ml で上書き
-const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px ${t.comingSoon ? 'dashed' : 'solid'} #7FA89C; background: rgba(0, 0, 0, 0.12)${t.comingSoon ? '; opacity: 0.78' : ''}">
+// 売り切れは soldOut:true。カードは薄くして「SOLD OUT」と出し、価格は出さない。診断の対象外。セットに含まれていたら、そのセットにも SOLD OUT を出す
+const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px ${t.comingSoon ? 'dashed' : 'solid'} #7FA89C; background: rgba(0, 0, 0, 0.12)${t.comingSoon ? '; opacity: 0.78' : ''}${t.soldOut ? '; opacity: 0.6' : ''}">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">${t.no ? String(t.no).padStart(2, '0') : '─'}</span><span style="font-size: 14px; text-align: right">${t.original ? '<span style="background: #E3D3A8; color: #145E50; padding: 2px 10px; font-weight: 700">オリジナル</span>' : esc(t.brewery ?? '')}</span></div>
 <div><span style="font-size: 22px; font-weight: 700">${esc(t.name)}</span>${t.ruby ? ` <span style="font-size: 14px">${esc(t.ruby)}</span>` : ''}</div>
 <div style="font-size: 15px">${esc(t.style)} ／ ALC.${Number(t.abv).toFixed(1)}%</div>
 <div style="font-size: 15px; color: #E3D3A8">${aguOf(t.abv, mlOf(t).regular)} AGU(レギュラー)・${aguOf(t.abv, mlOf(t).big)} AGU(ビッグ)</div>
-${t.comingSoon ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">COMING SOON <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ もうすぐ到着</span></div>` : `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>`}
+${t.soldOut ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">SOLD OUT <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ 売り切れ</span></div>` : t.comingSoon ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">COMING SOON <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ もうすぐ到着</span></div>` : `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>`}
 <p style="margin: 0; font-size: 15px; line-height: 1.9">${esc(t.desc)}</p>
 <div><span style="display: inline-block; border: 1px solid #E3D3A8; padding: 2px 12px; font-size: 14px">${esc(t.tag)}</span></div>
 </div>`).join('\n');
 const comingNos = new Set(tap.items.filter((t) => t.comingSoon).map((t) => t.no)); // 届いていないタップを含むセットは COMING SOON
+const soldNos = new Set(tap.items.filter((t) => t.soldOut).map((t) => t.no)); // 売り切れのタップを含むセットは SOLD OUT
 const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px solid #E3D3A8; display: flex; flex-direction: column; gap: 14px">
 <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px"><span style="font-family: 'Alfa Slab One', serif; font-size: 24px; color: #E3D3A8">${esc(tap.sets.title)}</span><span style="font-family: 'Alfa Slab One', serif; font-size: 22px">${yen(tap.sets.price)}</span><span style="font-size: 14px">${esc(tap.sets.size)}</span></div>
-${tap.sets.items.map((x) => { const soon = x.order.some((n) => comingNos.has(n)); return `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C${soon ? '; opacity: 0.78' : ''}"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span>${soon ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">COMING SOON</span>' : ''}</span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`; }).join('\n')}
+${tap.sets.items.map((x) => { const soon = x.order.some((n) => comingNos.has(n)); const out = x.order.some((n) => soldNos.has(n)); return `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C${out ? '; opacity: 0.6' : soon ? '; opacity: 0.78' : ''}"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span>${out ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">SOLD OUT</span>' : soon ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">COMING SOON</span>' : ''}</span><span style="font-size: 20px; letter-spacing: 0.1em">${x.order.map(circled).join(' → ')}</span></div>`; }).join('\n')}
 <span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
 </div>`;
 // ビール診断用のデータ(味の目安 profile がある銘柄だけ。無い銘柄は診断の対象外にして、推測で入れない)
@@ -187,7 +190,7 @@ const finderMissing = tap.items.filter((t) => !t.profile || !t.likes).map((t) =>
 if (finderMissing.length) console.warn(`診断の対象外(profile か likes がない): ${finderMissing.join(', ')}`);
 const FINDER_DATA = JSON.stringify({
   updated: tapDate, setPrice: tap.sets.price,
-  items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes, aguR: aguOf(t.abv, mlOf(t).regular), aguB: aguOf(t.abv, mlOf(t).big) })),
+  items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon && !t.soldOut).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes, aguR: aguOf(t.abv, mlOf(t).regular), aguB: aguOf(t.abv, mlOf(t).big) })),
 }).replace(/</g, '\\u003c');
 const TAPLIST = `<p style="margin: 0 0 8px; font-size: 15px">${esc(tap.sizes)}</p>\n<p style="margin: 0 0 20px; font-size: 14px; line-height: 1.9">AGU:一杯の純アルコール量が、厚生労働省の目安(約${AGU.baseG}g)の何倍かを表す数字です。安全な量を示すものではありません。ご自身の許容量を、AGUでも把握して、無理のない量でお楽しみください。<a href="/guide/#agu" style="text-decoration: underline; color: #E3D3A8">くわしくは BEER 101</a></p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
@@ -322,8 +325,8 @@ LD_BY_REL['yagiriya/index.html'].push({ '@context': 'https://schema.org', '@type
 const isoDay = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : String(d).slice(0, 10));
 
 const PAGES = path.join(ROOT, 'src/pages');
-const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
-<span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F">${p.image ? `<img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover">` : ''}</span>
+const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: ${p.image ? '120px 1fr' : '1fr'}; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
+${p.image ? `<span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F"><img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>` : ''}
 <span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #DCD4C0; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 1.6; font-weight: 600">${esc(p.title)}</span></span>
 </a>`).join('\n') || `<p style="font-family: 'Shippori Mincho', serif; font-size: 18px; padding: 22px 0; border-top: 1px solid #3F5C52">ただいま発酵中…</p>`;
 
