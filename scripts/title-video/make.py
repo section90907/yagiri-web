@@ -29,7 +29,6 @@ W, H, FPS, TOTAL = 1280, 720, 30, 10.0
 BG, CREAM, GOLD, WINE = (11, 11, 11), (239, 233, 220), (201, 170, 110), (140, 36, 52)
 SIZES = {'大': 96, '中': 54, '小': 32}
 GAP = 1.42          # 縦書きの字送り
-SYM = 'α≒β'        # 明朝に無い記号
 CATS = {'醸造科学': 'BREW SCIENCE', '世界の潮流': 'WORLD TRENDS', '酵母': 'YEAST', 'BREW LOG': 'BREW LOG'}  # Cinzel に日本語が無いので、英字で
 
 mincho = lambda s, w='Regular': ImageFont.truetype(FD + f'ShipporiMincho-{w}.ttf', s)
@@ -37,6 +36,16 @@ cinzel = lambda s: ImageFont.truetype(FD + 'Cinzel.ttf', s)
 symfont = lambda s: ImageFont.truetype(SYMBOL_FONT, s)
 ease = lambda x: x * x * (3 - 2 * x)
 is_latin = lambda w: all(ord(c) < 128 for c in w)
+# 明朝に無い文字(α ≒ ℃ など)は、別の書体(DejaVu Serif)で描く。無い文字は、書体に収められた「豆腐」(欠字の記号)と同じ形になるので、それで見分ける
+import hashlib
+_mf = ImageFont.truetype(FD + 'ShipporiMincho-Regular.ttf', 40)
+_hash = lambda c: hashlib.md5(bytes(_mf.getmask(c))).hexdigest()
+_TOFU = _hash('\uffff')
+_sym_cache = {}
+def is_sym(c):
+    if c.isascii(): return False
+    if c not in _sym_cache: _sym_cache[c] = (_hash(c) == _TOFU)
+    return _sym_cache[c]
 
 
 def env(t, t0, t1, fin=0.9, fout=0.9):
@@ -56,7 +65,7 @@ def tile_vertical(text, size, col):
         cy = y0 + i * size * GAP
         if ch in '、。': d.text((x0 + size * 0.58, cy - size * 0.42), ch, font=f, fill=col + (255,))   # 縦書きの句読点は、右上へ
         elif ch == 'ー': d.text((x0 + size * 0.5, cy), '丨', font=f, fill=col + (255,), anchor='mt')
-        elif ch in SYM: d.text((x0 + size * 0.5, cy), ch, font=symfont(int(size * 0.9)), fill=col + (255,), anchor='mt')
+        elif is_sym(ch): d.text((x0 + size * 0.5, cy), ch, font=symfont(int(size * 0.9)), fill=col + (255,), anchor='mt')
         elif is_latin(ch): d.text((x0 + size * 0.5, cy), ch, font=cinzel(int(size * 0.8)), fill=col + (255,), anchor='mt')
         else: d.text((x0, cy), ch, font=f, fill=col + (255,))
     return im.crop(im.getbbox())
@@ -65,7 +74,7 @@ def tile_vertical(text, size, col):
 def tile_horizontal(text, size, col, track):
     latin = is_latin(text.replace(' ', ''))
     f = cinzel(int(size * 0.9)) if latin else mincho(size, 'Medium' if size > 60 else 'Regular')
-    fo = lambda c: symfont(int(size * 0.85)) if c in SYM else f
+    fo = lambda c: symfont(int(size * 0.85)) if is_sym(c) else f
     tw = int(sum(fo(c).getlength(c) + track for c in text)); pad = 16
     im = Image.new('RGBA', (tw + pad * 2, int(size * 1.6) + pad * 2 + 20), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
     d.rectangle([pad, pad, pad + 30, pad + 2], fill=WINE + (255,))                              # 頭の、えんじの短い線
