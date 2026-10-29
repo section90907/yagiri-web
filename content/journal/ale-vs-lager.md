@@ -9,6 +9,8 @@ point:
   - エールは暖かめ(約16〜26℃)、ラガーは冷たく(約9〜14℃)発酵させる。使う酵母の種類も違う
   - 暖かい発酵は果実やスパイスのような香りを生み、冷たい発酵は香りが控えめで澄んだ味になる
   - ラガー酵母はエール酵母と低温に強い野生酵母の雑種で、冷やす技術の進歩とともに広がった
+image: /images/journal/ale-vs-lager.jpg
+video: /images/journal/ale-vs-lager.mp4
 draft: false
 ---
 

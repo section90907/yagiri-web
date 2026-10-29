@@ -9,6 +9,8 @@ point:
   - ABVは「アルコール度数」、IBUは「苦味成分の量」、スタイル名は「そのビールの型」を表す
   - IBUは苦味の「成分の量」で、感じる苦さそのものではない(麦芽の甘さや保存の状態で変わる)
   - スタイル名を知ると、度数と苦味のだいたいの見当がつく
+image: /images/journal/label-reading.jpg
+video: /images/journal/label-reading.mp4
 draft: false
 ---
 
