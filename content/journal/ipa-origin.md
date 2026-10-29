@@ -9,6 +9,8 @@ point:
   - IPAは「ある日の発明」ではなく、貿易・航海・水・ホップの使い方が重なって育ったスタイル
   - 一度は忘れられたが、1970年代のアメリカのクラフトビールが復活させた
   - 苦味が強めのウエストコースト系と、苦味控えめのヘイジー系で、選び方が変わる
+image: /images/journal/ipa-origin.jpg
+video: /images/journal/ipa-origin.mp4
 draft: false
 ---
 

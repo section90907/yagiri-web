@@ -9,6 +9,8 @@ point:
   - 約1万3000年前の洞窟から、穀物を発酵させた痕跡が見つかっている
   - ホップ、酵母、温度への理解が進み、エール・ラガー・ピルスナーが生まれた
   - 日本は1870年代に始まり、1994年の規制緩和でクラフトビールの時代へ
+image: /images/journal/beer-history.jpg
+video: /images/journal/beer-history.mp4
 draft: false
 ---
 

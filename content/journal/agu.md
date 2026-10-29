@@ -9,6 +9,8 @@ point:
   - AGUは、一杯の純アルコール量が、厚労省の目安(1日平均 約20g)の何倍かを表す、矢切ブルワリーの単位
   - 正式名は「AGU2026」。基準が変わったら、年を改めて、記録を残す
   - 安全な量を示すものではない。ご自身の許容量を、AGUでも把握してほしい
+image: /images/journal/agu.jpg
+video: /images/journal/agu.mp4
 draft: false
 ---
 
