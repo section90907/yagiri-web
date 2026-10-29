@@ -152,6 +152,11 @@ if (STAGING) posts.forEach((p) => { if (p.draft) p.title = `【下書き】${p.t
 posts.forEach((p, i) => { p.no = p.no ?? String(posts.length - i).padStart(3, '0'); });
 
 // 画像が無い記事には、画像の欄を出さない(代わりの枠は置かない)
+// 記事の冒頭: タイトル動画(video)があれば、音なしのループ再生。動きを減らす設定の端末では、静止画(poster)のまま止める。無ければ、画像、それも無ければ何も出さない
+const heroMedia = (p) => p.video
+  ? `<video data-title-video autoplay muted loop playsinline preload="metadata" poster="${esc(p.image ?? '')}" aria-label="${esc(p.title)}のタイトル動画" style="display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #0B0B0B"><source src="${esc(p.video)}" type="video/mp4"></video>
+<script>(function(){var v=document.querySelector('video[data-title-video]');if(v&&window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){v.autoplay=false;v.removeAttribute('autoplay');v.pause();}})();</script>`
+  : eyecatch(p, '21 / 9');
 const eyecatch = (p, ratio) => p.image
   ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
   : '';
@@ -370,7 +375,7 @@ posts.forEach((p, i) => {
     TITLE: esc(p.title), LEAD: esc(p.lead), CATEGORY: esc(p.category), NO: esc(p.no),
     DATE: fmtDate(p.date) + (p.updated ? ` 更新 ${fmtDate(p.updated)}` : ''),
     MINUTES: String(p.minutes), AUTHOR: esc(p.author ?? '矢切ブルワリー'),
-    HERO: eyecatch(p, '21 / 9'),
+    HERO: heroMedia(p), OG_IMAGE: esc(new URL(p.image ?? '/images/og.png', cfg.siteUrl + '/').href),
     TOC: p.toc.map((t) => `<a href="#${t.id}" style="font-size: 16px; line-height: 1.7">${esc(t.text)}</a>`).join('\n'),
     POINT: (p.point ?? []).map(esc).join('<br>'),
     BODY: p.html,

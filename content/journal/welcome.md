@@ -8,6 +8,8 @@ point:
   - 醸造科学・世界の潮流・酵母・醸造記録の4カテゴリで更新
   - 論文や公開データなど、根拠のある情報をもとに書きます
   - はじめての方は「BEER 101」もあわせてどうぞ
+image: /images/journal/welcome.jpg
+video: /images/journal/welcome.mp4
 draft: false
 ---
 

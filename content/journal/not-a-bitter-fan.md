@@ -9,6 +9,8 @@ point:
   - 苦味の強さはIBUだけでは決まらない。麦芽の甘さや、果実・酸味で、感じ方は変わる
   - ヴァイツェンやケルシュなど、もともと苦味が控えめなスタイルがある
   - 迷ったら「苦いのが苦手」と伝える。飲み比べや診断も、入り口になる
+image: /images/journal/not-a-bitter-fan.jpg
+video: /images/journal/not-a-bitter-fan.mp4
 draft: false
 ---
 
