@@ -106,6 +106,8 @@ const write = (rel, html) => {
   }
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', `${toTop(isYagiriya(rel))}\n</body>`);
   if (rel.endsWith('.html') && html.includes('data-news')) html = html.replace('</body>', `${NEWS_JS}\n</body>`);
+  // 一覧・トップのサムネイルのプレビュー(動画のあるサムネイルがあるページにだけ)
+  if (rel.endsWith('.html') && html.includes('data-video-src')) html = html.replace('</body>', '<script src="/preview.js" defer></script>\n</body>');
   // ご意見箱(フォームのあるページにだけ)
   if (rel.endsWith('.html') && html.includes('data-voice')) html = html.replace('</body>', '<script src="/voice.js" defer></script>\n</body>');
   // 読まれ方の計測(匿名。中身は public/pulse.js と worker/index.js、説明は docs/PULSE.md)
@@ -159,6 +161,11 @@ const heroMedia = (p) => p.video
   : eyecatch(p, '21 / 9');
 const eyecatch = (p, ratio) => p.image
   ? `<img src="${esc(p.image)}" alt="" style="display: block; width: 100%; aspect-ratio: ${ratio}; object-fit: cover">`
+  : '';
+
+// 一覧・トップのサムネイル: 静止画(ポスター)。動画があれば、見られているときだけ preview.js が動かす(同時に1本)
+const thumb = (p, ratio, extra = '') => p.image
+  ? `<span data-preview${p.video ? ` data-video-src="${esc(p.video)}"` : ''} style="display: block; position: relative; overflow: hidden; aspect-ratio: ${ratio}; background: #0B0B0B${extra}"><img src="${esc(p.image)}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover"></span>`
   : '';
 
 // ---------- ON TAP(content/taplist.json から) ----------
@@ -331,7 +338,7 @@ const isoDay = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : String
 
 const PAGES = path.join(ROOT, 'src/pages');
 const latest = posts.slice(0, 3).map((p) => `<a href="/journal/${p.slug}/" style="display: grid; grid-template-columns: ${p.image ? '120px 1fr' : '1fr'}; gap: 20px; padding: 22px 0; border-top: 1px solid #3F5C52; align-items: center">
-${p.image ? `<span style="aspect-ratio: 16 / 10; overflow: hidden; background: #1C362F"><img src="${esc(p.image)}" alt="" style="width: 100%; height: 100%; object-fit: cover"></span>` : ''}
+${thumb(p, '16 / 10')}
 <span style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; color: #DCD4C0; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span><span style="font-family: 'Shippori Mincho', serif; font-size: 19px; line-height: 1.6; font-weight: 600">${esc(p.title)}</span></span>
 </a>`).join('\n') || `<p style="font-family: 'Shippori Mincho', serif; font-size: 18px; padding: 22px 0; border-top: 1px solid #3F5C52">ただいま発酵中…</p>`;
 
@@ -397,7 +404,7 @@ const cats = ['すべて', ...new Set(posts.map((p) => p.category))];
 const tabs = cats.map((c, i) => `<button type="button" data-cat="${esc(c)}" style="min-height: 44px; display: inline-flex; align-items: center; padding: 0 20px; border: 1px solid ${i ? '#3A3A3A' : '#7A1E2B'}; background: ${i ? 'transparent' : '#7A1E2B'}; color: #EFE9DC; font: inherit; font-size: 16px; letter-spacing: 0.1em; cursor: pointer">${esc(c)}</button>`).join('\n');
 const [first, ...rest] = posts;
 const featured = first ? `<a href="/journal/${first.slug}/" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 48px; align-items: center">
-${eyecatch(first, '16 / 10')}
+${thumb(first, '16 / 10')}
 <div style="display: flex; flex-direction: column; gap: 16px">
 <span style="font-family: Cinzel, 'Times New Roman', serif; font-size: 14px; letter-spacing: 0.3em; color: #C9AA6E">LATEST — No.${esc(first.no)}</span>
 <span style="font-size: 15px; color: #CFC8B8">${esc(first.category)} ／ ${fmtDate(first.date)} ／ 約${first.minutes}分で読めます</span>
@@ -407,7 +414,7 @@ ${eyecatch(first, '16 / 10')}
 </div>
 </a>` : `<div style="padding: 56px 0; border-top: 1px solid #3F5C52; border-bottom: 1px solid #3F5C52"><p style="margin: 0; font-family: 'Shippori Mincho', serif; font-size: 34px; font-weight: 800">ただいま発酵中…</p><p style="margin: 10px 0 0; color: #DCD4C0">次の記事を仕込んでいます。飲み頃まで、少々お待ちください。</p></div>`;
 const cards = rest.map((p) => `<a href="/journal/${p.slug}/" data-cat="${esc(p.category)}" style="display: flex; flex-direction: column; gap: 12px">
-${eyecatch(p, '16 / 10')}
+${thumb(p, '16 / 10')}
 <span style="font-size: 14px; color: #CFC8B8; letter-spacing: 0.1em">${esc(p.category)} ／ ${fmtDate(p.date)}</span>
 <span style="font-family: 'Shippori Mincho', serif; font-size: 20px; font-weight: 600; line-height: 1.6">${esc(p.title)}</span>
 </a>`).join('\n');
