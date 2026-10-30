@@ -31,6 +31,7 @@ td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
   var CH = { good: '役に立った', more: 'もっと知りたい', off: 'ちょっと違う' };
   var MOOD = { refresh: 'スッキリ', savor: 'ゆっくり味わう', adventure: '冒険', fun: '盛り上がる' };
   function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function elS(tag, text, css) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (css) e.setAttribute('style', css); return e; }
   function table(head, rows) {
     var w = el('div', null, 'wrap'), tb = el('table'), tr = el('tr');
     head.forEach(function (h) { tr.appendChild(el('th', h)); }); tb.appendChild(tr);
@@ -40,6 +41,35 @@ td.n{text-align:right} p.note{font-size:14px;color:#BDB7A9}
   function section(title, node, note) { out.appendChild(el('h2', title)); if (note) out.appendChild(el('p', note, 'note')); out.appendChild(node); }
   function render(d) {
     out.textContent = '';
+    // ---- 単純なアクセス数(日別・時間帯別・曜日別・日×時間)
+    function bars(rows, label, val, max, unit) {
+      var w = elS('div', null, 'display:flex;flex-direction:column;gap:3px');
+      rows.forEach(function (r) {
+        var line = elS('div', null, 'display:flex;align-items:center;gap:8px;font-size:14px');
+        line.appendChild(elS('span', label(r), 'flex:0 0 7.5em;color:#BDB7A9;white-space:nowrap'));
+        var bar = elS('span', null, 'height:14px;background:#C9AA6E;display:inline-block;min-width:1px'); bar.style.width = Math.max(1, Math.round(240 * val(r) / (max || 1))) + 'px';
+        line.appendChild(bar); line.appendChild(elS('span', String(val(r)) + (unit || ''), 'white-space:nowrap'));
+        w.appendChild(line);
+      }); return w;
+    }
+    var daily = (d.daily || []);
+    section('日別のアクセス数(新しい順・最大60日)', (function () {
+      var box = elS('div'); box.appendChild(bars(daily, function (r) { return r.day; }, function (r) { return r.pv; }, Math.max.apply(null, daily.map(function (r) { return r.pv; })), ' 件'));
+      box.appendChild(table(['日付', 'アクセス数', 'おおよその訪問数(タブ)'], daily.map(function (r) { return [r.day, r.pv, r.tabs]; })));
+      return box;
+    })(), '1回のページの読み込みを1件と数える(同じ人が3ページ見れば3件)。タブ=同じタブで見たものを1と数える、おおよその訪問数。「トラッキングしない」設定の端末と、JavaScriptを動かさないものは入らない。検索ロボットが混ざることがある。');
+    var hrs = []; for (var h = 0; h < 24; h++) hrs.push({ h: h, n: 0 }); (d.hourly || []).forEach(function (r) { hrs[r.h].n = r.n; });
+    section('時間帯別のアクセス数(直近30日の合計・日本時間)', bars(hrs, function (r) { return (r.h < 10 ? '0' : '') + r.h + '時台'; }, function (r) { return r.n; }, Math.max.apply(null, hrs.map(function (r) { return r.n; })), ' 件'), '時刻は、記録を始めた日(10月下旬)以降のぶんだけ。');
+    var WD = ['日', '月', '火', '水', '木', '金', '土'], wd = []; for (var i = 0; i < 7; i++) wd.push({ w: i, n: 0, days: 0 }); (d.weekday || []).forEach(function (r) { wd[r.w] = r; });
+    section('曜日別(直近90日・1日あたりの平均)', bars(wd, function (r) { return WD[r.w] + '曜日'; }, function (r) { return r.days ? Math.round(10 * r.n / r.days) / 10 : 0; }, Math.max.apply(null, wd.map(function (r) { return r.days ? r.n / r.days : 0; })), ' 件/日'));
+    var heat = d.heat || [], days = []; heat.forEach(function (r) { if (days.indexOf(r.day) < 0) days.push(r.day); });
+    var hm = {}; heat.forEach(function (r) { hm[r.day + '|' + r.h] = r.n; }); var hmax = Math.max.apply(null, [1].concat(heat.map(function (r) { return r.n; })));
+    var ht = elS('table'), hr = elS('tr'); hr.appendChild(elS('th', '日付'));
+    for (var k = 0; k < 24; k++) hr.appendChild(elS('th', String(k)));
+    ht.appendChild(hr);
+    days.forEach(function (day) { var tr = elS('tr'); tr.appendChild(elS('td', day.slice(5))); for (var k2 = 0; k2 < 24; k2++) { var n = hm[day + '|' + k2] || 0, td = elS('td', n ? String(n) : '', 'text-align:center;padding:3px 4px;font-size:12px;background:rgba(201,170,110,' + (n ? 0.12 + 0.75 * n / hmax : 0) + ');color:' + (n / hmax > 0.5 ? '#0B0B0B' : '#E6E0D2')); tr.appendChild(td); } ht.appendChild(tr); });
+    var hw = elS('div', null, 'wrap'); hw.appendChild(ht);
+    section('日×時間のアクセス数(直近14日・日本時間)', hw, '濃いほど多い。縦=日付、横=時(0〜23)。');
     var votes = {};
     d.votes.forEach(function (v) { (votes[v.path] = votes[v.path] || {})[v.choice] = v.n; });
     section('ページごとの閲覧', table(['ページ', '閲覧', '平均秒', '読み進め率'], d.pages.map(function (p) {
