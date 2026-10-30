@@ -87,6 +87,7 @@
 | Tropical Snow(Hazy IPA) | 1/3/5/4/5 | fruity |
 | DANK HOP COLLISION(ゴーヤIPA) | 5/1/2/4/5 | hoppy, spicy |
 | SOUL(ライスIPA) | 4/1/4/2/5 | hoppy, classic |
+| Dynamo(ダブルIPA・U.B.P Brewery、2026-10-30 入荷前) | 4/2/4/4/5 | hoppy, fruity |
 | AFTERGLOW(ボタニカルヴァイツェン) | 1/3/4/3/4 | spicy, fruity |
 | KENTRIBE(イタリアンピルスナー) | 2/1/2/2/4 | classic |
 | India Black Saison(ブラックセゾン) | 4/1/3/3/5 | roasty, hoppy |
