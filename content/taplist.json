@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-29",
+  "updated": "2026-10-30",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -112,26 +112,27 @@
     },
     {
       "no": 6,
-      "name": "DANK HOP COLLISION",
-      "style": "ゴーヤ ダンク IPA",
-      "brewery": "Derailleur Brew Works(大阪府)",
+      "name": "Dynamo",
+      "ruby": "ダイナモ",
+      "style": "ダブルIPA(DDH)",
+      "brewery": "U.B.P Brewery(埼玉県)",
       "abv": 8.0,
       "regular": 1000,
       "big": 1500,
       "tag": "ダンク",
-      "desc": "松やにのような濃いホップの香りに、ゴーヤの青い苦みが衝突する一杯。強烈に苦くて度数も高め。覚悟してどうぞ。",
+      "desc": "柑橘や熟したパイナップル、ベリーを思わせるアロマ。草のようなダンクな味わいと、甘い果実感に、苦みもしっかり(IBU 58)。SimcoeとMosaicをふんだんに使った、ウエストコーストスタイルのDDHダブルIPA。",
       "profile": {
-        "bitter": 5,
-        "sweet": 1,
-        "fruity": 2,
+        "bitter": 4,
+        "sweet": 2,
+        "fruity": 4,
         "body": 4,
         "special": 5
       },
       "likes": [
         "hoppy",
-        "spicy"
+        "fruity"
       ],
-      "soldOut": true
+      "comingSoon": true
     },
     {
       "no": 7,
@@ -254,7 +255,7 @@
     "items": [
       {
         "title": "IPAセット",
-        "desc": "IBU 9から100超へ 苦味の階段",
+        "desc": "ヘイジー、ライス、ダブルIPA。IPAの幅を飲み比べ",
         "order": [
           5,
           7,
