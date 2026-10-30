@@ -193,6 +193,11 @@ async function stats(request, env) {
     weather: await q(`SELECT CASE WHEN w.temp IS NULL THEN '気温不明' WHEN w.temp < 10 THEN '10℃未満' WHEN w.temp < 20 THEN '10〜19℃' WHEN w.temp < 28 THEN '20〜27℃' ELSE '28℃以上' END AS temp_band,
       CASE WHEN w.precip IS NULL THEN '降水不明' WHEN w.precip > 0 THEN '雨' ELSE '雨なし' END AS rain, f.top, COUNT(*) AS n
       FROM finder f LEFT JOIN weather w ON w.day = f.day AND w.hour = f.hour GROUP BY temp_band, rain, f.top ORDER BY temp_band, n DESC LIMIT 200`),
+    // 単純なアクセス数(1回のページの読み込み=1件)。日付は日本時間。tabs は、同じタブで見た印(sid)の数=おおよその訪問数
+    daily: await q('SELECT day, COUNT(*) AS pv, COUNT(DISTINCT sid) AS tabs FROM visits GROUP BY day ORDER BY day DESC LIMIT 60'),
+    hourly: await q("SELECT CAST(strftime('%H', ts + 32400, 'unixepoch') AS INTEGER) AS h, COUNT(*) AS n FROM visits WHERE ts IS NOT NULL AND ts >= CAST(strftime('%s', 'now') AS INTEGER) - 30 * 86400 GROUP BY h ORDER BY h"),
+    weekday: await q("SELECT CAST(strftime('%w', day) AS INTEGER) AS w, COUNT(*) AS n, COUNT(DISTINCT day) AS days FROM visits WHERE day >= date('now', '+9 hours', '-90 days') GROUP BY w ORDER BY w"),
+    heat: await q("SELECT strftime('%Y-%m-%d', ts + 32400, 'unixepoch') AS day, CAST(strftime('%H', ts + 32400, 'unixepoch') AS INTEGER) AS h, COUNT(*) AS n FROM visits WHERE ts IS NOT NULL AND ts >= CAST(strftime('%s', 'now') AS INTEGER) - 14 * 86400 GROUP BY day, h ORDER BY day DESC, h"),
     flows: await q("SELECT rv AS src, path AS dst, COUNT(*) AS n FROM visits WHERE rk = 'in' AND rv != path GROUP BY rv, path ORDER BY n DESC LIMIT 50"),
     entries: await q("SELECT COALESCE(rk, 'direct') AS kind, COALESCE(rv, '') AS val, COUNT(*) AS n FROM visits GROUP BY rk, rv HAVING kind != 'in' ORDER BY n DESC LIMIT 40"),
     clicks: await q('SELECT path, kind, COUNT(*) AS n FROM clicks GROUP BY path, kind ORDER BY n DESC LIMIT 60'),
