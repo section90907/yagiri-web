@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31",
+  "updated": "2026-11-02",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -181,17 +181,18 @@
     },
     {
       "no": 9,
-      "name": "KENTRIBE",
-      "style": "イタリアンピルスナー",
-      "brewery": "Beer Again Brewing",
+      "name": "のろしWiess",
+      "ruby": "のろしヴィース",
+      "style": "Wiess(ヴィース)",
+      "brewery": "のろし醸造",
       "abv": 5.0,
       "regular": 900,
       "big": 1400,
-      "tag": "ハーバル",
-      "desc": "ハーブや白い花を思わせる上品な香り。苦みはひかえめで、炭酸高めのキレのある飲み口。食事によく合います。",
+      "tag": "やわらか",
+      "desc": "ケルンの無濾過・上面発酵ビール「Wiess」を、のろし醸造が表現。穏やかな香りと軽快な飲み口、無濾過ならではの柔らかな口当たり。ほのかな濁りがあります(IBU 15.8)。",
       "profile": {
-        "bitter": 2,
-        "sweet": 1,
+        "bitter": 1,
+        "sweet": 2,
         "fruity": 2,
         "body": 2,
         "special": 4
@@ -199,7 +200,7 @@
       "likes": [
         "classic"
       ],
-      "soldOut": true
+      "comingSoon": true
     },
     {
       "no": 10,
@@ -266,7 +267,7 @@
       },
       {
         "title": "麦芽くらべセット",
-        "desc": "淡色、琥珀、黒。すべてラガー",
+        "desc": "淡色、琥珀、黒。麦芽の色くらべ",
         "order": [
           9,
           3,
