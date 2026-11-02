@@ -89,6 +89,7 @@
 | SOUL(ライスIPA) | 4/1/4/2/5 | hoppy, classic |
 | Dynamo(ダブルIPA・U.B.P Brewery、2026-10-30 入荷前) | 4/2/4/4/5 | hoppy, fruity |
 | のろしWiess(Wiess・のろし醸造、2026-11-02 入荷前) | 1/2/2/2/4(tag: やわらか) | classic |
+| Merseyside ESB(ESB・沼津クラフト、2026-11-02 入荷前) | 3/2/2/3/4(tag: 香ばしさ) | roasty(香ばしいモルト。tag が「香ばしさ」の基準に従う) |
 | AFTERGLOW(ボタニカルヴァイツェン) | 1/3/4/3/4 | spicy, fruity |
 | KENTRIBE(イタリアンピルスナー) | 2/1/2/2/4 | classic |
 | India Black Saison(ブラックセゾン) | 4/1/3/3/5 | roasty, hoppy |

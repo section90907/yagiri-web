@@ -204,26 +204,26 @@
     },
     {
       "no": 10,
-      "name": "India Black Saison",
-      "style": "ブラックセゾン",
-      "brewery": "のろし醸造",
-      "abv": 6.5,
-      "regular": 900,
-      "big": 1400,
-      "tag": "ドライ",
-      "desc": "松や柑橘のホップ香に、ローストの香ばしさとスパイシーな発酵感。見た目ほど重くなく、ドライで軽快に飲めます。",
+      "name": "Merseyside ESB",
+      "ruby": "マージーサイドESB",
+      "style": "ESB(イングリッシュビター)",
+      "brewery": "沼津クラフト(静岡県)",
+      "abv": 6.0,
+      "regular": 800,
+      "big": 1300,
+      "tag": "香ばしさ",
+      "desc": "イギリス伝統のイングリッシュビターの力強いスタイル。香ばしいモルトの風味に、ほどよい苦味とコク。苦すぎず、飲み飽きないバランスのよさです(IBU 32)。",
       "profile": {
-        "bitter": 4,
-        "sweet": 1,
-        "fruity": 3,
+        "bitter": 3,
+        "sweet": 2,
+        "fruity": 2,
         "body": 3,
-        "special": 5
+        "special": 4
       },
       "likes": [
-        "roasty",
-        "hoppy"
+        "roasty"
       ],
-      "soldOut": true
+      "comingSoon": true
     },
     {
       "no": null,
@@ -276,7 +276,7 @@
       },
       {
         "title": "酵母の個性セット",
-        "desc": "バナナ、スパイス、そして黒",
+        "desc": "ヴァイツェン、セゾン、ESB。上面発酵の個性くらべ",
         "order": [
           8,
           1,
