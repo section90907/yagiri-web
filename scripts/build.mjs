@@ -551,7 +551,7 @@ copyDir(path.join(ROOT, 'public'), DIST);
 // 旧BASEのURL(www.〜/items/… など)を、ショップの新しいドメインへ転送する(検索結果・SNS・ブックマーク対策)
 fs.writeFileSync(path.join(DIST, '_redirects'), (cfg.baseRedirectPaths ?? []).flatMap((p) => p.endsWith('/*')
   ? [`${p} ${SHOP_ORIGIN}${p.replace('/*', '/:splat')} 301`]
-  : [`${p} ${SHOP_ORIGIN}${p} 301`, `${p}/ ${SHOP_ORIGIN}${p} 301`]).join('\n') + '\n');
+  : [`${p} ${SHOP_ORIGIN}${p} 301`, `${p}/ ${SHOP_ORIGIN}${p} 301`]).concat(['/m /tap/?from=qr-menu 302']).join('\n') + '\n'); // /m = メニュー(紙)のQRの短いアドレス。QRの点を粗く(読み取りやすく)するため、短くして、/tap/?from=qr-menu へ転送する
 if (!STAGING) {
   // 公開用: 検索に載せる。sitemap.xml を出す
   fs.writeFileSync(path.join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${cfg.siteUrl}/sitemap.xml\n`);

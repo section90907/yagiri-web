@@ -21,7 +21,7 @@ os.makedirs(CACHE, exist_ok=True)
 for n, u in FONTS.items():
     if not os.path.exists(CACHE + n): urllib.request.urlretrieve(u, CACHE + n)
 
-QR_URL = 'https://www.yagiribrewery.com/tap/?from=qr-menu'   # 目印(?from=)で、メニューのQRからの来訪を、集計で見分ける
+QR_URL = 'https://www.yagiribrewery.com/m'   # 短いアドレス(QRの点が粗くなり、印刷でにじんでも読める)。/m は、サイトが /tap/?from=qr-menu へ転送する(メニューのQRからの来訪を、集計で見分ける)
 AGU_BASE = 20.0
 esc = lambda s: html.escape(str(s if s is not None else ''))
 circled = lambda n: chr(0x2460 + int(n) - 1)
@@ -91,7 +91,20 @@ for i, x in enumerate(sets['items']):
     mark = ' <span class="tag">' + ('SOLD OUT' if any(by_no[n].get('soldOut') for n in x['order']) else 'COMING SOON') + '</span>' if flag else ''
     set_rows += f'<div class="srow{" dim" if flag else ""}">{icons[i % 2]}<div class="st"><b>{esc(x["title"])}</b>{mark}<br><small>{esc(x["desc"])}</small></div><div class="so">{"→".join(circled(n) for n in x["order"])}</div></div>'
 set_rows += f'<div class="srow">{icons[2]}<div class="st"><b>お好みセット</b><br><small>気になる3つを選んでください</small></div><div class="so free">お好み3種</div></div>'
-qr = segno.make(QR_URL, error='m').svg_inline(scale=4, border=1, dark='#1F1F1F', light='#FFFFFF', omitsize=True)
+# QR: 点を行ごとにつなげた図形で描く(隙間やにじみを減らす)。純黒。誤り訂正は M。まわりの白い余白(静かな領域)は、4点ぶん以上とる
+_q = segno.make(QR_URL, error='m', micro=False)
+_m = [list(r) for r in _q.matrix]
+_n = len(_m)
+_d = []
+for _y, _row in enumerate(_m):
+    _x = 0
+    while _x < _n:
+        if _row[_x]:
+            _s = _x
+            while _x < _n and _row[_x]: _x += 1
+            _d.append(f'M{_s} {_y}h{_x - _s}v1h-{_x - _s}z')
+        else: _x += 1
+qr = f'<svg viewBox="-4 -4 {_n + 8} {_n + 8}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect x="-4" y="-4" width="{_n + 8}" height="{_n + 8}" fill="#fff"/><path d="{"".join(_d)}" fill="#000"/></svg>'
 updated = tap['updated']
 doc = f'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>CRAFT BEER {esc(updated)}</title>
 <style>
@@ -112,7 +125,7 @@ h1{{margin:0 0 4mm 6mm;font-size:30pt;font-weight:900;letter-spacing:.01em;line-
 .body{{display:flex;gap:1mm;margin-top:.6mm;height:21.2mm}}
 .desc{{margin:0;flex:1 1 56%;font-size:8.1pt;line-height:1.5;overflow:hidden}} .radar{{flex:0 0 40%;height:25mm;margin-top:-2.4mm;margin-right:-1mm}}
 .foot{{font-size:7.6pt;margin-top:-1.2mm;font-weight:500}}
-.qr{{display:flex;align-items:center;gap:4.5mm;padding-left:8mm}} .qr svg{{width:21mm;height:21mm;flex:0 0 auto}}
+.qr{{display:flex;align-items:center;gap:3mm;padding-left:3mm}} .qr svg{{width:31mm;height:31mm;flex:0 0 auto}}
 .qr h2{{margin:0 0 1.2mm;font-size:11.2pt;font-weight:900}} .qr p{{margin:0;font-size:7.6pt;line-height:1.55}} .qr small{{display:block;margin-top:1.4mm;font-size:6.6pt;color:#555}}
 .sets .sh{{display:flex;align-items:baseline;gap:2.4mm}} .sets h2{{margin:0;font-size:11.5pt;font-weight:900}} .sets .sp{{font-size:10.5pt;font-weight:800}} .sets .sz{{font-size:4.8pt}}
 .srow{{display:flex;align-items:center;gap:2mm;margin-top:.7mm}} .ic{{width:5mm;height:5mm;flex:0 0 auto}}
