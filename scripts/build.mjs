@@ -196,6 +196,7 @@ const tapSets = `<div style="margin-top: 40px; padding: 28px 32px; border: 2px s
 <div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px"><span style="font-family: 'Alfa Slab One', serif; font-size: 24px; color: #E3D3A8">${esc(tap.sets.title)}</span><span style="font-family: 'Alfa Slab One', serif; font-size: 22px">${yen(tap.sets.price)}</span><span style="font-size: 14px">${esc(tap.sets.size)}</span></div>
 ${tap.sets.items.map((x) => { const soon = !x.free && x.order.some((n) => comingNos.has(n)); const out = !x.free && x.order.some((n) => soldNos.has(n)); return `<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 20px; padding-top: 12px; border-top: 1px dashed #7FA89C${out ? '; opacity: 0.6' : soon ? '; opacity: 0.78' : ''}"><span><b style="font-size: 17px">${esc(x.title)}</b> <span style="font-size: 15px">${esc(x.desc)}</span>${out ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">SOLD OUT</span>' : soon ? ' <span style="display: inline-block; border: 1px solid #E3D3A8; padding: 0 10px; font-size: 13px; font-family: \'Alfa Slab One\', serif; letter-spacing: 0.08em">COMING SOON</span>' : ''}</span><span style="${x.free ? 'font-size: 17px; font-weight: 700' : 'font-size: 20px; letter-spacing: 0.1em'}">${x.free ? 'お好み3種' : x.order.map(circled).join(' → ')}</span></div>`; }).join('\n')}
 <span style="font-size: 14px">※ ${esc(tap.sets.note)}</span>
+${tap.sets.orderNotice ? `<p style="margin: 6px 0 0; padding: 12px 16px; border: 2px solid #E3D3A8; background: rgba(227, 211, 168, 0.12); font-size: 17px; font-weight: 700; line-height: 1.8">⚠ ${esc(tap.sets.orderNotice)}</p>` : ''}
 </div>`;
 // ビール診断用のデータ(味の目安 profile がある銘柄だけ。無い銘柄は診断の対象外にして、推測で入れない)
 const finderMissing = tap.items.filter((t) => !t.profile || !t.likes).map((t) => t.name);
@@ -320,6 +321,7 @@ const YFAQ = [
   ['どんなクラフトビールがありますか?', '国内外から選んだクラフトビールを、タップ(生ビール)でご用意しています。タップの大半はゲストビールで、毎週入れ替わります。いまのラインナップはON TAPの欄と、Instagram @yagiribrewery でご覧いただけます。'],
   ['クラフトビールがはじめてでも大丈夫ですか?', '大丈夫です。3種類を100mLずつ飲み比べできる「飲み比べセット」(1,000円・税込)があります。サイトには、5つの質問に答えるだけで、いまのタップからおすすめを選ぶ「ビール診断」もあります。'],
   ['ビールの量と、アルコールの量の目安を知りたいです。', 'クラフトビールのレギュラーは240ml、ビッグは470mlです(バドワイザーのみ300ml / 500ml)。一杯の純アルコール量は、厚生労働省の目安(約20g)を1とする「AGU」で、ON TAPに表示しています。AGUは安全な量を示すものではありません。'],
+  ['飲み比べセットの頼み方を教えてください。', '3種類を100mLずつ飲み比べられる「飲み比べセット」(1,000円・税込)があります。ご注文のときは、セット名ではなく、メニューのビールの番号をスタッフにお伝えください(例:⑤・⑦・⑥)。お好みで3つ選ぶこともできます。'],
   ['ランチはありますか?', '平日・土日祝とも11:30〜14:00(ラストオーダー13:30)にランチをご用意しています。プルドポークサンド、オーバーライス、ハンバーグ、パスタなどがあり、ドリンク付きのセットもあります。'],
   ['ハッピーアワーはありますか?', '平日の16:00〜19:00は、全品200円引きです(バドワイザーは100円引き)。価格はすべて税込です。'],
   ['宴会や団体の予約はできますか?', '11月・12月限定で、飲み放題つきの「年末宴会コース」(1名様 4,000円・5,000円・6,000円、税込)があります。2名様から、前日までのご予約制です(肉盛りコースは2日前まで)。お電話(047-706-5387)またはInstagramのDM(@yagiribrewery)でご予約ください。'],

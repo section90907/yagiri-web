@@ -134,7 +134,8 @@ h1{{margin:0 0 4mm 6mm;font-size:30pt;font-weight:900;letter-spacing:.01em;line-
 .st{{flex:1;font-size:8.4pt;line-height:1.2}} .st small{{font-size:6.8pt}} .so{{font-size:12.4pt;letter-spacing:.04em;white-space:nowrap}} .so.free{{font-size:9.6pt;font-weight:900}}
 .tag{{display:inline-block;border:.25mm solid #2B2B2B;font-size:5.4pt;padding:0 1.2mm;font-weight:700;vertical-align:1px}}
 .note{{font-size:5.6pt;text-align:right;margin-top:.5mm}}
-.legal{{margin-top:3.4mm;text-align:right;font-size:6.6pt;color:#555}}
+.notice{{margin-top:2.6mm;border:.5mm solid #8C2434;background:#FBF3E2;padding:1.8mm 3mm;font-size:9pt;font-weight:900;line-height:1.5;color:#8C2434}}
+.legal{{margin-top:2.4mm;text-align:right;font-size:6.6pt;color:#555}}
 </style></head><body>
 <h1>CRAFT BEER</h1>
 <div class="grid">
@@ -142,6 +143,7 @@ h1{{margin:0 0 4mm 6mm;font-size:30pt;font-weight:900;letter-spacing:.01em;line-
 <div class="qr">{qr}<div><h2>どれにするか決まらない人へ</h2><p>5つの質問でおすすめを選びます<br>用語集・読みもの・AGUの考え方も</p><small>yagiribrewery.com/tap</small></div></div>
 <div class="sets"><div class="sh"><h2>飲み比べセット</h2><span class="sp">{yen(sets["price"])}</span><span class="sz">{esc(sets["size"].replace(" ", ""))} / 約{min(agus):.1f}〜{max(agus):.1f} AGU</span></div>{set_rows}</div>
 </div>
+{('<div class="notice">⚠ ' + esc(sets['orderNotice']) + '</div>') if sets.get('orderNotice') else ''}
 <div class="legal">※「→」はおすすめの飲む順番(飲み比べセット)。　AGU … 一杯の純アルコール量を示す矢切ブルワリー独自の単位。安全な量の目安ではありません。お酒は20歳になってから。　{esc(updated)} 現在</div>
 </body></html>'''
 out = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'out')); os.makedirs(out, exist_ok=True)
