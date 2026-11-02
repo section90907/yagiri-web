@@ -53,7 +53,7 @@
   ],
   "sets": {
     "title": "飲み比べセット", "price": 1000, "size": "3種 × 各100mL",
-    "items": [ { "title": "IPAセット", "desc": "…", "order": [5, 7, 6] } ],
+    "items": [ { "title": "IPAセット", "desc": "…", "order": [5, 7, 6] }, { "title": "お好みセット", "desc": "気になる3つを選んでください", "free": true, "order": [] } ],  // 決まった組み合わせは2つ+お好みセット(free:true。番号なし)
     "note": "「→」はおすすめの飲む順番"
   }
 }

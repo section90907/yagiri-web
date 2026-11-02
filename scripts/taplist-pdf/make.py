@@ -77,20 +77,22 @@ def cell(t):
 </div>'''
 
 
-def set_agu(order): return sum(by_no[n]['abv'] for n in order) * 100 * 0.8 / 100 / AGU_BASE
+def set_agu(order): return sum(by_no[n]['abv'] for n in order) * 100 * 0.8 / 100 / AGU_BASE   # 3杯(各100mL)
 
 
 sets = tap['sets']
-agus = [set_agu(x['order']) for x in sets['items']]
+agus = [set_agu(x['order']) for x in sets['items'] if not x.get('free')]   # お好みセット(free)は、中身が決まっていないので、AGUの範囲には入れない
 icons = ['<svg viewBox="0 0 24 24" class="ic"><g fill="#4F7A4E"><circle cx="12" cy="6" r="3"/><circle cx="8" cy="11" r="3"/><circle cx="16" cy="11" r="3"/><circle cx="12" cy="16" r="3"/><circle cx="12" cy="21" r="2"/></g></svg>',
          '<svg viewBox="0 0 24 24" class="ic"><g fill="#B98B3E"><ellipse cx="7" cy="9" rx="2" ry="4"/><ellipse cx="12" cy="7" rx="2" ry="4"/><ellipse cx="17" cy="9" rx="2" ry="4"/><rect x="11.4" y="11" width="1.2" height="11"/></g></svg>',
          '<svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="9" fill="#E8A33D"/><circle cx="12" cy="12" r="6.5" fill="#F6D58C"/><g stroke="#E8A33D" stroke-width="1"><line x1="12" y1="6" x2="12" y2="18"/><line x1="6" y1="12" x2="18" y2="12"/></g></svg>']
 set_rows = ''
 for i, x in enumerate(sets['items']):
+    if x.get('free'):   # お好みセット: 気になる3つを選ぶ(中身は決めない)
+        set_rows += f'<div class="srow">{icons[2]}<div class="st"><b>{esc(x["title"])}</b><br><small>{esc(x["desc"])}</small></div><div class="so free">お好み3種</div></div>'
+        continue
     flag = any((by_no[n].get('comingSoon') or by_no[n].get('soldOut')) for n in x['order'])
     mark = ' <span class="tag">' + ('SOLD OUT' if any(by_no[n].get('soldOut') for n in x['order']) else 'COMING SOON') + '</span>' if flag else ''
     set_rows += f'<div class="srow{" dim" if flag else ""}">{icons[i % 2]}<div class="st"><b>{esc(x["title"])}</b>{mark}<br><small>{esc(x["desc"])}</small></div><div class="so">{"→".join(circled(n) for n in x["order"])}</div></div>'
-set_rows += f'<div class="srow">{icons[2]}<div class="st"><b>お好みセット</b><br><small>気になる3つを選んでください</small></div><div class="so free">お好み3種</div></div>'
 # QR: 点を行ごとにつなげた図形で描く(隙間やにじみを減らす)。純黒。誤り訂正は M。まわりの白い余白(静かな領域)は、4点ぶん以上とる
 _q = segno.make(QR_URL, error='m', micro=False)
 _m = [list(r) for r in _q.matrix]
@@ -128,8 +130,8 @@ h1{{margin:0 0 4mm 6mm;font-size:30pt;font-weight:900;letter-spacing:.01em;line-
 .qr{{display:flex;align-items:center;gap:3mm;padding-left:3mm}} .qr svg{{width:31mm;height:31mm;flex:0 0 auto}}
 .qr h2{{margin:0 0 1.2mm;font-size:11.2pt;font-weight:900}} .qr p{{margin:0;font-size:7.6pt;line-height:1.55}} .qr small{{display:block;margin-top:1.4mm;font-size:6.6pt;color:#555}}
 .sets .sh{{display:flex;align-items:baseline;gap:2.4mm}} .sets h2{{margin:0;font-size:11.5pt;font-weight:900}} .sets .sp{{font-size:10.5pt;font-weight:800}} .sets .sz{{font-size:4.8pt}}
-.srow{{display:flex;align-items:center;gap:2mm;margin-top:.7mm}} .ic{{width:5mm;height:5mm;flex:0 0 auto}}
-.st{{flex:1;font-size:7.8pt;line-height:1.15}} .st small{{font-size:6.2pt}} .so{{font-size:11.4pt;letter-spacing:.04em;white-space:nowrap}} .so.free{{font-size:9pt;font-weight:900}}
+.srow{{display:flex;align-items:center;gap:2mm;margin-top:2.2mm}} .ic{{width:6.2mm;height:6.2mm;flex:0 0 auto}}
+.st{{flex:1;font-size:8.4pt;line-height:1.2}} .st small{{font-size:6.8pt}} .so{{font-size:12.4pt;letter-spacing:.04em;white-space:nowrap}} .so.free{{font-size:9.6pt;font-weight:900}}
 .tag{{display:inline-block;border:.25mm solid #2B2B2B;font-size:5.4pt;padding:0 1.2mm;font-weight:700;vertical-align:1px}}
 .note{{font-size:5.6pt;text-align:right;margin-top:.5mm}}
 .legal{{margin-top:3.4mm;text-align:right;font-size:6.6pt;color:#555}}
