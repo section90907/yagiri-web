@@ -324,7 +324,7 @@ const YFAQ = [
   ['飲み比べセットの頼み方を教えてください。', '3種類を100mLずつ飲み比べられる「飲み比べセット」(1,000円・税込)があります。ご注文のときは、セット名ではなく、メニューのビールの番号をスタッフにお伝えください(例:⑤・⑦・⑥)。お好みで3つ選ぶこともできます。'],
   ['ランチはありますか?', '平日・土日祝とも11:30〜14:00(ラストオーダー13:30)にランチをご用意しています。プルドポークサンド、オーバーライス、ハンバーグ、パスタなどがあり、ドリンク付きのセットもあります。'],
   ['ハッピーアワーはありますか?', '平日の16:00〜19:00は、全品200円引きです(バドワイザーは100円引き)。価格はすべて税込です。'],
-  ['宴会や団体の予約はできますか?', '11月・12月限定で、飲み放題つきの「年末宴会コース」(1名様 4,000円・5,000円・6,000円、税込)があります。2名様から、前日までのご予約制です(肉盛りコースは2日前まで)。お電話(047-706-5387)またはInstagramのDM(@yagiribrewery)でご予約ください。'],
+  ['宴会や団体の予約はできますか?', '11月・12月限定で、飲み放題つきの「年末宴会コース」(1名様 4,000円・5,000円・6,000円、税込)があります。2名様から、前日までのご予約制です(肉盛りコースは2日前まで)。お電話(047-706-5387)またはInstagramのDM(@yagiribrewery)でご予約ください。くわしくは「矢切・松戸の忘年会」のページ(/yagiriya/party/)をご覧ください。'],
   ['支払い方法は何が使えますか?', '現金、クレジットカード、電子マネー、交通系IC、au PAY、PayPay、d払いをご利用いただけます。'],
   ['お酒が飲めなくても利用できますか?', 'ご利用いただけます。コーヒーや紅茶、ソフトドリンクもあります。お酒は20歳になってから。20歳未満の飲酒や、飲酒運転は法律で禁止されています。']
 ];
@@ -336,6 +336,25 @@ ${YFAQ.map(([q, a]) => `<details class="faq-item"><summary><h3 style="margin: 0;
 </section>
 `;
 LD_BY_REL['yagiriya/index.html'].push({ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'ja', mainEntity: YFAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) });
+// 忘年会ページ(/yagiriya/party/)のよくある質問。事実は docs/SITE_FACTS.md と party-courses.html が正
+const PFAQ = [
+  ['矢切・松戸で、少人数の忘年会はできますか?', 'できます。YAGIRIYA(矢切屋)の年末宴会コースは2名様からご予約いただけます。'],
+  ['忘年会のコースと料金を教えてください。', '飲み放題つきで、乾杯コース 1名様4,000円、定番コース 5,000円、肉盛りコース 6,000円(すべて税込)です。11月・12月限定です。'],
+  ['飲み放題はありますか?', 'あります。コース料金に飲み放題が含まれます。国内外のクラフトビールをタップでご用意しています。'],
+  ['利用時間はどのくらいですか?', '120分制(ラストオーダーは90分)です。延長は1名様あたり1,000円です。'],
+  ['予約はいつまでにすればよいですか?', '前日までのご予約制です。肉盛りコースは2日前までにご連絡ください。お電話(047-706-5387)またはInstagramのDM(@yagiribrewery)で承ります。'],
+  ['矢切駅から近いですか?', '北総線 矢切駅から徒歩30秒です。住所は千葉県松戸市下矢切132-1です。'],
+  ['お酒が飲めない人がいても大丈夫ですか?', '大丈夫です。ソフトドリンクのみの方は、コース料金から500円引きになります。お酒は20歳になってから。20歳未満の飲酒や、飲酒運転は法律で禁止されています。']
+];
+const faqSection = (list) => yfaqHtml.replace(/(<\/style>\n<span[\s\S]*?<\/h2>\n)[\s\S]*?(<\/section>\n)$/, (_, head, tail) => head + list.map(([q, a]) => `<details class="faq-item"><summary><h3 style="margin: 0; font-size: 19px; font-weight: 900; line-height: 1.6">${esc(q)}</h3></summary><p style="margin: 0 0 16px; font-size: 17px; line-height: 2">${esc(a)}</p></details>`).join('\n') + '\n' + tail);
+const pfaqHtml = faqSection(PFAQ);
+LD_BY_REL['yagiriya/party/index.html'] = [
+  { '@context': 'https://schema.org', '@type': 'WebPage', '@id': `${SITE}/yagiriya/party/#page`, name: '矢切・松戸の忘年会|飲み放題つき2名様から|YAGIRIYA(矢切屋)', url: `${SITE}/yagiriya/party/`, inLanguage: 'ja', about: { '@id': `${SITE}/yagiriya/#taproom` } },
+  { '@context': 'https://schema.org', '@type': 'BarOrPub', '@id': `${SITE}/yagiriya/#taproom`, name: 'PUBLIC HOUSE YAGIRIYA', alternateName: ['YAGIRIYA', '矢切屋', 'やぎりや'], url: `${SITE}/yagiriya/`, telephone: '+81-47-706-5387',
+    address: { '@type': 'PostalAddress', streetAddress: '下矢切132-1', addressLocality: '松戸市', addressRegion: '千葉県', addressCountry: 'JP' },
+    hasOfferCatalog: { '@type': 'OfferCatalog', name: '年末宴会コース(11月・12月限定・飲み放題つき・2名様から)', itemListElement: [['乾杯コース', 4000], ['定番コース', 5000], ['肉盛りコース', 6000]].map(([name, price]) => ({ '@type': 'Offer', name, price, priceCurrency: 'JPY', priceSpecification: { '@type': 'UnitPriceSpecification', price, priceCurrency: 'JPY', referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitText: '1名様' }, valueAddedTaxIncluded: true }, availabilityEnds: '2026-12-31' })) } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'ja', mainEntity: PFAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }
+];
 const isoDay = (d) => (d instanceof Date ? d.toISOString().slice(0, 10) : String(d).slice(0, 10));
 
 const PAGES = path.join(ROOT, 'src/pages');
@@ -350,7 +369,7 @@ for (const f of walk(PAGES)) {
   if ((cfg.hiddenPages ?? []).some((p) => rel === p || rel.startsWith(p + path.sep))) continue;
   let html = fs.readFileSync(f, 'utf8');
   if (rel.endsWith('.html')) html = include(html, rel);
-  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, NEWS_BREWERY: newsSection('brewery'), NEWS_YAGIRIYA: newsSection('yagiriya'), YAGIRIYA_FAQ: yfaqHtml, AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
+  if (rel.endsWith('.html')) html = fill(html, { SHOP_URL: esc(cfg.shopUrl), SITE_URL: esc(cfg.siteUrl), LATEST: latest, TAPLIST, TAPLIST_DATE: tapDate, FINDER_DATA, FUTURE_TOP, NEWS_BREWERY: newsSection('brewery'), NEWS_YAGIRIYA: newsSection('yagiriya'), YAGIRIYA_FAQ: yfaqHtml, PARTY_FAQ: pfaqHtml, AGU_BASE_G: String(AGU.baseG), AGU_NAME: aguName, AGU_SINCE_JA: aguSinceJa });
   write(rel, html);
 }
 
