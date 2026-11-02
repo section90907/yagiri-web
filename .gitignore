@@ -3,3 +3,4 @@ dist/
 .wrangler/
 .DS_Store
 worker/gbp-data.json
+out/
