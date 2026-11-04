@@ -91,16 +91,16 @@
     },
     {
       "no": 5,
-      "name": "Tropical Snow",
+      "name": "霞ヶ浦ヘイジーIPA",
       "style": "Hazy IPA",
-      "brewery": "HAKUBA CRAFT(長野県)",
-      "abv": 7.0,
+      "brewery": "江口屋醸造所(茨城県)",
+      "abv": 6.0,
       "regular": 900,
       "big": 1400,
       "tag": "にごり",
-      "desc": "硬度ゼロの雪解け水で仕込んだヘイジー。トロピカルな香りが豊かで、苦みはほとんどなし。度数を感じさせない飲みやすさです。",
+      "desc": "トロピカルでジューシー。後味に少し苦みがあり、口当たりはなめらか。Japan Great Beer Awards 2026 銀賞(IBU 18)。",
       "profile": {
-        "bitter": 1,
+        "bitter": 2,
         "sweet": 3,
         "fruity": 5,
         "body": 4,
@@ -108,7 +108,8 @@
       },
       "likes": [
         "fruity"
-      ]
+      ],
+      "comingSoon": true
     },
     {
       "no": 6,
