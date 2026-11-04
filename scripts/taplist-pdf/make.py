@@ -69,13 +69,14 @@ def cell(t):
     else: top = f'<span class="brew">{esc(t.get("brewery", ""))}</span>'
     if sold: price = '<div class="price"><b>SOLD OUT</b> ─ 売り切れ</div>'
     elif soon: price = '<div class="price"><b>COMING SOON</b> ─ もうすぐ到着</div>'
+    elif t.get('glass'): price = f'<div class="price">{ru}ml{yen(t["regular"])} / {bi}ml{yen(t["big"])}</div>'   # グラス指定つき(例: 150ml / 300ml。グラス名は下の行に出す)
     else: price = f'<div class="price">レギュラー{yen(t["regular"])} / ビッグ{yen(t["big"])}</div>'
     ruby = f'<div class="ruby">{esc(t.get("ruby", ""))}</div>' if t.get('ruby') else ''
     return f'''<div class="cell{' dim' if (soon or sold) else ''}">
 <div class="head"><div class="name"><span class="no">{circled(t["no"])}</span>{esc(t["name"])}</div>{top}</div>
 <div class="sub">{ruby}<span class="style">({esc(t["style"])})</span>{price}</div>
 <div class="body"><p class="desc">{esc(t["desc"])}</p>{radar(t)}</div>
-<div class="foot">ALC.{t["abv"]:.1f}%&nbsp;&nbsp;{agu(t["abv"], ru)} / {agu(t["abv"], bi)} AGU</div>
+<div class="foot">ALC.{t["abv"]:.1f}%&nbsp;&nbsp;{agu(t["abv"], ru)} / {agu(t["abv"], bi)} AGU{('&nbsp;&nbsp;<b>' + esc(t['glass']) + 'で提供</b>') if t.get('glass') else ''}</div>
 </div>'''
 
 

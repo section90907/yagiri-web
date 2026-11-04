@@ -180,15 +180,17 @@ const aguName = `AGU${AGU.baseYear}`;
 const aguSinceJa = AGU.since.replace(/^(\d+)-(\d+)-(\d+)$/, (m, y, mo, d) => `${y}年${Number(mo)}月${Number(d)}日`);
 const aguOf = (abv, ml) => (Number(abv) * Number(ml) * 0.8 / 100 / AGU.baseG).toFixed(1);
 const mlOf = (t) => ({ regular: t.ml?.regular ?? 240, big: t.ml?.big ?? 470 }); // 既定の容量。バドワイザーだけ taplist.json の ml で上書き
+// グラス指定(glass)があるタップは、容量を ml で直接書く(例: チューリップグラス 150ml / 300ml)。無いタップは従来どおり レギュラー / ビッグ
+const sizeLab = (t) => (t.glass ? { r: `${mlOf(t).regular}ml`, b: `${mlOf(t).big}ml` } : { r: 'レギュラー', b: 'ビッグ' });
 // 売り切れは soldOut:true。カードは薄くして「SOLD OUT」と出し、価格は出さない。診断の対象外。セットに含まれていたら、そのセットにも SOLD OUT を出す
 const tapCards = tap.items.map((t) => `<div style="display: flex; flex-direction: column; gap: 10px; padding: 22px 24px; border: 1px ${t.comingSoon ? 'dashed' : 'solid'} #7FA89C; background: rgba(0, 0, 0, 0.12)${t.comingSoon ? '; opacity: 0.78' : ''}${t.soldOut ? '; opacity: 0.6' : ''}">
 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px"><span style="font-family: 'Alfa Slab One', serif; font-size: 26px; color: #E3D3A8">${t.no ? String(t.no).padStart(2, '0') : '─'}</span><span style="font-size: 14px; text-align: right">${t.original ? '<span style="background: #E3D3A8; color: #145E50; padding: 2px 10px; font-weight: 700">オリジナル</span>' : esc(t.brewery ?? '')}</span></div>
 <div><span style="font-size: 22px; font-weight: 700">${esc(t.name)}</span>${t.ruby ? ` <span style="font-size: 14px">${esc(t.ruby)}</span>` : ''}</div>
 <div style="font-size: 15px">${esc(t.style)} ／ ALC.${Number(t.abv).toFixed(1)}%</div>
-<div style="font-size: 15px; color: #E3D3A8">${aguOf(t.abv, mlOf(t).regular)} AGU(レギュラー)・${aguOf(t.abv, mlOf(t).big)} AGU(ビッグ)</div>
-${t.soldOut ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">SOLD OUT <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ 売り切れ</span></div>` : t.comingSoon ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">COMING SOON <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ もうすぐ到着</span></div>` : `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">レギュラー ${yen(t.regular)} ／ ビッグ ${yen(t.big)}</div>`}
+<div style="font-size: 15px; color: #E3D3A8">${aguOf(t.abv, mlOf(t).regular)} AGU(${sizeLab(t).r})・${aguOf(t.abv, mlOf(t).big)} AGU(${sizeLab(t).b})</div>
+${t.soldOut ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">SOLD OUT <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ 売り切れ</span></div>` : t.comingSoon ? `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8; letter-spacing: 0.08em">COMING SOON <span style="font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; letter-spacing: 0">─ もうすぐ到着</span></div>` : `<div style="font-family: 'Alfa Slab One', serif; font-size: 16px; color: #E3D3A8">${sizeLab(t).r} ${yen(t.regular)} ／ ${sizeLab(t).b} ${yen(t.big)}</div>`}
 <p style="margin: 0; font-size: 15px; line-height: 1.9">${esc(t.desc)}</p>
-<div><span style="display: inline-block; border: 1px solid #E3D3A8; padding: 2px 12px; font-size: 14px">${esc(t.tag)}</span></div>
+<div><span style="display: inline-block; border: 1px solid #E3D3A8; padding: 2px 12px; font-size: 14px">${esc(t.tag)}</span>${t.glass ? ` <span style="display: inline-block; background: #E3D3A8; color: #145E50; padding: 2px 12px; font-size: 14px; font-weight: 700">${esc(t.glass)}で</span>` : ''}</div>
 </div>`).join('\n');
 const comingNos = new Set(tap.items.filter((t) => t.comingSoon).map((t) => t.no)); // 届いていないタップを含むセットは COMING SOON
 const soldNos = new Set(tap.items.filter((t) => t.soldOut).map((t) => t.no)); // 売り切れのタップを含むセットは SOLD OUT
@@ -203,9 +205,10 @@ const finderMissing = tap.items.filter((t) => !t.profile || !t.likes).map((t) =>
 if (finderMissing.length) console.warn(`診断の対象外(profile か likes がない): ${finderMissing.join(', ')}`);
 const FINDER_DATA = JSON.stringify({
   updated: tapDate, setPrice: tap.sets.price,
-  items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon && !t.soldOut).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes, aguR: aguOf(t.abv, mlOf(t).regular), aguB: aguOf(t.abv, mlOf(t).big) })),
+  items: tap.items.filter((t) => t.profile && t.likes && !t.comingSoon && !t.soldOut).map((t) => ({ no: t.no, name: t.name, ruby: t.ruby ?? '', style: t.style, brewery: t.brewery ?? '', original: !!t.original, abv: t.abv, regular: t.regular, big: t.big, tag: t.tag, desc: t.desc, profile: t.profile, likes: t.likes, aguR: aguOf(t.abv, mlOf(t).regular), aguB: aguOf(t.abv, mlOf(t).big), labR: sizeLab(t).r, labB: sizeLab(t).b, glass: t.glass ?? '' })),
 }).replace(/</g, '\\u003c');
-const TAPLIST = `<p style="margin: 0 0 8px; font-size: 15px">${esc(tap.sizes)}</p>\n<p style="margin: 0 0 20px; font-size: 14px; line-height: 1.9">AGU:一杯の純アルコール量が、厚生労働省の目安(約${AGU.baseG}g)の何倍かを表す数字です。安全な量を示すものではありません。ご自身の許容量を、AGUでも把握して、無理のない量でお楽しみください。<a href="/guide/#agu" style="text-decoration: underline; color: #E3D3A8">くわしくは BEER 101</a></p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
+const glassNote = tap.items.filter((t) => t.glass && !t.soldOut).map((t) => `／${t.name}のみ ${t.glass} ${mlOf(t).regular}ml ／ ${mlOf(t).big}ml`).join('');
+const TAPLIST = `<p style="margin: 0 0 8px; font-size: 15px">${esc(tap.sizes + glassNote)}</p>\n<p style="margin: 0 0 20px; font-size: 14px; line-height: 1.9">AGU:一杯の純アルコール量が、厚生労働省の目安(約${AGU.baseG}g)の何倍かを表す数字です。安全な量を示すものではありません。ご自身の許容量を、AGUでも把握して、無理のない量でお楽しみください。<a href="/guide/#agu" style="text-decoration: underline; color: #E3D3A8">くわしくは BEER 101</a></p>\n<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">\n${tapCards}\n</div>\n${tapSets}`;
 
 // ---------- 未来年表(content/future/future-timeline.json から) ----------
 // 確認中(pending)の項目は、ページにも、配るデータ(timeline.json)にも出さない。
