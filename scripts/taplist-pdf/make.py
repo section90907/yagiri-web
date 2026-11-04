@@ -5,7 +5,7 @@
          → <出力フォルダ>/taplist_YYYYMMDD_A4.pdf(と、確認用の .html)
 必要なもの: Python3 + segno(QRコード。pip install segno)、Node + Playwright(Chromium)、書体(下の FONTS を、初回に Google Fonts から ~/.cache/yagiri-taplist/ へ取る)
 決まり:  レーダーチャートは、JSON の profile の数値から描く(サイトの ON TAP・ビール診断と同じ元データ。ずれない)
-         入荷前(comingSoon)は「COMING SOON」(価格なし)、売り切れ(soldOut)は「SOLD OUT」。番号の無い定番(バドワイザー)は載せない(従来のPDFと同じ)
+         入荷前(comingSoon)でも、印刷用は「COMING SOON」を出さず通常表示(価格つき)にする。売り切れ(soldOut)は「SOLD OUT」。番号の無い定番(バドワイザー)は載せない(従来のPDFと同じ)
 詳しくは docs/TAPLIST_UPDATE.md
 """
 import sys, os, json, math, html, subprocess, urllib.request
@@ -27,6 +27,8 @@ esc = lambda s: html.escape(str(s if s is not None else ''))
 circled = lambda n: chr(0x2460 + int(n) - 1)
 yen = lambda n: '¥' + format(int(n), ',')
 tap = json.load(open(os.path.join(ROOT, 'content', 'taplist.json'), encoding='utf-8'))
+# 印刷用は「COMING SOON」を出さない(店に置く紙に、まだ無いビールの表示は要らない。価格つきの通常表示にする。サイトは comingSoon のまま)
+for _t in tap['items']: _t.pop('comingSoon', None)
 items = [t for t in tap['items'] if t.get('no')]
 by_no = {t['no']: t for t in items}
 

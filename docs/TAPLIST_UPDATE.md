@@ -33,7 +33,7 @@ ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/ta
 
 ## タップリストのPDF(A4・縦・CRAFT BEER)
 - `content/taplist.json` から、PDF を作る: `python3 scripts/taplist-pdf/make.py [出力フォルダ]`(既定 `out/`。Git 管理外)。`taplist_YYYYMMDD_A4.pdf` ができる。必要なもの: Python3 + `pip install segno`(QR)、Node + Playwright(Chromium)。書体(Noto Sans JP)は初回に取ってくる
-- **レーダーチャートは、JSON の `profile` から描く**(サイトの ON TAP・ビール診断と同じ元データ。ずれない)。番号の無い定番(バドワイザー)は載せない(従来のPDFと同じ)。入荷前は「COMING SOON」(価格なし)、売り切れは「SOLD OUT」
+- **レーダーチャートは、JSON の `profile` から描く**(サイトの ON TAP・ビール診断と同じ元データ。ずれない)。番号の無い定番(バドワイザー)は載せない(従来のPDFと同じ)。**印刷用の PDF は、入荷前でも「COMING SOON」を出さず通常表示(価格つき)**(サイトは COMING SOON のまま。オーナーの指示 2026-11)。売り切れは「SOLD OUT」
 - QR は `https://www.yagiribrewery.com/m`(短いアドレス。点が粗くなり、印刷でにじんでも読める)。`/m` は、サイトが `/tap/?from=qr-menu` へ転送する(`scripts/build.mjs` の `_redirects`。管理者ページの「入口」で、メニューのQRからの来訪が分かる)。表示は `yagiribrewery.com/tap`。**QRは、純黒・点を行ごとにつなげて描き、まわりの白い余白を4点ぶん以上とる。大きさは約31mm角(余白をふくむ)。小さく刷ると読めなくなるので、縮めない**
 - 飲み比べセットの AGU は、3杯(各100mL)の度数の合計から計算(Σ度数 × 0.04)。PDF の説明文は、サイトの `desc` と同じ。**説明文は、約70字(PDFの4行)に収める**(長いと切れる)
 - 入荷したら、`comingSoon` を外してから作り直す(PDF もサイトも、同じデータ)
