@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-02",
+  "updated": "2026-11-04",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -112,21 +112,21 @@
     },
     {
       "no": 6,
-      "name": "Dynamo",
-      "ruby": "ダイナモ",
-      "style": "ダブルIPA(DDH)",
-      "brewery": "U.B.P Brewery(埼玉県)",
-      "abv": 8.0,
-      "regular": 1000,
-      "big": 1500,
-      "tag": "ダンク",
-      "desc": "柑橘や熟したパイナップル、ベリーの香り。草っぽくダンクな味わいに、苦みもしっかり。ウエストコーストスタイルのDDHダブルIPA(IBU 58)。",
+      "name": "SHŌJŌ",
+      "ruby": "猩々",
+      "style": "ウエストコースト IPA",
+      "brewery": "Kaigan Brewery(千葉県)",
+      "abv": 6.5,
+      "regular": 900,
+      "big": 1300,
+      "tag": "ウエストコースト",
+      "desc": "松や柑橘の香りが舞うクラシックなウエストコーストIPA。麦芽の支えに、心地よい苦味とクリスプなキレ(シトラ、シムコクライオほか)。",
       "profile": {
         "bitter": 4,
         "sweet": 2,
         "fruity": 4,
-        "body": 4,
-        "special": 5
+        "body": 3,
+        "special": 4
       },
       "likes": [
         "hoppy",
@@ -258,7 +258,7 @@
     "items": [
       {
         "title": "IPAセット",
-        "desc": "ヘイジー、ライス、ダブルIPA",
+        "desc": "ヘイジー、ライス、ウエストコーストIPA",
         "order": [
           5,
           7,
