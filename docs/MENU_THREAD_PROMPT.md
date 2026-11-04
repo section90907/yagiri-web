@@ -84,7 +84,7 @@
 | シュバルツ(ブラックラガー) | 2/3/1/3/4 | roasty |
 | MASHI MASHI(黒烏龍茶ラガー) | 1/2/1/3/4 | roasty |
 | ウマイケル(フルーツサワー) | 1/2/5/1/5 | fruity |
-| Tropical Snow(Hazy IPA) | 1/3/5/4/5 | fruity |
+| 霞ヶ浦ヘイジーIPA(Hazy IPA・江口屋醸造所、2026-11-04 入荷前) | 2/3/5/4/5 | fruity |
 | DANK HOP COLLISION(ゴーヤIPA) | 5/1/2/4/5 | hoppy, spicy |
 | SOUL(ライスIPA) | 4/1/4/2/5 | hoppy, classic |
 | SHŌJŌ 猩々(ウエストコーストIPA・Kaigan Brewery、2026-11-04 入荷前) | 4/2/4/3/4 | hoppy, fruity |
@@ -96,7 +96,7 @@
 | バドワイザー(ラガー) | 1/2/2/2/4 | classic |
 
 ※ 同じ銘柄が続けて出るときは、前回の値を変えないでください(同じ銘柄の味の目安が、週ごとに変わらないように)。
-※ Tropical Snow が fruity なのに hoppy ではない、など、基準だけでは割り切れないものがあります。
+※ ヘイジーIPA(霞ヶ浦ヘイジーIPAなど)が fruity なのに hoppy ではない、など、基準だけでは割り切れないものがあります。
    迷ったら、上の表の考え方に合わせて、likesNote に書いてください。
 
 ## 出力前のチェック(あなたが確認してから出す)
