@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-04",
+  "updated": "2026-11-05",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -119,7 +119,7 @@
       "brewery": "Kaigan Brewery(千葉県)",
       "abv": 6.5,
       "regular": 900,
-      "big": 1300,
+      "big": 1400,
       "tag": "ウエストコースト",
       "desc": "松や柑橘の香りが舞うクラシックなウエストコーストIPA。麦芽の支えに、心地よい苦味とクリスプなキレ(シトラ、シムコクライオほか)。",
       "profile": {
