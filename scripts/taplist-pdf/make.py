@@ -127,9 +127,9 @@ h1{{margin:0 0 4mm 6mm;font-size:30pt;font-weight:900;letter-spacing:.01em;line-
 .sub{{display:flex;justify-content:space-between;align-items:baseline;gap:2mm;font-size:7.6pt;margin-top:.3mm;position:relative}}
 .ruby{{position:absolute;left:.3mm;top:-1.2mm;font-size:4.6pt;letter-spacing:.02em;color:#444}} .style{{margin-top:1.3mm;display:inline-block}}
 .price{{font-size:7.6pt}} .price b{{font-family:inherit;font-weight:800}}
-.body{{display:flex;gap:1mm;margin-top:.6mm;height:21.2mm}}
+.body{{display:flex;gap:1mm;margin-top:.6mm;height:19.6mm}}
 .desc{{margin:0;flex:1 1 56%;font-size:8.1pt;line-height:1.5;overflow:hidden}} .radar{{flex:0 0 40%;height:25mm;margin-top:-2.4mm;margin-right:-1mm}}
-.foot{{font-size:7.6pt;margin-top:-1.2mm;font-weight:500}}
+.foot{{font-size:7.6pt;margin-top:-.4mm;font-weight:500}}
 .qr{{display:flex;align-items:center;gap:3mm;padding-left:3mm}} .qr svg{{width:31mm;height:31mm;flex:0 0 auto}}
 .qr h2{{margin:0 0 1.2mm;font-size:11.2pt;font-weight:900}} .qr p{{margin:0;font-size:7.6pt;line-height:1.55}} .qr small{{display:block;margin-top:1.4mm;font-size:6.6pt;color:#555}}
 .sets .sh{{display:flex;align-items:baseline;gap:2.4mm}} .sets h2{{margin:0;font-size:11.5pt;font-weight:900}} .sets .sp{{font-size:10.5pt;font-weight:800}} .sets .sz{{font-size:4.8pt}}
