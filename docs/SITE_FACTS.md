@@ -48,3 +48,8 @@
 - 「矢切 忘年会」「松戸 忘年会」の検索・AI検索向けの専用ページ。コースの中身は `src/partials/party-courses.html` を YAGIRIYA トップと共有(直すのは1か所)。
 - FAQ は `scripts/build.mjs` の `PFAQ`(画面と FAQPage の JSON-LD を同じデータから生成)。2026-12-31 を過ぎると「受付終了」帯が出る。
 - 料金・条件を変えたら、partial・PFAQ・YFAQ・news.json・llms.txt を合わせて直す。
+
+## QRのLP(/tap/)の「本日のメニュー」ボタン(2026-11-06)
+- /tap/ の先頭に、BrewLedger の黒板(タップルームのメニュー)へのリンクを置いた: `https://brew.yagiribrewery.com/board?web`(同じタブで開く。`target="_blank"` は付けない。戻るボタンでLPに戻れるように)。
+- **URLは変えない・中身をコピーしない・`/board/data` を読んで自前で描かない・yagiri-web側でキャッシュ/中継しない**(売り切れ・入荷前の表示は、店での編集が約35秒で反映される。BrewLedger側で15秒キャッシュ済み)。
+- iframe での埋め込みはしていない(外部のページを増やさない方針)。入れる場合は、CSP の frame-src に https://brew.yagiribrewery.com が要り、高さを受け取るスクリプトは `e.origin` の確認を消さないこと。
