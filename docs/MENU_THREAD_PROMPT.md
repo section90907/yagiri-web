@@ -84,7 +84,8 @@
 | シュバルツ(ブラックラガー) | 2/3/1/3/4 | roasty |
 | MASHI MASHI(黒烏龍茶ラガー) | 1/2/1/3/4 | roasty |
 | ウマイケル(フルーツサワー) | 1/2/5/1/5 | fruity |
-| 霞ヶ浦ヘイジーIPA(Hazy IPA・江口屋醸造所、2026-11-04 入荷前) | 2/3/5/4/5 | fruity |
+| Tropical Snow(Hazy IPA) | 1/3/5/4/5 | fruity |
+| 霞ヶ浦ヘイジーIPA(Hazy IPA・江口屋醸造所。Tropical Snow が切れたら入れる予定) | 2/3/5/4/5 | fruity |
 | DANK HOP COLLISION(ゴーヤIPA) | 5/1/2/4/5 | hoppy, spicy |
 | SOUL(ライスIPA) | 4/1/4/2/5 | hoppy, classic |
 | SHŌJŌ 猩々(ウエストコーストIPA・Kaigan Brewery、2026-11-06 入荷) | 4/2/4/3/4 | hoppy, fruity |

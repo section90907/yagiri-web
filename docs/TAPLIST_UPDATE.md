@@ -45,3 +45,9 @@ ON TAP の欄と「ビール診断(BEER FINDER)」は、どちらも `content/ta
 {"no": 3, "name": "Merckx", "ruby": "メルクス", "style": "ベルジャン・ダークストロング", "original": true, "abv": 8.0, "regular": 800, "big": 1300, "ml": {"regular": 150, "big": 300}, "glass": "チューリップグラス", "tag": "2年熟成", "desc": "2年熟成させたベルジャン・ダークストロングエール。深いコクと、熟成による丸み。チューリップグラスで、ゆっくりどうぞ。", "profile": {"bitter": 2, "sweet": 4, "fruity": 3, "body": 5, "special": 5}, "likes": ["roasty"]}
 ```
 - 入れるときの空き枠の考え方は、同じ系統(濃色・麦芽系が切れたら Merckx、淡色が切れたら Himmel)。ヒンメルは価格が決まったら同じ形で追加する。
+
+## 差し替え待ちの下書き(05: 霞ヶ浦ヘイジーIPA)
+Tropical Snow が切れたら、05 の枠にこれを入れる(入荷前なら `"comingSoon": true` を足す):
+```json
+{"no": 5, "name": "霞ヶ浦ヘイジーIPA", "style": "Hazy IPA", "brewery": "江口屋醸造所(茨城県)", "abv": 6.0, "regular": 900, "big": 1400, "tag": "にごり", "desc": "トロピカルでジューシー。後味に少し苦みがあり、口当たりはなめらか。Japan Great Beer Awards 2026 銀賞(IBU 18)。", "profile": {"bitter": 2, "sweet": 3, "fruity": 5, "body": 4, "special": 5}, "likes": ["fruity"]}
+```
