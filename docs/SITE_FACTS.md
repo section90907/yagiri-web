@@ -50,6 +50,6 @@
 - 料金・条件を変えたら、partial・PFAQ・YFAQ・news.json・llms.txt を合わせて直す。
 
 ## QRのLP(/tap/)の「本日のメニュー」ボタン(2026-11-06)
-- /tap/ の先頭に、BrewLedger の黒板(タップルームのメニュー)へのリンクを置いた: `https://brew.yagiribrewery.com/board?web`(同じタブで開く。`target="_blank"` は付けない。戻るボタンでLPに戻れるように)。
+- /tap/ の先頭に、BrewLedger の黒板(タップルームのメニュー)へのリンクを置いた。**表記は「本日のおすすめ」**(黒板は、おすすめの一覧であって、全メニューではない。くわしくは、すぐ下の「タップリスト」「フードメニュー」へ。2026-11-06 オーナー指示): `https://brew.yagiribrewery.com/board?web`(同じタブで開く。`target="_blank"` は付けない。戻るボタンでLPに戻れるように)。
 - **URLは変えない・中身をコピーしない・`/board/data` を読んで自前で描かない・yagiri-web側でキャッシュ/中継しない**(売り切れ・入荷前の表示は、店での編集が約35秒で反映される。BrewLedger側で15秒キャッシュ済み)。
 - iframe での埋め込みはしていない(外部のページを増やさない方針)。入れる場合は、CSP の frame-src に https://brew.yagiribrewery.com が要り、高さを受け取るスクリプトは `e.origin` の確認を消さないこと。
