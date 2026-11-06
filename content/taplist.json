@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -132,8 +132,7 @@
       "likes": [
         "hoppy",
         "fruity"
-      ],
-      "comingSoon": true
+      ]
     },
     {
       "no": 7,
@@ -200,8 +199,7 @@
       },
       "likes": [
         "classic"
-      ],
-      "comingSoon": true
+      ]
     },
     {
       "no": 10,
