@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06",
+  "updated": "2026-11-07",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -47,21 +47,26 @@
     },
     {
       "no": 3,
-      "name": "MASHI MASHI",
-      "ruby": "マシマシ",
-      "style": "黒烏龍茶ラガー",
-      "brewery": "BALDYS GOODBEER(東京都)",
-      "abv": 5.0,
-      "regular": 1000,
-      "big": 1500,
-      "tag": "香ばしさ",
-      "desc": "モルトと茶葉のアンバー色。カラメルの香ばしさのあとに黒烏龍茶の清涼感が来て、口の中をさっぱりさせます。",
+      "name": "Merckx",
+      "ruby": "メルクス",
+      "style": "ベルジャン・ダークストロング",
+      "original": true,
+      "abv": 8.0,
+      "regular": 800,
+      "big": 1300,
+      "ml": {
+        "regular": 150,
+        "big": 300
+      },
+      "glass": "チューリップグラス",
+      "tag": "2年熟成",
+      "desc": "2年熟成させたベルジャン・ダークストロングエール。深いコクと、熟成による丸み。チューリップグラスで、ゆっくりどうぞ。",
       "profile": {
-        "bitter": 1,
-        "sweet": 2,
-        "fruity": 1,
-        "body": 3,
-        "special": 4
+        "bitter": 2,
+        "sweet": 4,
+        "fruity": 3,
+        "body": 5,
+        "special": 5
       },
       "likes": [
         "roasty"
