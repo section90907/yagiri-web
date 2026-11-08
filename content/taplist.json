@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07",
+  "updated": "2026-11-08",
   "note": "毎週の入れ替えは、このファイルの items と updated を直すだけ。sets の order は items の no(おすすめの飲む順)。",
   "items": [
     {
@@ -163,25 +163,24 @@
     },
     {
       "no": 8,
-      "name": "AFTERGLOW",
-      "ruby": "アフターグロウ",
-      "style": "ボタニカルヴァイツェン",
-      "brewery": "八ヶ岳ブルワリー(山梨県)",
+      "name": "Himmel",
+      "ruby": "ヒンメル",
+      "style": "ピルスナー",
+      "original": true,
       "abv": 5.5,
-      "regular": 900,
-      "big": 1400,
-      "tag": "スパイシー",
-      "desc": "バナナやクローブが香る白ビールに、カルダモンとジュニパーベリー。松のようなウッディさとジンの余韻が重なります。",
+      "regular": 800,
+      "big": 1300,
+      "tag": "キレ",
+      "desc": "液体酵母のラガー酵母で、じっくり仕込んだ自社のピルスナー。ほどよい苦味と、すっきりとしたキレ(IBU 22)。",
       "profile": {
-        "bitter": 1,
-        "sweet": 3,
-        "fruity": 4,
-        "body": 3,
+        "bitter": 2,
+        "sweet": 2,
+        "fruity": 1,
+        "body": 2,
         "special": 4
       },
       "likes": [
-        "spicy",
-        "fruity"
+        "classic"
       ]
     },
     {
