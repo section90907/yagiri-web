@@ -89,7 +89,6 @@ const LD_BY_REL = {};
 const ldTag = (o) => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`;
 const write = (rel, html) => {
   html = html.replace(/%%SHOP_ORIGIN%%/g, SHOP_ORIGIN).replace(/%%PRODUCT_HREF%%/g, PRODUCT_HREF).replace(/%%ALL_PRODUCTS_HREF%%/g, ALL_PRODUCTS_HREF)
-    .replace(/%%FUND_URL%%/g, cfg.fundUrl)
     .replace(/%%SHOP_URL%%/g, esc(cfg.shopUrl)) // 共通ヘッダーの SHOP ボタン。ページごとの fill に頼らない(未来年表・NEWS・ビール詳細で、置き換わらずエラーになっていた)
     .replace(/%%BEER_HREF:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? `/beer/${k}/` : cfg.shopUrl))
     .replace(/%%BEER_SPEC:([a-z0-9-]+)%%/g, (m, k) => (beerBySlug[k] ? esc(specLine(beerBySlug[k])) : ''));
@@ -112,8 +111,6 @@ const write = (rel, html) => {
   if (rel.endsWith('.html') && html.includes('data-voice')) html = html.replace('</body>', '<script src="/voice.js" defer></script>\n</body>');
   // 読まれ方の計測(匿名。中身は public/pulse.js と worker/index.js、説明は docs/PULSE.md)
   if (rel.endsWith('.html') && rel !== '404.html') html = html.replace('</body>', '<script src="/pulse.js" defer></script>\n</body>');
-  // クラウドファンディングの導線(data-fund)は、期限(fundEnd。その日の終わりまで)を過ぎたら自動で隠す。見ている人の端末の暦日で判定する
-  if (rel.endsWith('.html') && html.includes('data-fund')) html = html.replace('</body>', `<script>(function(){var end='${cfg.fundEnd}',d=new Date(),t=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');if(t>end){document.querySelectorAll('[data-fund]').forEach(function(e){e.hidden=true;e.style.display='none';});}})();</script>\n</body>`);
   if (STAGING && rel.endsWith('.html')) html = forStaging(html);
   const p = path.join(DIST, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
